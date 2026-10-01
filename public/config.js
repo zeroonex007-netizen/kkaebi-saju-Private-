@@ -1,7 +1,7 @@
 // 공개해도 되는 키만 여기에 넣으세요. (service_role 키, 토스 시크릿 키, Anthropic 키는 절대 여기 X → Vercel 환경변수)
 window.KKAEBI_CONFIG = {
-  SUPABASE_URL: "https://YOUR-PROJECT.supabase.co",
-  SUPABASE_ANON_KEY: "YOUR-SUPABASE-ANON-KEY",
+  SUPABASE_URL: "https://eulinqcucvjqtncusqom.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1bGlucWN1Y3ZqcXRuY3VzcW9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4MzA1NzAsImV4cCI6MjEwNjQwNjU3MH0.bDmMLrjJGIGxgMYLInlON44hcizO2qeEeEy6p8oYEyk",
   // 토스페이먼츠 결제위젯 '클라이언트 키'. 아래는 토스 문서용 테스트 키 (실제 돈 안 나감)
   TOSS_CLIENT_KEY: "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm",
   BIZ: {
