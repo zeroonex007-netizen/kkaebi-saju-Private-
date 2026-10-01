@@ -309,3 +309,17 @@ footer.biz button{background:none;border:0;padding:0;color:inherit;text-decorati
 .mc-yearly{background:#EEE8FF}.mc-yearly .mframe{--sh-c:#CDBEFF;--sh:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='27' r='24'/><circle cx='27' cy='50' r='24'/><circle cx='73' cy='50' r='24'/><circle cx='50' cy='73' r='24'/><circle cx='50' cy='50' r='26'/></svg>")}
 .mc-daewoon{background:#DDF1FF}.mc-daewoon .mframe{--sh-c:#A9D8FF;--sh:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 8l12 30 32 2-25 20 9 32-28-18-28 18 9-32L6 40l32-2z' stroke='black' stroke-width='10' stroke-linejoin='round'/></svg>")}
 .mc-taekil{background:#FFEBDD}.mc-taekil .mframe{--sh-c:#FFC9A3;--sh:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46'/></svg>")}
+
+/* 자주 묻는 질문 */
+.faq{background:var(--surface);border-radius:20px;overflow:hidden;border:2px solid var(--line)}
+.faq details{border-top:1px solid var(--line)}.faq details:first-child{border-top:0}
+.faq summary{list-style:none;cursor:pointer;padding:14px 40px 14px 16px;font-family:"Jua";font-size:1.02rem;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--line);margin-right:10px;vertical-align:3px}
+.faq summary::after{content:"⌄";position:absolute;right:16px;top:10px;color:var(--muted);transition:transform .2s}
+.faq details[open] summary{background:var(--lavSoft)}.faq details[open] summary::before{background:var(--sun)}
+.faq details[open] summary::after{transform:rotate(180deg)}
+.faq details p{margin:0;padding:6px 16px 16px 33px;color:var(--muted);font-size:.93rem;line-height:1.75}
+.ask{text-align:center;margin:14px 0 4px}.ask-btn{display:inline-block;width:auto;padding:10px 22px;text-decoration:none}
+.rv-empty{background:var(--surface);border:2px dashed var(--line);border-radius:18px;padding:14px;text-align:center}
+.rv-empty b{font-family:"Jua";font-weight:400;font-size:1.05rem}.rv-empty p{margin:4px 0 0;color:var(--muted);font-size:.9rem}

@@ -120,6 +120,20 @@
   <h2 class="sec">먼저 본 친구들 후기</h2>
   <div class="reviews" id="reviewList"><p style="color:var(--muted)">후기를 불러오고 있어…</p></div>
 
+  <h2 class="sec">자주 묻는 질문</h2>
+  <div class="faq" id="faq">
+    <details><summary>부적냥은 어떤 서비스예요?</summary><p>생년월일시로 만세력(사주 여덟 글자)을 세워서 성격, 재물운, 일·진로, 연애운을 풀어주는 사주 서비스예요. 사주 말고도 궁합, 올해 운세, 대운, 좋은 날 고르기(택일)를 볼 수 있고, 내 사주에 부족한 기운을 채워주는 이미지 부적도 받을 수 있어요.</p></details>
+    <details><summary>990원 사주, 진짜 990원이에요?</summary><p>네. 모든 메뉴가 별사탕 1개(990원)예요. 추가 결제나 자동 결제 없어요. 여러 개 보고 싶으면 별사탕 5개(4,500원), 11개(9,900원) 묶음이 더 싸요.</p></details>
+    <details><summary>풀이는 뭘 근거로 만들어져요?</summary><p>양력 생년월일과 태어난 시각으로 사주 여덟 글자를 계산하고, 일간·오행의 강약·십신·합과 충 같은 명리학 기준으로 풀어요. 그래서 같은 날 태어나도 시각과 성별에 따라 풀이가 달라져요.</p></details>
+    <details><summary>태어난 시간을 몰라도 볼 수 있어요?</summary><p>볼 수 있어요. '시간 몰라'를 체크하면 시주를 빼고 나머지 여섯 글자로 풀어요. 시간을 알면 조금 더 정확해져요.</p></details>
+    <details><summary>음력 생일만 알아요.</summary><p>지금은 양력 기준이에요. 음력 생일은 포털에서 '음력 양력 변환'으로 바꿔서 넣어주세요. 음력 입력은 곧 붙일게요.</p></details>
+    <details><summary>무료로 볼 수 있는 건 뭐예요?</summary><p>맨 위 '오늘의 행운 부적'은 로그인 없이 매일 무료예요. 로그인하면 내 사주로 보는 오늘 운세, 부적냥 고민 상담, 매일 출석·복주머니 뽑기도 무료예요. 친구 초대와 공유 미션으로 별사탕을 받을 수도 있어요.</p></details>
+    <details><summary>이미지 부적은 뭐예요?</summary><p>부적냥이 내 이름을 부르며 빌어서 그려주는 폰 배경화면 부적이에요. 내 이름, 일주, 사주에서 가장 부족한 기운이 들어가요. 바라는 일이 잘 되길 비는 마음을 담은 기원 부적이라, 결과를 보장하진 않아요. 친구한테 선물할 수도 있어요.</p></details>
+    <details><summary>환불할 수 있어요?</summary><p>사용하지 않은 별사탕은 구매일로부터 7일 안에 전액 환불돼요. 이미 풀이를 본 별사탕과 받은 이미지 부적은 디지털 콘텐츠라 환불이 안 돼요. 오류로 풀이가 안 나오면 별사탕은 자동으로 돌려드려요.</p></details>
+    <details><summary>내 정보는 안전해요?</summary><p>생년월일과 이름은 풀이에만 쓰고, 탈퇴하면 바로 지워요. 결제 카드 정보는 토스페이먼츠가 처리해서 부적냥은 보관하지 않아요. 자세한 건 개인정보처리방침에 있어요.</p></details>
+  </div>
+  <div class="ask" id="askBox"></div>
+
   <p class="fine">양력 기준이며 절기는 해마다 하루 정도 차이가 날 수 있어요. 부적냥의 풀이는 명리학을 바탕으로 한 참고용이에요. 중요한 결정은 꼭 전문가와 상의해요.</p>
 </section>
 
@@ -376,6 +390,7 @@ for(const s of PURPOSES)$("purpose").add(new Option(s));
 
 const B=C.BIZ;
 $("biz").innerHTML=`<b>부적냥 사주</b> · 상호 ${B.name} · 대표 ${B.owner}<br>사업자등록번호 ${B.regNo} · 통신판매업 신고 ${B.ecomNo||"신고 진행 중"}<br>${B.address}<br>${[B.email&&"고객센터 "+B.email,B.phone].filter(Boolean).join(" · ")}${B.email||B.phone?"<br>":""}<a href="/terms.html">이용약관</a><a href="/privacy.html"><b>개인정보처리방침</b></a><span class="acct" id="acctLine" hidden></span><button id="myInfoBtn" hidden>내 정보</button><button id="logoutBtn" hidden>로그아웃</button>`;
+$("askBox").innerHTML=B.email?`<a class="btn-soft ask-btn" href="mailto:${B.email}?subject=${encodeURIComponent("[부적냥 문의]")}">❓ 문의하기</a>`:"";
 $("logoutBtn").onclick=async()=>{await sb.auth.signOut();toast("로그아웃했어. 또 놀러 와!");};
 
 /* ---------- 로그인 ---------- */
@@ -523,7 +538,7 @@ $("reviewBtn").onclick=async()=>{const t=$("reviewText").value.trim();if(t.lengt
   catch(e){$("reviewErr").textContent=e.status===409?"이 메뉴 후기는 이미 남겼어.":"저장이 안 됐어. 다시 해줘.";}};
 async function loadReviews(){const el=$("reviewList");
   try{const r=await fetch("/api/reviews");const {reviews}=await r.json();el.textContent="";
-    if(!reviews.length){el.innerHTML='<p style="color:var(--muted)">아직 후기가 없어. 첫 후기를 남기면 조각을 줄게!</p>';return;}
+    if(!reviews.length){el.innerHTML='<div class="rv-empty"><b>첫 후기의 주인공이 되어줘</b><p>풀이 보고 후기 남기면 별사탕 조각을 줘. 조각 3개면 별사탕 1개!</p></div>';return;}
     for(const v of reviews){const d=document.createElement("div");d.className="rv";const name=(PRODUCTS.find(p=>p.id===v.product)||{}).name||"";
       d.innerHTML=`<div class="top"><span><span class="st"></span> <span class="pn"></span></span>${v.rewarded?'<span class="badge">별사탕 조각 지급 후기</span>':""}</div><p></p>`;
       d.querySelector(".st").textContent="★".repeat(v.stars);d.querySelector(".pn").textContent=name;d.querySelector("p").textContent=v.body;el.appendChild(d);}}
