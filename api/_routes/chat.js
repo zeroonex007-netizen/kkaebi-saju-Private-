@@ -1,5 +1,8 @@
-// 부적냥 수다: 하루 1회 무료, 이후 질문당 별사탕 1개
+// 부적냥 고민 상담
+// - ANTHROPIC_API_KEY가 없으면(기본): 부적냥 문장으로 답함. 무료·무제한, 토큰 0원
+// - 키를 넣으면: AI 답변. 하루 1회 무료, 이후 질문당 별사탕 1개
 import { route, admin, rpc, claude, clip } from "../_lib.js";
+import { chatReply } from "../_text.js";
 import { sajuOf, gz, elCount } from "../../public/saju.js";
 import { SYS } from "../../public/products.js";
 
@@ -11,6 +14,11 @@ export default route(async (req, res, user, b) => {
     .filter((x) => x.content);
   while (messages.length && messages[0].role !== "user") messages.shift();
   if (!messages.length || messages[messages.length - 1].role !== "user") return res.status(400).json({ error: "input" });
+
+  if (!process.env.ANTHROPIC_API_KEY) {
+    const { data: pr } = await admin.from("profiles").select("birth,birth_time").eq("id", user.id).single();
+    return res.json({ text: chatReply(messages[messages.length - 1].content, pr), free: true, canned: true });
+  }
 
   const free = await rpc("use_free_chat", { uid: user.id });
   let kind = null;

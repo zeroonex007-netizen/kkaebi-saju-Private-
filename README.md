@@ -49,7 +49,10 @@
 
 > ⚠️ 키는 꼭 **결제위젯용**(gck/gsk)을 쓰세요. API 개별 연동 키(ck/sk)는 이 코드와 안 맞습니다.
 
-## 4. Anthropic API 키
+## 4. Anthropic API 키 (선택 — 없어도 됩니다)
+
+**지금은 필요 없습니다.** 6개 메뉴 풀이, 오늘의 운세, 고민 상담 모두 `api/_text.js`의 부적냥 문장을 사주 계산 결과로 조합해 보여줘서 토큰 비용이 0원입니다. 나중에 고민 상담만 AI로 바꾸고 싶을 때 아래 키를 Vercel에 넣으면 상담이 AI 답변(하루 1회 무료, 이후 별사탕 1개)으로 바뀝니다.
+
 
 console.anthropic.com → 결제수단 등록 → **API Keys → Create Key**. 기본 모델은 저렴한 `claude-haiku-4-5-20251001`이고, 품질을 올리고 싶으면 환경변수 `ANTHROPIC_MODEL`을 `claude-sonnet-5-5`로 바꾸면 됩니다(비용 증가).
 
@@ -71,7 +74,7 @@ console.anthropic.com → 결제수단 등록 → **API Keys → Create Key**. �
 |---|---|
 | `SUPABASE_URL` | Supabase Project URL |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service_role 키 |
-| `ANTHROPIC_API_KEY` | Anthropic 키 |
+| `ANTHROPIC_API_KEY` | (선택) Anthropic 키. 없으면 AI 없이 동작 |
 | `TOSS_SECRET_KEY` | 토스 결제위젯 시크릿 키 |
 
 4. 배포 주소가 나오면 2-7번(Supabase URL Configuration)에 그 주소를 넣습니다.
@@ -168,3 +171,13 @@ Supabase > SQL Editor에 `supabase/migration-003.sql`을 통째로 붙여넣고 
 
 ### 문구 원칙
 부적냥이 **진심으로 빌어주는** 톤으로 쓰되, "반드시 붙는다·무조건 합격" 같은 **결과 보장 표현은 쓰지 않습니다**(표시광고법). 결과를 보장하지 않는다는 문장은 약관에만 둡니다.
+
+
+---
+
+## 4차 업데이트: AI 없이 돌아가는 풀이 (토큰 0원)
+
+- `api/_text.js`에 부적냥 말투 풀이 문장이 들어 있습니다: 일간 10종 × 성격·재물·일·사람·연애, 일지 12종, 오행 강약, 십신(그해·그달·그날·대운), 연애 상태, 택일 목적, 고민 키워드별 답변.
+- 사주 계산 결과(일주, 오행 강약, 올해·이번 달·대운의 십신, 일지 합·충)로 문장을 골라 이어 붙여서 사람마다 다르게 나옵니다.
+- 문장을 고치고 싶으면 `api/_text.js`에서 해당 줄만 바꾸면 됩니다.
+- 고민 상담은 키가 없으면 무료·무제한(키워드 답변 + 오늘의 기운 + 오늘 할 일 하나). "죽고 싶다" 같은 말이 오면 109(자살예방 상담전화)를 안내합니다.

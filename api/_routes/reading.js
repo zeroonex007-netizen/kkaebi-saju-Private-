@@ -1,7 +1,8 @@
-// 990원 메뉴 풀이: 별사탕 1개 차감 → AI 풀이 → 실패하면 환불
-import { route, admin, rpc, claude, parseJSON, isDate, isTime, isSex, clip } from "../_lib.js";
-import { sajuOf, gz, elCount, goodDays, todayKST, cardOf, STEM_KO, STEM_EL } from "../../public/saju.js";
-import { PRODUCTS, SYS, LOVE_STATES, PURPOSES } from "../../public/products.js";
+// 990원 메뉴 풀이: 별사탕 1개 차감 → 부적냥 문장 조합 풀이(AI 안 씀, 토큰 0원) → 실패하면 환불
+import { route, admin, rpc, isDate, isTime, isSex, clip } from "../_lib.js";
+import { sajuOf, goodDays, cardOf } from "../../public/saju.js";
+import { PRODUCTS } from "../../public/products.js";
+import { compose } from "../_text.js";
 
 export default route(async (req, res, user, b) => {
   const prod = PRODUCTS.find((p) => p.id === b.product);
@@ -23,24 +24,9 @@ export default route(async (req, res, user, b) => {
   await admin.from("profiles").update({ name, sex: me.sex, birth: me.birth, birth_time: me.time }).eq("id", user.id);
 
   try {
-    const p = sajuOf(me.birth, me.time), c = elCount(p);
-    const [y, m, d] = todayKST();
-    let ctx = `이름 ${name}(${me.sex}), 양력 ${me.birth} ${me.time}\n연주 ${gz(p.year)} 월주 ${gz(p.month)} 일주 ${gz(p.day)} 시주 ${gz(p.hour)}\n일간 ${STEM_KO[p.day.s]}${STEM_EL[p.day.s]}, 오행 ${JSON.stringify(c)}\n오늘 ${y}-${m}-${d}`;
-    const worry = clip(b.worry, 200);
-    if (worry) ctx += `\n하고 싶은 말: ${worry}`;
-    if (prod.love) ctx += `\n현재 연애 상태: ${LOVE_STATES.includes(b.loveState) ? b.loveState : "솔로"}`;
-    if (partner) {
-      const pp = sajuOf(partner.birth, "모름");
-      ctx += `\n상대방 ${partner.name}(${partner.sex}), 양력 ${partner.birth}, 연주 ${gz(pp.year)} 월주 ${gz(pp.month)} 일주 ${gz(pp.day)}, 오행 ${JSON.stringify(elCount(pp))}`;
-    }
-    let days = null;
-    if (prod.purpose) {
-      days = goodDays(p, 6);
-      ctx += `\n목적 ${PURPOSES.includes(b.purpose) ? b.purpose : PURPOSES[0]}\n후보일(일지 삼합·육합, 충 제외): ${days.map((x) => x.label + " " + x.gz).join(", ")}`;
-    }
-    const fmt = "{" + prod.keys.map(([k]) => `"${k}":""`).join(",") + "}";
-    const prompt = `[메뉴] ${prod.name}: ${prod.desc}\n[사주]\n${ctx}\n\n각 항목 3~5문장, 반드시 다음 키만 가진 JSON 하나로만 답해:\n${fmt}\n항목 의미: ${prod.keys.map(([k, t]) => k + "=" + t).join(", ")}`;
-    const sections = parseJSON(await claude({ system: SYS, messages: [{ role: "user", content: prompt }], max_tokens: 2000 }));
+    const p = sajuOf(me.birth, me.time);
+    const sections = compose(prod.id, { worry: clip(b.worry, 200), loveState: b.loveState, purpose: b.purpose, partner }, { name, sex: me.sex, birth: me.birth, time: me.time });
+    const days = prod.purpose ? goodDays(p, 6) : null;
     // 보상: 경험치 + 도감 카드 (내 일주, 궁합이면 상대 일주)
     const rewards = { xp: await rpc("add_xp", { uid: user.id, amt: 30 }), cards: [] };
     rewards.cards.push(await rpc("add_card", { uid: user.id, c: cardOf(p.day), src: "reading" }));
