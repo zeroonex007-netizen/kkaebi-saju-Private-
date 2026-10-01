@@ -382,6 +382,47 @@ const hashStr = (t) => { let h = 7; for (const ch of t) h = (h * 31 + ch.charCod
 const catOf = (t) => { for (const [c, re] of CHAT_CAT) if (re.test(t)) return c; return null; };
 const WD = "일월화수목금토";
 
+// 콕 집은 부탁들: 로또, 메뉴, 색, 그 사람 마음, 언제, 오늘 운세, 내 사주
+const EL_NUM = { 목: [3, 8], 화: [2, 7], 토: [5, 10], 금: [4, 9], 수: [1, 6] };   // 하도 오행수
+const EL_FOOD = { 목: ["쌈밥", "샐러드", "나물 비빔밥"], 화: ["마라탕", "떡볶이", "김치찌개"], 토: ["국밥", "비빔밥", "카레"], 금: ["돈가스", "치킨", "닭갈비"], 수: ["초밥", "쌀국수", "해물짬뽕"] };
+const EL_COLOR = { 목: "초록·민트", 화: "빨강·코랄", 토: "베이지·노랑", 금: "흰색·실버", 수: "검정·네이비" };
+function intentReply(q, pr, name, seed, said) {
+  const has = pr && pr.birth, p = has ? sajuOf(pr.birth, pr.birth_time || "모름") : null, w = has ? weakEl(elCount(p)) : null;
+  const [y, m, d] = todayKST(), today = dayP(y, m, d), tg = has ? tenGod(p.day.s, today.s) : null;
+  const needBirth = "생일 알려주면 니 사주로 맞춰줄게. 메뉴 하나 보면 자동 저장됨.";
+  if (/로또|복권|연금복권|번호 ?(찍|뽑|추천)|행운 ?번호/.test(q)) {
+    let h = hashStr((pr && pr.birth || "x") + `${y}${m}${d}`), nums = new Set();
+    if (w) { nums.add(EL_NUM[w][0]); nums.add(EL_NUM[w][1] + 10 * (Math.abs(h) % 3)); }
+    while (nums.size < 6) { h = (h * 1103515245 + 12345) | 0; nums.add(1 + (Math.abs(h) % 45)); }
+    const list = [...nums].sort((a, b) => a - b).join(", ");
+    return `부적냥 오늘의 행운 번호: ${list}\n` + (w ? `니 사주에 부족한 ${w} 기운 숫자(${EL_NUM[w][0]}, ${EL_NUM[w][1]})를 넣어서 뽑았음. ` : "") + "번호는 매일 바뀜.\n근데 로또는 5천 원까지만. 그 이상은 부적냥도 책임 못 짐. 진짜 돈은 꾸준함에서 나옴.";
+  }
+  if (/뭐 ?먹|메뉴 ?(추천|골라)|점심|저녁|배고파|야식/.test(q)) {
+    const list = w ? EL_FOOD[w] : ["떡볶이", "국밥", "초밥"];
+    return `오늘은 ${pick(list, seed)} 먹어.\n` + (w ? `니 사주에 ${w} 기운이 부족해서 그 기운 채워주는 메뉴로 골랐음. ` : "") + "맛있는 거 먹으면 운도 오름. 진짜임.";
+  }
+  if (/무슨 ?색|색깔|옷 ?(뭐|추천)|뭐 ?입/.test(q)) {
+    return w ? `오늘은 ${EL_COLOR[w]} 계열 입어. 니 사주에 부족한 ${w} 기운 채워주는 색임.\n전부 그 색일 필요 없음. 양말이나 폰케이스 하나만 맞춰도 됨.` : `오늘은 코랄이나 민트 추천. ${needBirth}`;
+  }
+  if (/(나|날) ?좋아(해|하나|할까)|관심 ?있(어|나|을까)|마음 ?있(어|나)|호감|어장/.test(q)) {
+    return "그 사람 속마음은 부적냥도 못 봄. 근데 확인하는 법은 앎.\n① 먼저 연락이 오는지 ② 답장이 빠른지 ③ 너한테 질문을 하는지. 세 개 중 두 개면 관심 있음. 하나 이하면 지금은 니가 더 좋아하는 중.\n" + (tg ? `그리고 오늘 니 연애 기운은 이래: ${TODAY[tg][1]}` : needBirth);
+  }
+  if (/언제/.test(q) && /연락|생겨|생길|애인|인연|만나|결혼|합격|붙/.test(q)) {
+    if (!has) return `그거 니 사주 보면 앎. ${needBirth}`;
+    let when = [];
+    for (let k = 1; k <= 30 && when.length < 3; k++) { const t = new Date(Date.UTC(y, m - 1, d + k)), dp = dayP(t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate());
+      const g = tenGod(p.day.s, dp.s); if (["편재", "정재", "편관", "정관", "식신"].includes(g)) when.push(`${t.getUTCMonth() + 1}/${t.getUTCDate()}(${WD[t.getUTCDay()]})`); }
+    return `앞으로 한 달 안에 니 기운이 확 열리는 날은 ${when.join(", ")}.\n이런 날엔 연락도 잘 오고 일도 잘 풀림. 그날은 약속 잡고 밖에 나가.\n더 길게 보고 싶으면 990원 연애운이나 연운 메뉴에 달별로 다 나와.`;
+  }
+  if (/오늘 ?(운세|운|어때|기운)|운세 ?(봐|알려)/.test(q)) return has ? dailyText(pr.birth, pr.birth_time || "모름") + "\n\n홈 맨 위 행운점수도 뽑아봐." : `오늘 운세는 홈 맨 위 '오늘의 행운 부적'에서 바로 뽑을 수 있어. ${needBirth}`;
+  if (/(내 ?)?사주 ?(봐|알려|어때)|팔자 ?(봐|어때)|나 ?어떤 ?사람/.test(q)) {
+    if (!has) return `니 사주 보려면 생일이 필요함. ${needBirth}`;
+    const x = base({ name: name || "너", birth: pr.birth, time: pr.birth_time || "모름" });
+    return summaryOf(x) + "\n\n성격, 재물, 일, 사람 복까지 자세히 보고 싶으면 메뉴판의 990원 사주 눌러.";
+  }
+  return null;
+}
+
 export function chatReply(messages, pr) {
   const msgs = Array.isArray(messages) ? messages : [{ role: "user", content: String(messages || "") }];
   const q = (msgs[msgs.length - 1].content || "").trim(), seed = hashStr(q);
@@ -392,6 +433,8 @@ export function chatReply(messages, pr) {
   if (!cat || ["thanks", "laugh"].includes(cat) && YESNO.test(q)) {
     for (let k = msgs.length - 2; k >= 0; k--) if (msgs[k].role === "user") { const c = catOf(msgs[k].content || ""); if (c && !["greet", "thanks", "laugh", "who"].includes(c)) { cat = cat || c; break; } }
   }
+  const special = intentReply(q, pr, name, seed, said);
+  if (special && cat !== "crisis") return special;
   if (cat === "crisis") return "그 말 그냥 못 넘김. 지금 많이 힘든 거 맞지.\n혼자 버티지 말고 지금 바로 109(자살예방 상담전화, 24시간)에 전화해서 지금 마음 그대로 말해줘. 문자 상담도 돼.\n부적냥은 니가 내일도 여기 있었으면 좋겠음. 진심임.";
   if (cat === "greet") return pick([`왔어${name ? " " + name : ""}? 귀찮지만 들어줄게. 요즘 제일 신경 쓰이는 거 하나만 말해봐.`, "안녕. 부적냥 지금 누워있었음. 근데 니 얘기면 일어남. 뭐가 고민이야?"], seed);
   if (cat === "thanks") return pick(["별말을. 근데 맞았다니 기분 좋음. 다음 고민도 가져와.", "고맙긴. 대신 친구한테 부적냥 소문 좀 내줘.", "그치? 부적냥 용함. 알고 있었음."], seed);
