@@ -260,3 +260,52 @@ footer.biz button{background:none;border:0;padding:0;color:inherit;text-decorati
 .info{display:grid;grid-template-columns:84px 1fr;gap:8px 10px;margin:8px 0 12px;font-size:.95rem}
 .info dt{color:var(--muted)}.info dd{margin:0;word-break:break-all}
 #myInfoBtn{margin-right:8px}
+
+/* ── 첫 화면: 오늘의 행운 부적 ── */
+.luck{--pk:#FF8FB1;margin:4px 0 22px;padding:22px 16px 18px;border-radius:28px;text-align:center;color:#3A2B4A;
+  background-color:#FFF4F7;background-image:repeating-linear-gradient(0deg,rgba(255,143,177,.16) 0 14px,transparent 14px 28px),repeating-linear-gradient(90deg,rgba(255,143,177,.16) 0 14px,transparent 14px 28px)}
+.luck-q{font-family:"Jua";font-size:1.35rem;line-height:1.35;margin:0 6px;min-height:1.9em;word-break:keep-all}
+.luck-by{display:block;color:#9A8FA6;margin:2px 0 14px}
+.luck-dev{position:relative;display:block;width:min(100%,300px);margin:0 auto;border:0;padding:18px 18px 16px;border-radius:44px;
+  background:radial-gradient(circle at 30% 20%,#FFE58A,#FFD24A 60%,#F5B82E);box-shadow:inset 0 0 0 6px #fff6,inset 0 0 0 9px #E5483B,0 10px 24px rgba(229,72,59,.25);color:#3A2B4A}
+.luck-cat{position:absolute;right:-18px;top:-46px;width:96px;transform:rotate(8deg);pointer-events:none}
+.luck-title{display:block;font-family:"Jua";font-size:1.05rem;color:#B5261C;margin-bottom:8px;letter-spacing:.02em}
+.luck-scr{display:block;margin:0 auto;width:78%;padding:12px 0 8px;border-radius:18px;border:4px solid #fff;
+  background:linear-gradient(135deg,#CFF0FF 25%,#FFD6E4 25% 50%,#CFF0FF 50% 75%,#FFD6E4 75%) 0 0/28px 28px}
+.luck-scr small{display:block;font-weight:700;color:#5B4A6B}
+.luck-scr b{display:block;font-family:"DotGothic16",monospace;font-size:4.2rem;line-height:1.05;color:#E5487B;text-shadow:2px 2px 0 #fff}
+.luck-tap{display:inline-grid;place-items:center;margin-top:12px;min-width:64px;height:64px;padding:0 10px;border-radius:999px;background:#FF6F91;color:#fff;
+  font-family:"Jua";font-size:1.1rem;box-shadow:inset 0 -5px 0 #D94C70,0 4px 10px rgba(229,72,123,.35)}
+.luck:not(.done) .luck-tap{animation:tapme 1.4s ease-in-out infinite}
+.luck-dev.rolling .luck-scr b{animation:shake .12s linear infinite}
+.luck.pop .luck-dev{animation:pop .45s ease}
+.luck-tiles{display:grid;grid-template-columns:repeat(3,1fr);margin:16px 0 0;background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.luck-tiles div{padding:10px 4px;display:flex;flex-direction:column;gap:2px}
+.luck-tiles div+div{border-left:1px solid #F1E6EC}
+.luck-tiles small{font-size:.74rem;color:#E5487B;font-weight:700}
+.luck-tiles b{font-family:"Jua";font-weight:400;font-size:1.05rem;display:flex;align-items:center;justify-content:center;gap:5px;word-break:keep-all}
+.luck-tiles b i{width:12px;height:12px;border-radius:50%;box-shadow:0 0 0 1px #0002}
+.luck-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.luck-btns .btn-soft{background:#fff;color:#3A2B4A}
+.luck-more{background:#E5487B!important;color:#fff!important}
+@keyframes tapme{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes shake{0%{transform:translateX(-2px)}50%{transform:translateX(2px)}100%{transform:translateX(-2px)}}
+@keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion: reduce){.luck-tap,.luck-dev,.luck-scr b{animation:none!important}}
+
+/* ── 메뉴판: 큰 스티커 카드 ── */
+.card.mc{padding:12px 12px 14px;gap:4px;color:#3A2B4A;border-radius:24px}
+.mframe{position:relative;display:block;aspect-ratio:1/1;margin-bottom:6px}
+.mframe i{position:absolute;inset:4%;background:var(--sh-c);-webkit-mask:var(--sh) center/contain no-repeat;mask:var(--sh) center/contain no-repeat}
+.mframe img{position:absolute;left:50%;bottom:2%;max-height:88%;max-width:96%;width:auto;height:auto;transform:translateX(-50%);filter:drop-shadow(0 3px 4px rgba(0,0,0,.12));transition:transform .2s}
+.card.mc:active .mframe img{transform:translateX(-50%) scale(1.06) rotate(-3deg)}
+.mrow{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.card.mc strong{margin:0;font-size:1.12rem}
+.card.mc .cost{position:static;background:#fff}
+.card.mc small{color:#7E6E8C}
+.mc-saju{background:#FFF6C9}.mc-saju .mframe{--sh-c:#FFE27A;--sh:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='4' y='4' width='92' height='92' rx='30'/></svg>")}
+.mc-love{background:#FFE3EC}.mc-love .mframe{--sh-c:#FFB3C7;--sh:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 92C20 70 3 52 3 31 3 15 15 5 30 5c10 0 16 6 20 14C54 11 60 5 70 5c15 0 27 10 27 26 0 21-17 39-47 61z'/></svg>")}
+.mc-gunghap{background:#E8F7D6}.mc-gunghap .mframe{--sh-c:#BFE69B;--sh:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M7 60C1 38 10 8 32 8c10 0 16 8 18 14 2-6 8-14 18-14 22 0 31 30 25 52-4 22-22 34-43 34S11 82 7 60z'/></svg>")}
+.mc-yearly{background:#EEE8FF}.mc-yearly .mframe{--sh-c:#CDBEFF;--sh:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='27' r='24'/><circle cx='27' cy='50' r='24'/><circle cx='73' cy='50' r='24'/><circle cx='50' cy='73' r='24'/><circle cx='50' cy='50' r='26'/></svg>")}
+.mc-daewoon{background:#DDF1FF}.mc-daewoon .mframe{--sh-c:#A9D8FF;--sh:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 8l12 30 32 2-25 20 9 32-28-18-28 18 9-32L6 40l32-2z' stroke='black' stroke-width='10' stroke-linejoin='round'/></svg>")}
+.mc-taekil{background:#FFEBDD}.mc-taekil .mframe{--sh-c:#FFC9A3;--sh:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46'/></svg>")}

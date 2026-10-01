@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&family=Noto+Serif+KR:wght@900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&family=Noto+Serif+KR:wght@900&family=DotGothic16&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 <script src="/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -45,13 +45,28 @@
 </header>
 
 <section id="v-home">
-  <div class="hero">
-    <img class="kkaebi nyang" src="/img/nyang-wave.png" alt="손 흔드는 부적냥">
-    <div class="bubble">
-      <h1>니 팔자 내가 앎.<br>990원만 내</h1>
-      <p>별사탕 하나에 990원. 사주, 궁합, 연애운까지.</p>
+  <div class="luck" id="luck">
+    <p class="luck-q" id="luckQ">오늘 운, 내가 뽑아줌. 눌러.</p>
+    <small class="luck-by" id="luckBy">— 부적냥</small>
+    <button class="luck-dev" id="luckDev" aria-label="오늘의 행운점수 뽑기">
+      <img class="luck-cat" src="/img/nyang-hold.png" alt="">
+      <span class="luck-title">오늘의 행운 부적</span>
+      <span class="luck-scr"><small>행운점수</small><b id="luckNum">??</b></span>
+      <span class="luck-tap" id="luckTap">톡</span>
+    </button>
+    <div class="luck-tiles" id="luckTiles" hidden>
+      <div><small>🔢 행운 숫자</small><b id="luckN"></b></div>
+      <div><small>🎨 행운 컬러</small><b id="luckC"></b></div>
+      <div><small>🍀 행운 아이템</small><b id="luckI"></b></div>
+    </div>
+    <div class="luck-btns" id="luckBtns" hidden>
+      <button class="btn-soft" id="luckShare">공유하기</button>
+      <button class="btn luck-more" id="luckMore">내 사주로 더 보기</button>
     </div>
   </div>
+
+  <h2 class="sec">부적냥 메뉴판</h2>
+  <div class="grid" id="menu"></div>
 
   <div class="mykb" id="myKb" hidden>
     <button class="lvrow" id="lvBtn" aria-label="레벨 안내">
@@ -74,16 +89,13 @@
   </button>
 
   <div class="today">
-    <h2>오늘의 부적 · 무료</h2>
-    <p>매일 바뀌어. 행운의 색이랑 메뉴도 골라줄게.</p>
+    <h2>내 사주로 보는 오늘 운세 · 무료</h2>
+    <p>내 일주 기준으로 총운·연애·돈을 봐줄게.</p>
     <button class="btn" id="dailyBtn">오늘 운세 뽑기</button>
     <div class="out" id="dailyOut" hidden></div>
   </div>
 
   <button class="gift" id="shareApp"><span class="em" aria-hidden="true">🎁</span><span><strong>카톡으로 친구 초대하고 별사탕 받기</strong><br><small id="shareHint">친구가 내 링크로 가입하면 둘 다 1개씩!</small></span></button>
-
-  <h2 class="sec">부적냥 메뉴판</h2>
-  <div class="grid" id="menu"></div>
 
   <h2 class="sec">부적냥 부적 상점</h2>
   <p class="shop-sub">폰 배경화면으로 쓰는 내 이름 박힌 이미지 부적. 하나에 별사탕 1개(990원)</p>
@@ -332,7 +344,7 @@
 
 <script type="module">
 import {sajuOf,gz,elCount,TYPES,STEMS,STEM_KO,STEM_EL,BR,BR_KO,BR_EL,cardName,cardHanja,cardEl} from "/saju.js";
-import {PRODUCTS,PACKS,LOVE_STATES,PURPOSES,LEVELS,XP_RULES,LEVEL_REWARD,GACHA_ODDS,SUB,AMULETS,EL_HANJA,EL_RX,MENU_AMULET,PURPOSE_AMULET,weakEl} from "/products.js";
+import {PRODUCTS,PACKS,LOVE_STATES,PURPOSES,LEVELS,XP_RULES,LEVEL_REWARD,GACHA_ODDS,SUB,LUCK_QUOTES,LUCK_ITEMS,LUCK_COLORS,AMULETS,EL_HANJA,EL_RX,MENU_AMULET,PURPOSE_AMULET,weakEl} from "/products.js";
 
 const C=window.KKAEBI_CONFIG;
 // implicit: 로그인 후 돌아올 때 다른 브라우저로 열려도 주소에 담긴 토큰으로 로그인되게
@@ -354,8 +366,8 @@ document.querySelectorAll("[data-home]").forEach(b=>b.onclick=()=>show("v-home")
 $("goHome").onclick=()=>show("v-home");
 
 const NYANG={saju:"cross",love:"run",gunghap:"hold",yearly:"cheer",daewoon:"wave",taekil:"lie"};
-for(const p of PRODUCTS){const b=document.createElement("button");b.className="card "+p.c;
-  b.innerHTML=`${p.isNew?'<span class="new">NEW</span>':""}<span class="cost"><svg class="candy"><use href="#candy"/></svg>1</span><img class="mimg" src="/img/nyang-${NYANG[p.id]||"cross"}.png" alt=""><strong></strong><small></small>`;
+for(const p of PRODUCTS){const b=document.createElement("button");b.className="card mc mc-"+p.id;
+  b.innerHTML=`${p.isNew?'<span class="new">NEW</span>':""}<span class="mframe"><i></i><img src="/img/nyang-${NYANG[p.id]||"cross"}.png" alt=""></span><span class="mrow"><strong></strong><span class="cost"><svg class="candy"><use href="#candy"/></svg>1</span></span><small></small>`;
   b.querySelector("strong").textContent=p.name;b.querySelector("small").textContent=p.sub;b.onclick=()=>openForm(p);$("menu").appendChild(b);}
 for(const p of PACKS){const d=document.createElement("div");d.className="price";
   d.innerHTML=`<span><svg class="candy"><use href="#candy"/></svg> 별사탕 ${p.n}개${p.tag?` <em>${p.tag}</em>`:""}</span><strong>${p.price.toLocaleString()}원</strong>`;$("priceList").appendChild(d);}
@@ -699,6 +711,32 @@ function openInfo(){if(!me)return;const a=me.account||{},u=session&&session.user
   const dl=$("infoList");dl.textContent="";for(const[k,v]of rows){const dt=document.createElement("dt"),dd=document.createElement("dd");dt.textContent=k;dd.textContent=v;dl.append(dt,dd);}
   const img=$("infoAvatar");img.hidden=!a.avatar_url;if(a.avatar_url)img.src=a.avatar_url;openSheet("infoSheet");}
 $("myInfoBtn").onclick=openInfo;
+
+
+/* ---------- 첫 화면: 오늘의 행운 부적 ---------- */
+function luckHash(str){let h=2166136261;for(const ch of str){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
+function luckSeed(){let id=null;try{id=localStorage.getItem("nyang_dev");if(!id){id=Math.random().toString(36).slice(2);localStorage.setItem("nyang_dev",id);}}catch(e){id="guest";}
+  return id;}
+function luckToday(){const [y,m,d]=[new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate()],day=`${y}${m}${d}`,h=luckHash(day+"|"+luckSeed());
+  const score=52+h%48,tier=score>=88?"high":score>=70?"mid":"low",qs=LUCK_QUOTES[tier];
+  return {score,quote:qs[(h>>>7)%qs.length],num:1+(h>>>11)%9,color:LUCK_COLORS[(h>>>15)%LUCK_COLORS.length],item:LUCK_ITEMS[(h>>>19)%LUCK_ITEMS.length]};}
+let luckDone=null;
+function showLuck(r){luckDone=r;$("luckNum").textContent=r.score;$("luckQ").textContent=r.quote;$("luckBy").textContent="— 오늘의 부적냥";
+  $("luckN").textContent=r.num;$("luckC").innerHTML=`<i style="background:${r.color[1]}"></i>`;$("luckC").append(r.color[0]);$("luckI").textContent=r.item;
+  $("luckTiles").hidden=false;$("luckBtns").hidden=false;$("luckTap").textContent="내일 또";$("luck").classList.add("done");}
+$("luckDev").onclick=()=>{if(luckDone){$("luck").classList.remove("pop");void $("luck").offsetWidth;$("luck").classList.add("pop");return;}
+  const r=luckToday(),el=$("luckNum");$("luckDev").classList.add("rolling");let n=0;
+  const t=setInterval(()=>{el.textContent=10+Math.floor(Math.random()*90);if(++n>16){clearInterval(t);$("luckDev").classList.remove("rolling");showLuck(r);$("luck").classList.add("pop");
+    try{localStorage.setItem("nyang_luck_"+new Date().toDateString(),"1");}catch(e){}if(r.score>=88)celebrate(`오늘 행운점수 ${r.score}점! 🍀`);}},70);};
+try{if(localStorage.getItem("nyang_luck_"+new Date().toDateString()))showLuck(luckToday());}catch(e){}
+$("luckShare").onclick=async()=>{if(!luckDone)return;const r=luckDone,url=location.origin+(me&&me.ref_code?"/?ref="+me.ref_code:"/");
+  const title=`오늘 내 행운점수 ${r.score}점 🍀`,desc=`부적냥 한마디: "${r.quote}" 너도 뽑아봐.`;let ok=false;
+  if(KAKAO_OK){try{Kakao.Share.sendDefault({objectType:"feed",content:{title,description:desc,imageUrl:location.origin+"/share.png",imageWidth:800,imageHeight:400,link:{mobileWebUrl:url,webUrl:url}},buttons:[{title:"나도 뽑기",link:{mobileWebUrl:url,webUrl:url}}]});ok=true;}catch(e){}}
+  if(!ok){try{if(navigator.share){await navigator.share({title,text:title+" "+desc,url});ok=true;}}catch(e){if(e&&e.name==="AbortError")return;}}
+  if(!ok){try{await navigator.clipboard.writeText(title+" "+desc+" "+url);toast("링크 복사됐어! 친구한테 붙여넣어줘.");ok=true;}catch(e){}}
+  if(ok&&session){try{const x=await api("share");if(x.rewarded){await refreshMe();setTimeout(()=>toast("첫 공유 선물! 별사탕 1개 충전 🎁"),700);}}catch(e){}}};
+$("luckMore").onclick=()=>{if(needLogin())return;if(!me||!me.birth){toast("생일 알려주면 내 사주로 봐줄게!");openForm(PRODUCTS[0]);return;}
+  document.querySelector(".today").scrollIntoView({behavior:"smooth",block:"center"});$("dailyBtn").click();};
 
 /* ---------- 오늘의 운세 ---------- */
 $("dailyBtn").onclick=async()=>{if(needLogin())return;
