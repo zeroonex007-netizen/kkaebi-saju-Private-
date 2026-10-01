@@ -85,15 +85,7 @@
     <details><summary>990원 사주, 진짜 990원이에요?</summary><p>네. 모든 메뉴가 별사탕 1개(990원)예요. 추가 결제나 자동 결제 없어요. 여러 개 보고 싶으면 별사탕 5개(4,500원), 11개(9,900원) 묶음이 더 싸요.</p></details>
     <details><summary>무료로 볼 수 있는 건 뭐예요?</summary><p>맨 위 '오늘의 행운 부적'은 로그인 없이 매일 무료예요. 로그인하면 내 사주로 보는 오늘 운세, 부적냥 고민 상담, 매일 출석·복주머니 뽑기도 무료예요. 친구 초대와 공유 미션으로 별사탕을 받을 수도 있어요.</p></details>
     <details><summary>환불할 수 있어요?</summary><p>사용하지 않은 별사탕은 구매일로부터 7일 안에 전액 환불돼요. 이미 풀이를 본 별사탕과 받은 이미지 부적은 디지털 콘텐츠라 환불이 안 돼요. 오류로 풀이가 안 나오면 별사탕은 자동으로 돌려드려요.</p></details>
-    <div id="faqMore" hidden>
-    <details><summary>풀이는 뭘 근거로 만들어져요?</summary><p>양력 생년월일과 태어난 시각으로 사주 여덟 글자를 계산하고, 일간·오행의 강약·십신·합과 충 같은 명리학 기준으로 풀어요. 그래서 같은 날 태어나도 시각과 성별에 따라 풀이가 달라져요.</p></details>
-    <details><summary>태어난 시간을 몰라도 볼 수 있어요?</summary><p>볼 수 있어요. '시간 몰라'를 체크하면 시주를 빼고 나머지 여섯 글자로 풀어요. 시간을 알면 조금 더 정확해져요.</p></details>
-    <details><summary>음력 생일만 알아요.</summary><p>지금은 양력 기준이에요. 음력 생일은 포털에서 '음력 양력 변환'으로 바꿔서 넣어주세요. 음력 입력은 곧 붙일게요.</p></details>
-    <details><summary>이미지 부적은 뭐예요?</summary><p>부적냥이 내 이름을 부르며 빌어서 그려주는 폰 배경화면 부적이에요. 내 이름, 일주, 사주에서 가장 부족한 기운이 들어가요. 바라는 일이 잘 되길 비는 마음을 담은 기원 부적이라, 결과를 보장하진 않아요. 친구한테 선물할 수도 있어요.</p></details>
-    <details><summary>내 정보는 안전해요?</summary><p>생년월일과 이름은 풀이에만 쓰고, 탈퇴하면 바로 지워요. 결제 카드 정보는 토스페이먼츠가 처리해서 부적냥은 보관하지 않아요. 자세한 건 개인정보처리방침에 있어요.</p></details>
-    </div>
   </div>
-  <button class="faq-more" id="faqMoreBtn">질문 더 보기 ⌄</button>
   <div class="ask" id="askBox"></div>
 
   <p class="fine">양력 기준이며 절기는 해마다 하루 정도 차이가 날 수 있어요. 부적냥의 풀이는 명리학을 바탕으로 한 참고용이에요. 중요한 결정은 꼭 전문가와 상의해요.</p>
@@ -160,10 +152,7 @@
         <label>성별<select id="sex"><option>여</option><option>남</option></select></label>
       </div>
       <label>생년월일 (양력)<input id="birth" type="date" min="1920-01-01" max="2026-12-31" value="1998-03-15"></label>
-      <div class="row">
-        <label>태어난 시각<input id="time" type="time" value="12:00"></label>
-        <label class="check" style="align-self:end;padding-bottom:12px"><input id="noTime" type="checkbox"> 시간 몰라</label>
-      </div>
+      <label>태어난 시간 (시진)<select id="time"><option value="모름">🤷 시간 몰라요</option><option value="00:00">🐭 자시 · 밤 11시 ~ 새벽 1시</option><option value="02:00">🐮 축시 · 새벽 1시 ~ 3시</option><option value="04:00">🐯 인시 · 새벽 3시 ~ 5시</option><option value="06:00">🐰 묘시 · 새벽 5시 ~ 아침 7시</option><option value="08:00">🐲 진시 · 아침 7시 ~ 9시</option><option value="10:00">🐍 사시 · 오전 9시 ~ 11시</option><option value="12:00">🐴 오시 · 오전 11시 ~ 오후 1시</option><option value="14:00">🐑 미시 · 오후 1시 ~ 3시</option><option value="16:00">🐵 신시 · 오후 3시 ~ 5시</option><option value="18:00">🐔 유시 · 오후 5시 ~ 7시</option><option value="20:00">🐶 술시 · 저녁 7시 ~ 9시</option><option value="22:00">🐷 해시 · 밤 9시 ~ 11시</option></select></label>
     </fieldset>
     <fieldset id="partnerBox" hidden>
       <legend>상대방</legend>
@@ -531,12 +520,13 @@ $("buyBtn").onclick=async()=>{const b=$("buyBtn");b.disabled=true;
 
 /* ---------- 메뉴 입력 ---------- */
 function fill(){if(!me||!me.birth)return;$("name").value=me.name||"";$("sex").value=me.sex||"여";$("birth").value=me.birth;
-  const nt=me.birth_time==="모름";$("noTime").checked=nt;$("time").disabled=nt;if(!nt&&me.birth_time)$("time").value=me.birth_time;}
+  $("time").value=toSijin(me.birth_time);}
+// 저장된 시각(예: 03:17)을 시진 대표값(04:00)으로
+function toSijin(t){if(!t||t==="모름")return"모름";const h=Number(t.split(":")[0]),b=Math.floor((h+1)/2)%12;return String(b*2).padStart(2,"0")+":00";}
 function openForm(p){cur=p;$("formTitle").textContent=p.em+" "+p.name;$("formDesc").textContent=p.desc;$("partnerBox").hidden=!p.partner;$("loveBox").hidden=!p.love;$("purposeBox").hidden=!p.purpose;$("err").textContent="";fill();show("v-form");}
-$("noTime").onchange=e=>$("time").disabled=e.target.checked;
-function readMe(){const name=$("name").value.trim(),birth=$("birth").value,nt=$("noTime").checked;
-  if(!name)return["이름을 알려줘!"];if(!birth)return["생년월일을 골라줘!"];if(!nt&&!$("time").value)return["태어난 시각을 넣거나 '시간 몰라'를 체크해줘."];
-  return[null,{name,sex:$("sex").value,birth,time:nt?"모름":$("time").value}];}
+function readMe(){const name=$("name").value.trim(),birth=$("birth").value;
+  if(!name)return["이름을 알려줘!"];if(!birth)return["생년월일을 골라줘!"];
+  return[null,{name,sex:$("sex").value,birth,time:$("time").value||"모름"}];}
 
 function renderPillars(p){const w=$("pillars");w.textContent="";for(const[k,l]of[["hour","시"],["day","일"],["month","월"],["year","연"]]){const c=document.createElement("div");c.className="pillar";c.innerHTML=`<small>${l}주</small>`;const x=p[k];
   for(const part of["s","b"]){const d=document.createElement("div");if(x){const ch=part==="s"?STEMS[x.s]:BR[x.b],el=part==="s"?STEM_EL[x.s]:BR_EL[x.b],ko=part==="s"?STEM_KO[x.s]:BR_KO[x.b];d.className="ch e-"+el;d.textContent=ch;const i=document.createElement("i");i.textContent=ko+"·"+el;d.appendChild(i);}else{d.className="ch unk";d.textContent="?";}c.appendChild(d);}w.appendChild(c);}}
@@ -769,7 +759,6 @@ function openInfo(){if(!me)return;const a=me.account||{},u=session&&session.user
   const dl=$("infoList");dl.textContent="";for(const[k,v]of rows){const dt=document.createElement("dt"),dd=document.createElement("dd");dt.textContent=k;dd.textContent=v;dl.append(dt,dd);}
   const img=$("infoAvatar");img.hidden=!a.avatar_url;if(a.avatar_url)img.src=a.avatar_url;openSheet("infoSheet");}
 $("myInfoBtn").onclick=openInfo;
-$("faqMoreBtn").onclick=()=>{const m=$("faqMore");m.hidden=!m.hidden;$("faqMoreBtn").textContent=m.hidden?"질문 더 보기 ⌄":"접기 ⌃";};
 $("myInfoBtn2").onclick=()=>{if(needLogin())return;openInfo();};
 $("myShopBtn").onclick=()=>openShop();
 
