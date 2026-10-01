@@ -1,7 +1,7 @@
 // 공유 링크 방문 기록: 내 링크를 연 서로 다른 사람 3명 → 링크 주인에게 반짝 별사탕
 import { createHash } from "node:crypto";
-import { route, rpc, getUser, admin } from "./_lib.js";
-import { todayKST } from "../public/saju.js";
+import { route, rpc, getUser, admin } from "../_lib.js";
+import { todayKST } from "../../public/saju.js";
 
 export default route(async (req, res, _u, b) => {
   const code = typeof b.code === "string" ? b.code.slice(0, 16) : "";

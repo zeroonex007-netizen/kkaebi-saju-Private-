@@ -1,7 +1,7 @@
 // 990원 메뉴 풀이: 별사탕 1개 차감 → AI 풀이 → 실패하면 환불
-import { route, admin, rpc, claude, parseJSON, isDate, isTime, isSex, clip } from "./_lib.js";
-import { sajuOf, gz, elCount, goodDays, todayKST, cardOf, STEM_KO, STEM_EL } from "../public/saju.js";
-import { PRODUCTS, SYS, LOVE_STATES, PURPOSES } from "../public/products.js";
+import { route, admin, rpc, claude, parseJSON, isDate, isTime, isSex, clip } from "../_lib.js";
+import { sajuOf, gz, elCount, goodDays, todayKST, cardOf, STEM_KO, STEM_EL } from "../../public/saju.js";
+import { PRODUCTS, SYS, LOVE_STATES, PURPOSES } from "../../public/products.js";
 
 export default route(async (req, res, user, b) => {
   const prod = PRODUCTS.find((p) => p.id === b.product);

@@ -1,5 +1,5 @@
 // 토스페이먼츠 결제 승인 → 별사탕 충전 (같은 주문은 한 번만 충전)
-import { route, admin, rpc } from "./_lib.js";
+import { route, admin, rpc } from "../_lib.js";
 
 export default route(async (req, res, user, b) => {
   const { paymentKey, orderId } = b;

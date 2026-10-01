@@ -1,5 +1,5 @@
 // 네이버 로그인 완료: 네이버 계정 확인 → Supabase 회원 생성/조회 → 일회용 로그인 토큰을 붙여 사이트로 돌려보냄
-import { admin } from "./_lib.js";
+import { admin } from "../_lib.js";
 
 const back = (res, q) => res.redirect(302, "/?" + new URLSearchParams(q));
 

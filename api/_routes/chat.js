@@ -1,7 +1,7 @@
 // 깨비 수다: 하루 1회 무료, 이후 질문당 별사탕 1개
-import { route, admin, rpc, claude, clip } from "./_lib.js";
-import { sajuOf, gz, elCount } from "../public/saju.js";
-import { SYS } from "../public/products.js";
+import { route, admin, rpc, claude, clip } from "../_lib.js";
+import { sajuOf, gz, elCount } from "../../public/saju.js";
+import { SYS } from "../../public/products.js";
 
 export default route(async (req, res, user, b) => {
   const raw = Array.isArray(b.messages) ? b.messages.slice(-12) : [];

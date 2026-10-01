@@ -1,5 +1,5 @@
 // 깨비 패스 해지: 다음 결제부터 멈춤, 이미 낸 기간까지는 혜택 유지
-import { route, admin } from "./_lib.js";
+import { route, admin } from "../_lib.js";
 
 export default route(async (req, res, user) => {
   const { data } = await admin.from("subscriptions")

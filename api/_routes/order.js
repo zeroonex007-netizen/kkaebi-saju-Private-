@@ -1,7 +1,7 @@
 // 결제 주문 만들기: 가격은 서버의 PACKS 기준으로만 정함
-import { route, admin } from "./_lib.js";
+import { route, admin } from "../_lib.js";
 import { randomBytes } from "node:crypto";
-import { PACKS } from "../public/products.js";
+import { PACKS } from "../../public/products.js";
 
 export default route(async (req, res, user, b) => {
   const pack = PACKS.find((p) => p.id === b.pack);

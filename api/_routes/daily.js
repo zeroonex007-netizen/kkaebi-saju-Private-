@@ -1,7 +1,7 @@
 // 오늘의 무료 운세 (하루 한 번 만들어 저장해 두고 재사용)
-import { route, admin, rpc, claude } from "./_lib.js";
-import { sajuOf, gz, dayP, todayKST, STEM_EL } from "../public/saju.js";
-import { SYS } from "../public/products.js";
+import { route, admin, rpc, claude } from "../_lib.js";
+import { sajuOf, gz, dayP, todayKST, STEM_EL } from "../../public/saju.js";
+import { SYS } from "../../public/products.js";
 
 const COLORS = ["민트", "라벤더", "코랄", "레몬", "하늘", "크림", "체리", "올리브", "네이비", "피치"];
 const MENUS = ["떡볶이", "쌀국수", "김치찌개", "돈가스", "샐러드", "마라탕", "초밥", "제육볶음", "파스타", "국밥", "햄버거", "비빔밥"];

@@ -1,6 +1,6 @@
 // 후기 작성 → 별사탕 조각 +1 (메뉴당 1회)
-import { route, admin, rpc, clip } from "./_lib.js";
-import { PRODUCTS } from "../public/products.js";
+import { route, admin, rpc, clip } from "../_lib.js";
+import { PRODUCTS } from "../../public/products.js";
 
 export default route(async (req, res, user, b) => {
   const body = clip(b.body, 300), stars = Number(b.stars);
