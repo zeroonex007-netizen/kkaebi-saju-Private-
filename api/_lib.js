@@ -80,3 +80,22 @@ async function toss(path, body) {
 export const issueBillingKey = (authKey, customerKey) => toss("/v1/billing/authorizations/issue", { authKey, customerKey });
 export const chargeBilling = (billingKey, customerKey, amount, orderId, orderName) =>
   toss("/v1/billing/" + encodeURIComponent(billingKey), { customerKey, amount, orderId, orderName });
+
+// Google Gemini (무료 사용량 있음). GEMINI_API_KEY가 있을 때만 사용
+export async function gemini({ system, messages, max_tokens = 700 }) {
+  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: system }] },
+      contents: messages.map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] })),
+      generationConfig: { maxOutputTokens: max_tokens, temperature: 0.9, thinkingConfig: { thinkingBudget: 0 } },
+    }),
+  });
+  if (!r.ok) throw new Error("gemini " + r.status + " " + (await r.text()).slice(0, 300));
+  const j = await r.json();
+  const text = (j.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
+  if (!text) throw new Error("gemini empty");
+  return text;
+}

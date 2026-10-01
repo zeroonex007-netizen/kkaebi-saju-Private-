@@ -195,9 +195,60 @@ const isYuk = (a, b) => (a + b) % 12 === 1;                      // 육합 (자�
 const isSam = (a, b) => a !== b && a % 4 === b % 4;              // 삼합
 const isChung = (a, b) => (a - b + 12) % 12 === 6;               // 충
 
+/* ── 여덟 글자 깊이 보기: 십신 분포 · 신강/신약 · 계절 · 신살 ── */
+const GROUP_OF = { 비견: "비겁", 겁재: "비겁", 식신: "식상", 상관: "식상", 편재: "재성", 정재: "재성", 편관: "관성", 정관: "관성", 편인: "인성", 정인: "인성" };
+const GROUP_MANY = {
+  비겁: "비겁이 많아서 자존심 세고 독립심이 강함. 남 밑에 있기보다 내 판을 짜야 행복함. 대신 돈이랑 사람을 나눌 일이 많아서 동업은 조심.",
+  식상: "식상이 많아서 말 잘하고 끼가 많음. 표현하는 일, 만드는 일에서 빛남. 대신 말이 앞서서 오해 살 때가 있음.",
+  재성: "재성이 많아서 돈 감각이 좋고 현실적임. 사람도 돈도 잘 굴림. 대신 욕심낼 때 체력이 먼저 나감.",
+  관성: "관성이 많아서 책임감 강하고 규칙을 잘 지킴. 조직에서 인정받는 타입. 대신 스스로를 너무 몰아붙임.",
+  인성: "인성이 많아서 배우는 걸 좋아하고 생각이 깊음. 공부·자격증 운이 좋음. 대신 생각만 하다 타이밍을 놓칠 수 있음.",
+};
+const GROUP_NONE = {
+  비겁: "비겁이 없어서 혼자 다 짊어지는 편. 도와달라는 말을 연습해.",
+  식상: "식상이 없어서 속마음 표현이 서툶. 하고 싶은 말은 글로 먼저 써봐.",
+  재성: "재성이 없어서 돈 관리가 귀찮게 느껴짐. 자동이체로 모으는 게 정답.",
+  관성: "관성이 없어서 자유로운 영혼. 틀에 맞추는 곳보다 내 방식이 통하는 곳이 맞음.",
+  인성: "인성이 없어서 남한테 기대는 게 서툶. 대신 혼자 터득하는 힘은 최고.",
+};
+const SEASON = [["겨울", "차분하고 속이 깊음. 겉으론 조용해도 머릿속은 바쁨."], ["봄", "새로 시작하는 기운이 강함. 뭔가 키우고 벌이는 걸 좋아함."], ["여름", "에너지가 밖으로 뻗음. 사람 만나고 움직일 때 살아남."], ["가을", "맺고 끊는 감각이 좋음. 정리하고 결과 내는 데 강함."]];
+const seasonOf = (b) => [0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 0][b];   // 지지 → 계절 (인묘진 봄 …)
+const STARS = {
+  도화: "도화살 있음. 사람을 끄는 매력을 타고남. 인기 많고 연애 기회도 많음. 대신 오해 살 일도 많으니 선은 확실히.",
+  역마: "역마살 있음. 한곳에 오래 있으면 답답함. 이동·여행·해외·외근이 많은 일에서 운이 커짐.",
+  화개: "화개살 있음. 혼자만의 세계가 깊고 예술·공부 감각이 있음. 혼자 있는 시간이 곧 충전임.",
+  귀인: "천을귀인 있음. 힘들 때 꼭 도와주는 사람이 나타나는 사주. 이건 진짜 큰 복임.",
+};
+const GWIIN = [[1, 7], [0, 8], [11, 9], [11, 9], [1, 7], [0, 8], [1, 7], [2, 6], [5, 3], [5, 3]];   // 일간별 천을귀인 지지
+function deep(p) {
+  const ds = p.day.s, items = [];
+  for (const k of ["year", "month", "hour"]) if (p[k]) items.push([tenGod(ds, p[k].s), 1]);
+  for (const k of ["year", "month", "day", "hour"]) if (p[k]) items.push([tenGod(ds, MAIN_STEM[p[k].b]), k === "month" ? 2 : 1]);
+  const cnt = { 비겁: 0, 식상: 0, 재성: 0, 관성: 0, 인성: 0 };
+  let support = 0, total = 0;
+  for (const [t, wgt] of items) { cnt[GROUP_OF[t]]++; total += wgt; if (["비겁", "인성"].includes(GROUP_OF[t])) support += wgt; }
+  const strong = support * 2 >= total;
+  const keys = ["year", "month", "day", "hour"].filter((k) => p[k]), brs = keys.map((k) => p[k].b);
+  const stars = [];
+  for (const bk of ["year", "day"]) {   // 연지·일지 기준, 다른 기둥에 있을 때만
+    const g = p[bk].b % 4, others = keys.filter((k) => k !== bk).map((k) => p[k].b);   // 신자진(0) 사유축(1) 인오술(2) 해묘미(3)
+    const dohwa = [9, 6, 3, 0][g], yeokma = [2, 11, 8, 5][g], hwagae = [4, 1, 10, 7][g];
+    if (others.includes(dohwa) && !stars.includes("도화")) stars.push("도화");
+    if (others.includes(yeokma) && !stars.includes("역마")) stars.push("역마");
+    if (others.includes(hwagae) && !stars.includes("화개")) stars.push("화개");
+  }
+  if (brs.some((b) => GWIIN[ds].includes(b))) stars.push("귀인");
+  const many = Object.keys(cnt).filter((g) => cnt[g] >= 3), none = Object.keys(cnt).filter((g) => cnt[g] === 0);
+  return { cnt, strong, stars, many, none, season: SEASON[seasonOf(p.month.b)] };
+}
+const STRENGTH = {
+  true: "신강한 사주라 기운이 셈. 밀어붙이는 힘이 있으니까, 그 힘을 밖으로 쓰는 일(표현·돈·도전)에서 운이 열림.",
+  false: "신약한 사주라 섬세하고 주변 기운을 잘 받음. 좋은 사람, 좋은 환경 옆에 있을 때 운이 확 핌. 무리하지 말고 내 편부터 만들어.",
+};
+
 function base(me) {
   const p = sajuOf(me.birth, me.time), c = elCount(p), w = weakEl(c), st = strongEl(c);
-  return { p, c, w, st, s: p.day.s, b: p.day.b, name: me.name };
+  return { p, c, w, st, s: p.day.s, b: p.day.b, name: me.name, dp: deep(p) };
 }
 function summaryOf(x) {
   return `겉은 ${OUTER[x.s]}, 속은 ${INNER_ANIMAL[x.b]}. ${x.name}, 너 딱 이거임.\n${STRONG[x.st]} 반대로 ${x.w}(${"木火土金水"["목화토금수".indexOf(x.w)]}) 기운이 제일 적어서, ${EL_RX[x.w].why}`;
@@ -205,12 +256,14 @@ function summaryOf(x) {
 
 /* ── 메뉴별 조합 ── */
 function readSaju(x, b) {
+  const D = x.dp, line = (g) => (D.many.includes(g) ? GROUP_MANY[g] : D.none.includes(g) ? GROUP_NONE[g] : "");
   return {
-    summary: summaryOf(x),
-    personality: `${CORE[x.s]} ${INNER[x.b]}`,
-    money: MONEY[x.s],
-    work: WORK[x.s],
+    summary: summaryOf(x) + "\n" + STRENGTH[D.strong],
+    personality: [CORE[x.s], INNER[x.b], `${D.season[0]}에 태어나서 ${D.season[1]}`, line("비겁"), line("인성")].filter(Boolean).join(" "),
+    money: [MONEY[x.s], line("재성")].filter(Boolean).join(" "),
+    work: [WORK[x.s], line("관성"), line("식상")].filter(Boolean).join(" "),
     people: PEOPLE[x.s],
+    stars: D.stars.length ? D.stars.map((k) => STARS[k]).join(" ") : "특별한 살은 안 보임. 대신 기복이 적고 꾸준한 사주라 오래갈수록 유리함.",
     advice: [worryLine(b.worry), `부족한 ${x.w} 기운은 ${EL_FILL[x.w]}로 채우면 됨.`, CLOSER[x.s]].filter(Boolean).join(" "),
   };
 }
@@ -223,9 +276,10 @@ function readLove(x, b, me) {
     const M = ((m - 1 + i) % 12) + 1, Y = y + Math.floor((m - 1 + i) / 12), mp = monthP(Y, M);
     if (loveTg.includes(tenGod(x.s, mp.s)) || isYuk(mp.b, x.b) || isSam(mp.b, x.b)) months.push(`${Y !== y ? Y + "년 " : ""}${M}월`);
   }
-  const state = LOVE_NOW[b.loveState] ? b.loveState : "솔로";
+  const state = LOVE_NOW[b.loveState] ? b.loveState : "솔로", D = x.dp, lg = me.sex === "여" ? "관성" : "재성";
+  const loveCnt = D.cnt[lg], loveLine = loveCnt >= 3 ? "사주에 연애 별이 많아서 다가오는 사람이 많음. 고르는 눈이 중요함." : loveCnt === 0 ? "사주에 연애 별이 적어서 늦게 피는 타입. 대신 한번 만나면 오래 감." : "";
   return {
-    style: `${LOVE_STYLE[x.s]} ${INNER[x.b]}`,
+    style: [LOVE_STYLE[x.s], INNER[x.b], D.stars.includes("도화") ? "그리고 도화살 있음. 가만있어도 사람이 꼬이는 매력이 있음." : "", loveLine].filter(Boolean).join(" "),
     match: `${SPOUSE[x.b]}이랑 제일 잘 맞음. 띠로 치면 ${animals}띠가 찰떡. 그리고 너한테 부족한 ${x.w} 기운을 가진 사람, 그러니까 ${EL_PERSON[x.w]} 만나면 서로 채워줌.`,
     timing: months.length ? `인연 기운이 들어오는 달은 ${months.join(", ")}. 이때 소개팅이나 모임 들어오면 귀찮아도 나가. 니 사주에서 연애 별이 반짝이는 때임.` : "올해는 연애 별이 조용한 편. 대신 내 매력 키우는 시기라 내년에 몰아서 들어옴.",
     now: LOVE_NOW[state],
@@ -336,13 +390,17 @@ const CHAT_CAT = [
   ["study", /시험|공부|합격|수능|자격증|대학|성적|토익|학점|과제|재수|편입|공시|임용/],
   ["people", /친구|엄마|아빠|부모|가족|동료|인간관계|사람들|손절|서운|싸웠|무시|눈치/],
   ["health", /아파|아프|병원|다이어트|살 ?빼|몸이|두통|감기/],
-  ["tired", /우울|불안|힘들|지쳐|지침|외로|자존감|스트레스|잠이|무기력|번아웃|울었|눈물|짜증/],
+  ["move", /이사|자취|독립|집 ?(구|계약|보러)|전세|월세방/],
+  ["travel", /여행|해외|비행기|휴가|유학|워홀/],
+  ["looks", /외모|성형|피부|머리 ?(스타일|자를|염색)|살쪘|못생|예뻐지|잘생|다이어트/],
+  ["pet", /강아지|반려|댕댕|냥이|키울까|입양/],
+  ["tired", /우울|불안|힘들|지쳐|지침|외로|자존감|스트레스|잠이|무기력|번아웃|울었|눈물|짜증|하기 ?싫|의욕|귀찮|공허/],
   ["thanks", /고마|감사|ㄳ|땡큐|최고|좋았어|맞았어|소름/],
   ["greet", /^(안녕|하이|ㅎㅇ|헬로|반가|hello|hi)/i],
   ["laugh", /^[ㅋㅎ]+$|웃기|ㅋㅋㅋ/],
   ["who", /너 ?누구|넌 ?뭐|부적냥(이)? ?(뭐|누구)|고양이야/],
 ];
-const YESNO = /할까|될까|해도 ?돼|해도 ?될까|말까|괜찮을까|갈까|살까|사도 ?돼|보낼까|그만둘까|헤어질까|만날까|해야 ?(돼|할까)|하는 ?게 ?(나을까|맞을까)/;
+const YESNO = /키울까|할까|될까|해도 ?돼|해도 ?될까|말까|괜찮을까|갈까|살까|사도 ?돼|보낼까|그만둘까|헤어질까|만날까|해야 ?(돼|할까)|하는 ?게 ?(나을까|맞을까)/;
 const EMP = {
   love: ["아 그거 신경 쓰이지. 연애 고민은 밤에 더 커짐.", "그 마음 앎. 별거 아닌 척해도 하루 종일 생각나는 거.", "연애 얘기네. 부적냥 귀 쫑긋함."],
   money: ["돈 얘기는 현실이라 더 무겁지.", "통장 보면 한숨 나오는 거 정상임. 다들 그럼.", "돈 고민이네. 진지하게 들어줌."],
@@ -351,6 +409,10 @@ const EMP = {
   people: ["사람 때문에 지치는 게 제일 지치는 거임.", "그 사람 때문에 마음 쓰였구나.", "관계 고민은 정답이 없어서 더 어렵지."],
   tired: ["오늘 많이 버텼네. 일단 그거부터 잘했음.", "힘들다고 말한 거 잘했어. 그것도 용기임.", "지친 날엔 부적냥처럼 좀 누워도 됨."],
   health: ["몸 상태가 안 좋으면 다 안 좋아 보이지.", "아픈 건 참지 말고 챙겨야 됨."],
+  move: ["이사는 새 판 짜는 거라 설레면서 무섭지.", "집 문제는 돈이랑 생활이 다 걸려서 신중해지는 게 맞음."],
+  travel: ["여행 얘기 좋다. 부적냥도 따라가고 싶음.", "떠나고 싶을 땐 이유가 있음."],
+  looks: ["거울 볼 때마다 신경 쓰이는 거 앎.", "외모 고민은 남들이 생각보다 신경 안 씀. 근데 니 기분은 중요함."],
+  pet: ["반려동물 얘기면 부적냥 귀 쫑긋함. 나도 고양이임.", "한 생명 책임지는 거라 고민되는 게 당연함."],
 };
 const STUDY = ["넌 목표 정하면 끝까지 가는 타입이라 계획표가 무기임.", "넌 같이 하면 잘하는 타입. 스터디나 친구랑 하면 효율 두 배.", "넌 기분 좋을 때 몰아서 잘하는 타입. 컨디션 관리가 곧 공부임.",
   "넌 한 번 꽂히면 깊게 파는 타입. 범위를 좁히면 확 올라감.", "넌 느리지만 안 무너지는 타입. 꾸준함으로 이김.", "넌 정리 잘하는 타입. 오답 노트가 제일 잘 맞음.",
@@ -366,6 +428,10 @@ const ACTION = {
   people: ["서운한 거 하나만, 탓하지 말고 '나는 ~해서 서운했어'로 말해봐.", "오늘은 그 사람 말고 니 편인 사람한테 연락해.", "답 없는 관계는 잠깐 음소거해도 됨."],
   tired: ["따뜻한 거 마시고 오늘은 일찍 누워.", "폰 내려놓고 10분만 창밖 보기.", "좋아하는 노래 한 곡 크게 듣기. 그게 오늘 숙제."],
   health: ["몸이 계속 안 좋으면 병원부터 가. 부적냥은 의사가 아님.", "오늘은 물 많이 마시고 푹 자."],
+  move: ["계약 전엔 낮이랑 밤에 한 번씩 가봐. 동네 분위기가 다름.", "이사 날짜는 990원 택일 메뉴에서 '이사'로 골라봐."],
+  travel: ["가고 싶은 곳 세 군데 적고, 제일 먼저 떠오른 데로 가.", "짐은 반만 싸. 나머진 거기서 해결됨."],
+  looks: ["오늘 하나만 바꿔봐. 머리든 립이든. 기분이 운을 바꿈.", "큰 결정(시술 같은 거)은 한 달 고민하고, 전문가 상담 두 군데 받아봐."],
+  pet: ["입양 전에 하루 루틴에 산책·밥·병원비 넣어서 계산해봐.", "보호소 입양도 생각해봐. 인연은 거기서도 옴."],
 };
 const ASK = {
   love: ["근데 그 사람이랑 지금 어떤 사이야? 썸? 연애 중?", "니 마음은 몇 퍼센트야? 솔직하게.", "마지막으로 연락한 게 언제야?"],
@@ -375,6 +441,10 @@ const ASK = {
   people: ["그 사람이랑은 원래 친했어?", "그 일 있고 나서 연락은 해봤어?"],
   tired: ["요즘 잠은 잘 자?", "이런 기분 며칠째야?"],
   health: ["병원은 가봤어?"],
+  move: ["혼자 사는 거야, 같이 사는 거야?", "언제쯤 옮기려고?"],
+  travel: ["누구랑 가? 혼자? 친구?", "가고 싶은 데 있어?"],
+  looks: ["제일 바꾸고 싶은 데가 어디야?"],
+  pet: ["강아지파야 고양이파야? 부적냥은 당연히 고양이파."],
 };
 const pick = (arr, seed, used = "") => { for (let k = 0; k < arr.length; k++) { const v = arr[(Math.abs(seed) + k) % arr.length]; if (!used.includes(v)) return v; } return arr[Math.abs(seed) % arr.length]; };
 const BIG = /그만둘|퇴사|헤어질|이혼|투자|대출|코인|주식|사업|창업|자퇴|휴학/;
@@ -390,6 +460,21 @@ function intentReply(q, pr, name, seed, said) {
   const has = pr && pr.birth, p = has ? sajuOf(pr.birth, pr.birth_time || "모름") : null, w = has ? weakEl(elCount(p)) : null;
   const [y, m, d] = todayKST(), today = dayP(y, m, d), tg = has ? tenGod(p.day.s, today.s) : null;
   const needBirth = "생일 알려주면 니 사주로 맞춰줄게. 메뉴 하나 보면 자동 저장됨.";
+  const X = has ? base({ name: name || "너", birth: pr.birth, time: pr.birth_time || "모름", sex: pr.sex }) : null;
+  if (/도화|역마|화개|귀인|무슨 ?살|살 ?(있|뭐)/.test(q)) {
+    if (!has) return `그거 니 사주 보면 바로 앎. ${needBirth}`;
+    const asked = ["도화", "역마", "화개", "귀인"].filter((k) => q.includes(k)), out = [];
+    for (const k of asked) if (!X.dp.stars.includes(k)) out.push(k === "도화" ? "도화살은 없음. 대신 오래 볼수록 매력이 드러나는 타입이라, 첫인상보다 두 번째 만남에서 이김." : `${k === "귀인" ? "천을귀인" : k + "살"}은 니 사주엔 없음.`);
+    const have = X.dp.stars.map((k) => STARS[k]);
+    return [...out, have.length ? (out.length ? "대신 이건 있음.\n" : "") + have.join("\n") : "특별한 살은 안 보임. 대신 기복이 적고 꾸준해서 오래갈수록 유리함."].join("\n");
+  }
+  if (/신강|신약|기운이? ?(세|약|강)/.test(q)) return has ? STRENGTH[X.dp.strong] : `그거 니 사주 보면 바로 앎. ${needBirth}`;
+  if (/용신|부족한 ?기운|오행|무슨 ?기운/.test(q)) return has ? `니 사주 오행은 ${Object.entries(X.c).map(([k, v]) => k + " " + v).join(" · ")}.\n제일 적은 건 ${X.w} 기운이라 ${EL_RX[X.w].why}\n채우는 법: ${EL_FILL[X.w]}.` : `그거 니 사주 보면 바로 앎. ${needBirth}`;
+  if (/올해|내년|이번 ?해|20\d\d년/.test(q) && /운|어때|어떨/.test(q)) { if (!has) return `올해 운은 니 사주로 봐야 함. ${needBirth}`; const Y = readYearly(X); return `${Y.overall}\n${Y.luck}\n${Y.caution}\n\n달별로 자세히는 990원 연운 메뉴에 다 있음.`; }
+  if (/대운|10년|십년/.test(q)) { if (!has || !pr.sex) return `대운은 생일이랑 성별이 필요함. ${needBirth}`; const D = readDaewoon(X, {}, { birth: pr.birth, sex: pr.sex }); return `${D.now}\n${D.rise}\n\n자세히는 990원 대운 메뉴에서.`; }
+  if (/궁합|잘 ?맞(아|을까|나)|무슨 ?띠/.test(q)) { if (!has) return `궁합은 니 생일부터 알아야 함. ${needBirth}`; const L = readLove(X, {}, { sex: pr.sex || "여" }); return `${L.match}\n\n특정한 사람이랑 궁합은 990원 궁합 메뉴에 그 사람 생일 넣으면 점수까지 나와.`; }
+  if (/좋은 ?날|길일|택일|날짜 ?(잡|골라|추천)|날 ?잡/.test(q)) { if (!has) return `좋은 날은 니 사주로 골라야 함. ${needBirth}`; const g = goodDays(X.p, 3); return `너한테 좋은 날: ${g.map((v) => v.label).join(", ")}.\n고백·이사·면접처럼 목적이 있으면 990원 택일 메뉴에서 목적 골라. 이유까지 알려줌.`; }
+  if (/성격|나 ?(어때|어떤 ?애)|내 ?장점|내 ?단점/.test(q)) return has ? `${CORE[X.s]}\n${INNER[X.b]}` + (X.dp.many.length ? "\n" + GROUP_MANY[X.dp.many[0]] : "") : `니 성격은 사주에 다 나와 있음. ${needBirth}`;
   if (/로또|복권|연금복권|번호 ?(찍|뽑|추천)|행운 ?번호/.test(q)) {
     let h = hashStr((pr && pr.birth || "x") + `${y}${m}${d}`), nums = new Set();
     if (w) { nums.add(EL_NUM[w][0]); nums.add(EL_NUM[w][1] + 10 * (Math.abs(h) % 3)); }
@@ -451,7 +536,7 @@ export function chatReply(messages, pr) {
     const p = sajuOf(pr.birth, pr.birth_time || "모름"), s0 = p.day.s, w = weakEl(elCount(p));
     const [y, m, d] = todayKST(), tg = tenGod(s0, dayP(y, m, d).s);
     const first = (t) => t.split(". ")[0] + ".";
-    const insight = { love: first(LOVE_STYLE[s0]) + ` 그러니까 너한테 필요한 건 ${LOVE_TIP[s0]}.`, money: first(MONEY[s0]), work: first(WORK[s0]), people: first(PEOPLE[s0]), study: STUDY[s0], tired: COMFORT[s0] }[cat];
+    const insight = !cat ? `${first(CORE[s0])} ${STRENGTH[deep(p).strong].split(". ")[0]}.` : { love: first(LOVE_STYLE[s0]) + ` 그러니까 너한테 필요한 건 ${LOVE_TIP[s0]}.`, money: first(MONEY[s0]), work: first(WORK[s0]), people: first(PEOPLE[s0]), study: STUDY[s0], tired: COMFORT[s0], move: deep(p).stars.includes("역마") ? "역마살이 있어서 옮기면 운이 트이는 타입임." : "넌 자리 잡으면 오래 가는 타입이라 신중하게 골라.", travel: deep(p).stars.includes("역마") ? "역마살 있음. 떠나야 충전되는 사주임." : "넌 여행 가서 생각 정리되는 타입." }[cat];
     if (insight && !said.includes(insight)) parts.push(`니 사주로 보면, ${insight}`);
     if (YESNO.test(q) && BIG.test(q + " " + msgs.map((x) => x.content || "").join(" ").slice(-200))) {
       parts.push(`이건 큰 결정이라 부적냥이 대신 정해주면 안 됨. 결정은 니가 해. 대신 오늘 기운은 이래: ${TODAY[tg][0]} 큰 결정은 일주일만 묵히고, 필요하면 믿을 만한 사람이나 전문가한테도 한 번 물어봐.`);
@@ -475,3 +560,17 @@ export function chatReply(messages, pr) {
   else if (!cat) parts.push("조금만 더 자세히 말해줘. 연애야, 돈이야, 일이야, 사람이야?");
   return parts.join("\n");
 }
+
+// AI 상담용: 이 사람 사주 요약 (일주·오행·신강약·십신·살·오늘 기운)
+export function sajuContext(pr) {
+  if (!pr || !pr.birth) return "";
+  const x = base({ name: pr.name || "친구", birth: pr.birth, time: pr.birth_time || "모름", sex: pr.sex }), D = x.dp;
+  const [y, m, d] = todayKST(), t = dayP(y, m, d), tg = tenGod(x.s, t.s), ytg = tenGod(x.s, yearP(y).s);
+  return [`이름 ${pr.name || "친구"}${pr.sex ? "(" + pr.sex + ")" : ""}, 양력 ${pr.birth} ${pr.birth_time || "시간 모름"}`,
+    `사주: 연 ${gz(x.p.year)} 월 ${gz(x.p.month)} 일 ${gz(x.p.day)} 시 ${gz(x.p.hour)}`,
+    `일간 ${STEM_KO[x.s]}(${STEM_EL[x.s]}), 오행 ${JSON.stringify(x.c)}, 가장 부족한 기운 ${x.w}, 가장 강한 기운 ${x.st}`,
+    `${D.strong ? "신강" : "신약"}, 십신 분포 ${JSON.stringify(D.cnt)}, 태어난 계절 ${D.season[0]}`,
+    `신살: ${D.stars.length ? D.stars.map((k) => (k === "귀인" ? "천을귀인" : k + "살")).join(", ") : "없음"}`,
+    `오늘 ${y}-${m}-${d} ${gz(t)}일 → 이 사람에게 ${tg}, 올해 세운은 ${ytg}`].join("\n");
+}
+export { CHAT_CAT };
