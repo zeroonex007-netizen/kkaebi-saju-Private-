@@ -4,7 +4,7 @@ window.KKAEBI_CONFIG = {
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1bGlucWN1Y3ZqcXRuY3VzcW9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4MzA1NzAsImV4cCI6MjEwNjQwNjU3MH0.bDmMLrjJGIGxgMYLInlON44hcizO2qeEeEy6p8oYEyk",
   // 토스페이먼츠 결제위젯 '클라이언트 키'. 아래는 토스 문서용 테스트 키 (실제 돈 안 나감)
   // 카카오 디벨로퍼스 > 앱 > 플랫폼 키 > JavaScript 키 (공개해도 되는 키)
-  KAKAO_JS_KEY: "6d27b6bb085994fc5c94d499391e2209",
+  KAKAO_JS_KEY: "23c4b202999b38c56e3efc0b24d0c363",
   TOSS_CLIENT_KEY: "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm",
   // 부적 패스(월 구독) 카드 등록용 "API 개별 연동" 클라이언트 키. 아래는 토스 문서용 테스트 키 (실제 돈 안 나감)
   TOSS_BILLING_CLIENT_KEY: "test_ck_docs_Ovk5rk1EwkEbP0W43n07xlzm",
