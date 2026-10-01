@@ -82,20 +82,26 @@ export const chargeBilling = (billingKey, customerKey, amount, orderId, orderNam
   toss("/v1/billing/" + encodeURIComponent(billingKey), { customerKey, amount, orderId, orderName });
 
 // Google Gemini (무료 사용량 있음). GEMINI_API_KEY가 있을 때만 사용
-export async function gemini({ system, messages, max_tokens = 700 }) {
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
-  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: system }] },
-      contents: messages.map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] })),
-      generationConfig: { maxOutputTokens: max_tokens, temperature: 0.9, thinkingConfig: { thinkingBudget: 0 } },
-    }),
-  });
-  if (!r.ok) throw new Error("gemini " + r.status + " " + (await r.text()).slice(0, 300));
-  const j = await r.json();
-  const text = (j.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
-  if (!text) throw new Error("gemini empty");
-  return text;
+// 구글이 모델을 자주 바꿔서, 안 되는 모델이면 다음 후보로 자동으로 넘어감
+const GEMINI_MODELS = () => [process.env.GEMINI_MODEL, "gemini-flash-latest", "gemini-3.8-flash", "gemini-flash-lite-latest"].filter(Boolean);
+export async function gemini({ system, messages, max_tokens = 2048 }) {
+  let last = null;
+  for (const model of GEMINI_MODELS()) {
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: system }] },
+        contents: messages.map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] })),
+        generationConfig: { maxOutputTokens: max_tokens, temperature: 0.9 },
+      }),
+    });
+    if (r.status === 404 || r.status === 400) { last = new Error(`gemini ${r.status} ${model}: ` + (await r.text()).slice(0, 160)); continue; }
+    if (!r.ok) throw new Error(`gemini ${r.status} ${model}: ` + (await r.text()).slice(0, 160));
+    const j = await r.json();
+    const text = (j.candidates?.[0]?.content?.parts || []).filter((p) => !p.thought).map((p) => p.text || "").join("").trim();
+    if (text) return text;
+    last = new Error(`gemini empty ${model}`);
+  }
+  throw last || new Error("gemini no model");
 }
