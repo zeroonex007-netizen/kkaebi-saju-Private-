@@ -48,14 +48,14 @@ export const SUB = {
 };
 
 // ── 이미지 부적 (폰 배경화면, 별사탕 1개 = 990원) ──
-// 효능 보장 문구 금지(표시광고법): "응원용·재미로" 톤만 사용
+// 부적냥이 진심으로 빌어주는 기원 부적. 단, "반드시 ~된다" 같은 결과 보장 표현은 쓰지 않음(표시광고법)
 export const AMULETS = [
-  { id: "money",  name: "재물부적",  hanja: "財", big: "재물", paper: "#FFD648", ink: "#CD261E", line: "통장에 운 충전 중",     wish: "이번 달 수입이 지출을 이기기를" },
-  { id: "love",   name: "연애부적",  hanja: "戀", big: "연애", paper: "#FFC4CE", ink: "#C41E4A", line: "먼저 연락 오길 빌어드림", wish: "답장 3분 안에 오기를" },
-  { id: "pass",   name: "합격부적",  hanja: "合", big: "합격", paper: "#CFE3FF", ink: "#1F4FB0", line: "찍은 것도 맞기를",       wish: "시험장에서 머리 하얘지지 않기를" },
-  { id: "job",    name: "취뽀부적",  hanja: "就", big: "취뽀", paper: "#D6F2DE", ink: "#1E7A45", line: "서류 광탈 금지",         wish: "최종 합격 문자 오기를" },
-  { id: "people", name: "귀인부적",  hanja: "貴", big: "귀인", paper: "#F4E4C1", ink: "#8A5A12", line: "좋은 사람만 걸리기를",   wish: "도와줄 사람이 먼저 나타나기를" },
-  { id: "guard",  name: "무탈부적",  hanja: "安", big: "무탈", paper: "#E6DBFF", ink: "#5B2DA8", line: "이상한 사람 접근 금지",  wish: "오늘도 무사히 집에 가기를" },
+  { id: "money",  name: "재물부적",  hanja: "財", big: "재물", paper: "#FFD648", ink: "#CD261E", line: "통장에 운 충전 중",     wish: "이번 달 수입이 지출을 이기기를", pray: "손에 들어온 복이 새지 않고 오래오래 머물기를" },
+  { id: "love",   name: "연애부적",  hanja: "戀", big: "연애", paper: "#FFC4CE", ink: "#C41E4A", line: "먼저 연락 오길 빌어드림", wish: "답장 3분 안에 오기를", pray: "마음이 닿아야 할 사람에게 꼭 닿기를" },
+  { id: "pass",   name: "합격부적",  hanja: "合", big: "합격", paper: "#CFE3FF", ink: "#1F4FB0", line: "찍은 것도 맞기를",       wish: "시험장에서 머리 하얘지지 않기를", pray: "그동안 쌓아온 노력이 그날 다 보이기를" },
+  { id: "job",    name: "취뽀부적",  hanja: "就", big: "취뽀", paper: "#D6F2DE", ink: "#1E7A45", line: "서류 광탈 금지",         wish: "최종 합격 문자 오기를", pray: "나를 알아봐 주는 곳에서 좋은 소식이 오기를" },
+  { id: "people", name: "귀인부적",  hanja: "貴", big: "귀인", paper: "#F4E4C1", ink: "#8A5A12", line: "좋은 사람만 걸리기를",   wish: "도와줄 사람이 먼저 나타나기를", pray: "곁에 좋은 사람이 먼저 손 내밀어 주기를" },
+  { id: "guard",  name: "무탈부적",  hanja: "安", big: "무탈", paper: "#E6DBFF", ink: "#5B2DA8", line: "이상한 사람 접근 금지",  wish: "오늘도 무사히 집에 가기를", pray: "가는 길마다 탈 없이 평안하기를" },
 ];
 // 부족한 오행 → 처방 (부적냥 말투)
 export const EL_HANJA = { 목: "木", 화: "火", 토: "土", 금: "金", 수: "水" };

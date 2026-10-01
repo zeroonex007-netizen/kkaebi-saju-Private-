@@ -1,4 +1,4 @@
--- 깨비사주 DB 스키마 — Supabase 대시보드 > SQL Editor에 통째로 붙여넣고 Run
+-- 부적냥 사주 DB 스키마 — Supabase 대시보드 > SQL Editor에 통째로 붙여넣고 Run
 -- 별사탕 증감은 전부 아래 함수로만, 서버(service_role)만 호출할 수 있습니다.
 
 create table public.profiles (

@@ -88,6 +88,7 @@
   <h2 class="sec">부적냥 부적 상점</h2>
   <p class="shop-sub">폰 배경화면으로 쓰는 내 이름 박힌 이미지 부적. 하나에 별사탕 1개(990원)</p>
   <div class="amulets" id="amuletShop"></div>
+  <div class="sent" id="giftsSent" hidden></div>
 
   <button class="chatcta" id="openChat">
     <img src="/img/nyang-cross.png" alt="" class="cta-img">
@@ -107,7 +108,7 @@
   <h2 class="sec">먼저 본 친구들 후기</h2>
   <div class="reviews" id="reviewList"><p style="color:var(--muted)">후기를 불러오고 있어…</p></div>
 
-  <p class="fine">양력 기준이며 절기는 해마다 하루 정도 차이가 날 수 있어요. 부적냥의 풀이는 재미와 참고용이에요.</p>
+  <p class="fine">양력 기준이며 절기는 해마다 하루 정도 차이가 날 수 있어요. 부적냥의 풀이는 명리학을 바탕으로 한 참고용이에요. 중요한 결정은 꼭 전문가와 상의해요.</p>
 </section>
 
 <section id="v-form" hidden>
@@ -283,8 +284,29 @@
     <p class="am-why" id="amWhy"></p>
     <div class="am-prev"><canvas id="amCv" width="1080" height="1920"></canvas></div>
     <button class="btn" id="amBuy"></button>
-    <p class="refund" id="amNote">내 이름·일주·부족한 기운이 들어간 폰 배경화면(1080×1920)이에요. 응원용 이미지라 효과를 보장하진 않아요. 디지털 이미지라 받은 뒤에는 환불이 안 되고, 한 번 받은 부적은 언제든 무료로 다시 저장할 수 있어요.</p>
+    <button class="btn-soft gift-btn" id="amGift">🎁 친구한테 선물하기 (990원)</button>
+    <div class="giftform" id="giftForm" hidden>
+      <div class="row">
+        <label>받는 친구 이름<input id="gTo" maxlength="12" placeholder="예: 수아"></label>
+        <label>보내는 나<input id="gFrom" maxlength="12" placeholder="내 이름"></label>
+      </div>
+      <label>한마디 (선택)<input id="gMsg" maxlength="60" placeholder="예: 이번 시험 진짜 잘 보자"></label>
+      <p class="err" id="gErr" role="alert"></p>
+      <button class="btn" id="gSend">별사탕 1개로 선물 보내기</button>
+    </div>
+    <p class="refund" id="amNote">부적냥이 이름을 부르며 진심으로 빌어서 그려주는 부적이에요. 이름·일주·부족한 기운이 들어간 폰 배경화면(1080×1920)으로 받아요. 디지털 이미지라 받은 뒤에는 환불이 안 되고, 한 번 받은 부적은 언제든 무료로 다시 저장할 수 있어요.</p>
     <button class="btn-soft" data-close style="margin-top:8px">닫기</button>
+  </div>
+</div>
+
+<div class="sheet-bg" id="giftSheet" hidden>
+  <div class="sheet center" role="dialog" aria-modal="true" aria-labelledby="giftTitle" style="max-height:94vh;overflow:auto">
+    <h2 id="giftTitle">부적이 도착했어</h2>
+    <p class="am-why" id="giftLine"></p>
+    <p class="giftmsg" id="giftMsg" hidden></p>
+    <div class="am-prev"><canvas id="giftCv" width="1080" height="1920"></canvas></div>
+    <button class="btn" id="giftClaim">로그인하고 부적 받기</button>
+    <button class="btn-soft" data-close style="margin-top:8px">나중에</button>
   </div>
 </div>
 
@@ -338,7 +360,7 @@ $("logoutBtn").onclick=async()=>{await sb.auth.signOut();toast("로그아웃했�
 /* ---------- 로그인 ---------- */
 function renderWallet(){
   $("walletText").textContent=me?`${me.coins}${me.bonus?` ✨${me.bonus}`:""}${me.pieces?` +조각 ${me.pieces}/3`:""}`:"로그인";
-  renderKb();renderAmuletShop();
+  renderKb();renderAmuletShop();renderSent();
   $("walletBtn").setAttribute("aria-label",me?`별사탕 ${me.coins}개, 충전하기`:"로그인");
   $("logoutBtn").hidden=!me;
   $("shareHint").textContent=me&&!me.shared_once?"첫 공유하면 바로 1개! 친구가 가입하면 둘 다 1개씩.":"친구가 내 링크로 가입하면 둘 다 1개씩!";
@@ -353,6 +375,7 @@ $("walletBtn").onclick=()=>{if(!needLogin())openShop();};
 // 초대 링크로 들어온 경우 코드 보관
 const qs=new URLSearchParams(location.search);
 if(qs.get("ref"))try{localStorage.setItem("kkaebi_ref",qs.get("ref"));}catch(e){}
+if(qs.get("gift"))try{localStorage.setItem("nyang_gift",qs.get("gift"));}catch(e){}
 
 // 네이버 로그인에서 돌아온 경우
 const LOGIN_ERR={naver_cancel:"네이버 로그인을 취소했어.",naver_email:"네이버에서 이메일 제공에 동의해야 가입할 수 있어.",
@@ -377,7 +400,7 @@ let booted=false;
 sb.auth.onAuthStateChange((ev,s)=>{session=s;setTimeout(async()=>{
   await refreshMe();
   if(!booted){booted=true;await afterBoot();}
-  if(ev==="SIGNED_IN"){$("login").hidden=true;await claimRef();await doCheckin();}
+  if(ev==="SIGNED_IN"){$("login").hidden=true;await claimRef();await giftFlow();await doCheckin();}
 },0);});
 
 async function claimRef(){let code=null;try{code=localStorage.getItem("kkaebi_ref");}catch(e){}
@@ -391,6 +414,7 @@ async function afterBoot(){
   if(refCode){const k="kkaebi_v_"+refCode+"_"+new Date().toDateString();let seen=false;try{seen=!!localStorage.getItem(k);localStorage.setItem(k,"1");}catch(e){}
     if(!seen)api("visit",{code:refCode}).catch(()=>{});}
   await claimRef();
+  await giftFlow();
   await doCheckin();
   // 부적 패스 카드 등록 후 돌아온 경우
   if(qs.get("billing")==="fail")toast(qs.get("message")||"카드 등록이 취소됐어.");
@@ -406,7 +430,7 @@ async function afterBoot(){
     try{const r=await api("pay-confirm",{paymentKey:pk,orderId:oid,amount:Number(amt)});await refreshMe();toast(r.already?"이미 충전된 결제야.":`별사탕 ${r.coins}개 충전 완료!`);}
     catch(e){toast("결제 승인에 실패했어. 돈이 빠져나갔다면 고객센터로 알려줘.");}
   }
-  if(pk||qs.get("pay")||qs.get("ref"))history.replaceState(null,"",location.pathname);
+  if(pk||qs.get("pay")||qs.get("ref")||qs.get("gift"))history.replaceState(null,"",location.pathname);
 }
 
 /* ---------- 충전 (토스 결제위젯) ---------- */
@@ -549,17 +573,20 @@ function renderRx(prod,p,purpose){const c=elCount(p),w=weakEl(c),rx=EL_RX[w];
 let amCur=null;renderAmuletShop();
 async function openAmulet(id,why){if(needLogin())return;amCur=id;const a=amOf(id),own=ownedAm(id);
   $("amTitle").textContent=a.hanja+" "+a.name;
-  const el=own?own.el:myEl();
+  const el=own?(own.el||myEl()):myEl();$("giftForm").hidden=true;$("amGift").hidden=false;$("amNote").hidden=false;
   $("amWhy").textContent=why?why:el?`${a.line}. 니 사주에 제일 적은 ${el}(${EL_HANJA[el]}) 기운도 같이 넣어줄게.`:`${a.line}. 메뉴 하나 보면 니 사주에 부족한 기운도 같이 넣어줄게.`;
+  if(own&&own.from_name)$("amWhy").textContent=`${own.from_name}님이 너 위해 부탁한 부적이야. 부적냥이 니 이름 부르면서 진심으로 빌었음.`;
   $("amBuy").textContent=own?"배경화면 저장하기":"별사탕 1개로 받기 (990원)";
-  openSheet("amuletSheet");await drawAmulet(a,el,own,!own);}
+  openSheet("amuletSheet");await drawAmulet($("amCv"),a,el,own,!own);}
 $("amBuy").onclick=async()=>{const a=amOf(amCur);if(!a)return;
   if(ownedAm(a.id)){saveAmulet(a);return;}
   if(!me||(me.coins+(me.bonus||0))<1){toast("별사탕이 모자라! 충전하면 바로 받을 수 있어.");$("amuletSheet").hidden=true;openShop();return;}
   const btn=$("amBuy");btn.disabled=true;
   try{const r=await api("amulet",{kind:a.id});const before=me;await refreshMe();
-    const own=ownedAm(a.id)||r;await drawAmulet(a,own.el,own,false);$("amBuy").textContent="배경화면 저장하기";
-    if(!r.owned){celebrate(`${a.name} 획득! 🧧`);xpToast({gained:10,xp:me?me.xp:0},null);}
+    const own=ownedAm(a.id)||r;
+    if(!r.owned){$("amBuy").textContent="부적냥이 빌고 있어… 🙏";await new Promise(z=>setTimeout(z,1400));}
+    await drawAmulet($("amCv"),a,own.el||myEl(),own,false);$("amBuy").textContent="배경화면 저장하기";
+    if(!r.owned){$("amWhy").textContent=`부적냥이 ${(me&&me.name)||"너"} 이름 부르면서 진심으로 빌었어. 배경화면에 붙여두고 매일 봐.`;celebrate(`${a.name} 받았어 🧧`);}
     if(document.querySelector("#rx:not([hidden])"))$("rx").querySelectorAll(".am-card").forEach(b=>{if(b.textContent.includes(a.name)){const o=b.querySelector(".own");o.textContent="보유";o.classList.remove("buy");}});}
   catch(e){if(e.status===402){toast("별사탕이 모자라!");$("amuletSheet").hidden=true;openShop();}else toast("부적을 못 받았어. 다시 눌러줘!");}
   finally{btn.disabled=false;}};
@@ -568,9 +595,10 @@ async function saveAmulet(a){const blob=await new Promise(r=>$("amCv").toBlob(r,
   const u=URL.createObjectURL(blob),l=document.createElement("a");l.href=u;l.download=file.name;l.click();setTimeout(()=>URL.revokeObjectURL(u),5000);toast("저장했어! 배경화면으로 설정해줘.");}
 
 const amImg={};function loadImg(src){if(!amImg[src])amImg[src]=new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src;});return amImg[src];}
-async function drawAmulet(a,el,own,preview){
+async function drawAmulet(cv,a,el,own,preview,opt={}){
   await Promise.all([document.fonts.load("900 100px 'Noto Serif KR'",a.hanja+"木火土金水"),document.fonts.load("100px Jua"),document.fonts.ready]);
-  const cv=$("amCv"),x=cv.getContext("2d"),W=1080,H=1920,PW=820,PH=1480;
+  const x=cv.getContext("2d"),W=1080,H=1920,PW=820,PH=1480;
+  const nm=(own&&own.to_name)||opt.to||(me&&me.name)||"",from=(own&&own.from_name)||opt.from||"";
   x.setTransform(1,0,0,1,0,0);x.fillStyle="#281E2E";x.fillRect(0,0,W,H);
   // 반짝이
   let sd=a.hanja.charCodeAt(0);const rnd=()=>((sd=(sd*9301+49297)%233280)/233280);
@@ -586,24 +614,69 @@ async function drawAmulet(a,el,own,preview){
   x.font="230px Jua";[...a.big].forEach((ch,i)=>x.fillText(ch,PW/2,390+i*240));
   // 소용돌이
   x.lineWidth=8;x.beginPath();x.ellipse(PW/2,1010,110,56,0,0.6,Math.PI*2.4);x.stroke();x.lineWidth=6;x.beginPath();x.ellipse(PW/2,1012,72,32,0,0,Math.PI*1.7);x.stroke();
-  x.font="40px 'Gowun Dodum'";x.fillText(a.line,PW/2,1110);
-  x.font="36px Jua";x.fillText(a.wish,PW/2,1170);
+  x.font="38px 'Gowun Dodum'";x.fillText(a.line,PW/2,1100);
+  // 기원문 (두 줄로 나눠 쓰기)
+  x.font="40px Jua";const pr=`${nm?nm+"님, ":""}${a.pray}`,words=pr.split(" ");let l1="",i=0;
+  while(i<words.length&&x.measureText((l1+" "+words[i]).trim()).width<640){l1=(l1+" "+words[i]).trim();i++;}
+  x.fillText(l1,PW/2,1162);x.fillText((words.slice(i).join(" ")+" 진심으로 빕니다").trim(),PW/2,1214);
   // 내 기운 배지
   if(el){const t=`${EL_HANJA[el]}  ${el} 기운 충전`;x.font="40px Jua";const tw=x.measureText(t).width+70;
-    x.fillStyle=ELC[el];x.beginPath();x.roundRect(PW/2-tw/2,1215,tw,70,35);x.fill();x.fillStyle="#fff";x.fillText(t,PW/2,1252);x.fillStyle=a.ink;}
-  const nm=(me&&me.name)||"";const gzs=me&&me.birth?gz(sajuOf(me.birth,me.birth_time||"모름").day).replace(/\(.*\)/,"")+"일주":"";
-  x.font="34px 'Gowun Dodum'";x.fillText([nm&&nm+"님 전용",gzs].filter(Boolean).join(" · "),PW/2,1335);
+    x.fillStyle=ELC[el];x.beginPath();x.roundRect(PW/2-tw/2,1250,tw,66,33);x.fill();x.fillStyle="#fff";x.fillText(t,PW/2,1285);x.fillStyle=a.ink;}
+  const gzs=!opt.to&&me&&me.birth?gz(sajuOf(me.birth,me.birth_time||"모름").day).replace(/\(.*\)/,"")+"일주":"";
+  x.font="32px 'Gowun Dodum'";x.fillText(from?`${from}님이 ${nm}님께 보내는 부적`:[nm&&nm+"님 전용",gzs].filter(Boolean).join(" · "),PW/2,1360);
   const dt=own&&own.created_at?new Date(own.created_at):new Date();
-  x.font="26px 'Gowun Dodum'";x.globalAlpha=.75;x.fillText(`No.${String(own&&own.serial||0).padStart(6,"0")} · ${dt.getFullYear()}.${String(dt.getMonth()+1).padStart(2,"0")}.${String(dt.getDate()).padStart(2,"0")} 발급`,PW/2,1395);x.globalAlpha=1;
+  x.font="26px 'Gowun Dodum'";x.globalAlpha=.75;x.fillText(`No.${String(own&&own.serial||0).padStart(6,"0")} · ${dt.getFullYear()}.${String(dt.getMonth()+1).padStart(2,"0")}.${String(dt.getDate()).padStart(2,"0")} 발급`,PW/2,1408);x.globalAlpha=1;
   // 도장
   x.save();x.translate(140,1370);x.rotate(-0.12);x.strokeStyle="#D3271E";x.fillStyle="rgba(211,39,30,.12)";x.lineWidth=6;x.beginPath();x.roundRect(-60,-60,120,120,14);x.fill();x.stroke();
   x.fillStyle="#D3271E";x.font="40px Jua";x.fillText("부적",0,-18);x.fillText("냥",0,26);x.restore();
   x.restore();
   const cat=await loadImg("/img/nyang-hold.png");if(cat){const h=340,w=cat.width*h/cat.height;x.drawImage(cat,W-w-40,H-h-70,w,h);}
-  x.textAlign="left";x.fillStyle="rgba(230,220,240,.85)";x.font="30px 'Gowun Dodum'";x.fillText("부적냥 · 응원용 부적 (재미로 붙여요)",56,H-60);
+  x.textAlign="left";x.fillStyle="rgba(230,220,240,.85)";x.font="30px 'Gowun Dodum'";x.fillText(`부적냥이 ${nm?nm+"님을 위해 ":""}진심으로 빌었음`,56,H-60);
   if(preview){x.save();x.translate(W/2,H/2);x.rotate(-0.5);x.textAlign="center";x.font="150px Jua";x.fillStyle="rgba(255,255,255,.55)";x.strokeStyle="rgba(40,30,46,.35)";x.lineWidth=6;
     for(const dy of[-520,0,520]){x.strokeText("미리보기",0,dy);x.fillText("미리보기",0,dy);}x.restore();}
 }
+
+
+/* ---------- 부적 선물 ---------- */
+$("amGift").onclick=()=>{if(needLogin())return;$("giftForm").hidden=false;$("amGift").hidden=true;$("gFrom").value=(me&&me.name)||"";$("gErr").textContent="";$("gTo").focus();};
+async function sendGiftLink(g){const a=amOf(g.kind),url=`${location.origin}/?gift=${g.code}${me&&me.ref_code?"&ref="+me.ref_code:""}`;
+  const title=`${g.from}님이 ${g.to}님 위해 ${a.name}을 부탁했어요`,desc=`부적냥이 ${g.to}님 이름 부르면서 진심으로 빌었어. "${a.pray}"`;let ok=false;
+  if(KAKAO_OK){try{Kakao.Share.sendDefault({objectType:"feed",content:{title,description:desc,imageUrl:location.origin+"/share.png",imageWidth:800,imageHeight:400,link:{mobileWebUrl:url,webUrl:url}},buttons:[{title:"내 부적 받기",link:{mobileWebUrl:url,webUrl:url}}]});ok=true;}catch(e){console.error(e);}}
+  if(!ok){try{if(navigator.share){await navigator.share({title,text:title,url});ok=true;}}catch(e){if(e&&e.name==="AbortError")return true;}}
+  if(!ok){try{await navigator.clipboard.writeText(title+" "+url);ok=true;toast("선물 링크 복사됐어! 친구한테 붙여넣어줘.");}catch(e){}}
+  return ok;}
+$("gSend").onclick=async()=>{const a=amOf(amCur),to=$("gTo").value.trim(),from=$("gFrom").value.trim();
+  if(!to){$("gErr").textContent="받는 친구 이름을 알려줘!";return;}if(!from){$("gErr").textContent="보내는 사람 이름도 적어줘!";return;}
+  if(!me||(me.coins+(me.bonus||0))<1){toast("별사탕이 모자라!");$("amuletSheet").hidden=true;openShop();return;}
+  const b=$("gSend");b.disabled=true;
+  try{const r=await api("gift",{action:"send",kind:a.id,to,from,msg:$("gMsg").value.trim()});await refreshMe();
+    await drawAmulet($("amCv"),a,null,null,false,{to,from});$("giftForm").hidden=true;$("amWhy").textContent=`부적냥이 ${to}님 이름 부르면서 빌었어. 이제 카톡으로 보내줘.`;
+    const ok=await sendGiftLink({code:r.code,kind:a.id,to,from});if(!ok)toast("공유가 안 됐어. 홈의 '보낸 선물'에서 다시 보낼 수 있어.");}
+  catch(e){if(e.status===402){toast("별사탕이 모자라!");openShop();}else $("gErr").textContent="선물을 못 만들었어. 다시 눌러줘.";}
+  finally{b.disabled=false;}};
+function renderSent(){const el=$("giftsSent");if(!el)return;const gs=(me&&me.gifts_sent)||[];el.hidden=!gs.length;el.textContent="";if(!gs.length)return;
+  const h=document.createElement("p");h.className="sent-h";h.textContent="아직 안 열어본 선물";el.appendChild(h);
+  for(const g of gs){const a=amOf(g.kind);if(!a)continue;const row=document.createElement("div");row.className="sent-row";row.innerHTML=`<span></span><button>다시 보내기</button>`;
+    row.querySelector("span").textContent=`${g.to_name}님께 ${a.name}`;row.querySelector("button").onclick=()=>sendGiftLink({code:g.code,kind:g.kind,to:g.to_name,from:(me&&me.name)||"친구"});el.appendChild(row);}}
+// 선물 링크로 들어온 경우: 로그인 전엔 미리보기, 로그인하면 바로 받기
+let giftBusy=false;
+async function giftFlow(){let code=null;try{code=localStorage.getItem("nyang_gift");}catch(e){}
+  if(!code||giftBusy)return;giftBusy=true;
+  try{
+    if(!session){const g=await api("gift",{action:"info",code});const a=amOf(g.kind);if(!a)return;
+      if(g.claimed){toast("이미 누가 받아간 선물이야.");try{localStorage.removeItem("nyang_gift");}catch(e){}return;}
+      $("giftTitle").textContent=`${a.hanja} ${a.name}이 도착했어`;
+      $("giftLine").textContent=`${g.from_name}님이 ${g.to_name}님 위해 부적냥한테 부탁했어. 부적냥이 이름 부르면서 진심으로 빌었음.`;
+      $("giftMsg").hidden=!g.msg;$("giftMsg").textContent=g.msg?`“${g.msg}”`:"";
+      openSheet("giftSheet");await drawAmulet($("giftCv"),a,null,null,true,{to:g.to_name,from:g.from_name});return;}
+    const r=await api("gift",{action:"claim",code});try{localStorage.removeItem("nyang_gift");}catch(e){}
+    $("giftSheet").hidden=true;await refreshMe();
+    if(r.dup)toast("이미 있는 부적이라 대신 별사탕 1개 넣어줬어 🎁");
+    await openAmulet(r.kind);if(!r.already&&!r.dup)celebrate(`${r.from_name}님이 보낸 부적 도착 🧧`);
+  }catch(e){
+    if(e.status===409||e.status===404){try{localStorage.removeItem("nyang_gift");}catch(_){}toast(e.status===404?"선물을 못 찾았어. 링크를 다시 확인해줘.":"이 선물은 받을 수 없어. 이미 받았거나 내가 보낸 선물이야.");}
+  }finally{giftBusy=false;}}
+$("giftClaim").onclick=()=>{$("giftSheet").hidden=true;needLogin();};
 
 /* ---------- 오늘의 운세 ---------- */
 $("dailyBtn").onclick=async()=>{if(needLogin())return;

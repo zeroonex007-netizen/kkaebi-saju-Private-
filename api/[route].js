@@ -5,6 +5,7 @@ import chat from "./_routes/chat.js";
 import checkin from "./_routes/checkin.js";
 import cronBilling from "./_routes/cron-billing.js";
 import daily from "./_routes/daily.js";
+import gift from "./_routes/gift.js";
 import gacha from "./_routes/gacha.js";
 import me from "./_routes/me.js";
 import naverCallback from "./_routes/naver-callback.js";
@@ -21,7 +22,7 @@ import subStart from "./_routes/sub-start.js";
 import visit from "./_routes/visit.js";
 
 const ROUTES = {
-  amulet, chat, checkin, "cron-billing": cronBilling, daily, gacha, me,
+  amulet, chat, checkin, "cron-billing": cronBilling, daily, gacha, gift, me,
   "naver-callback": naverCallback, "naver-start": naverStart, order, "pay-confirm": payConfirm,
   reading, ref, review, reviews, share, "sub-cancel": subCancel, "sub-start": subStart, visit,
 };
