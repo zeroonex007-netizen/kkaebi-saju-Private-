@@ -1,4 +1,4 @@
-// 내 정보: 별사탕·조각·반짝 별사탕, 레벨, 출석, 뽑기, 공유 미션, 도감, 깨비 패스
+// 내 정보: 별사탕·조각·반짝 별사탕, 레벨, 출석, 뽑기, 공유 미션, 도감, 부적 패스
 import { route, admin } from "../_lib.js";
 import { todayKST } from "../../public/saju.js";
 

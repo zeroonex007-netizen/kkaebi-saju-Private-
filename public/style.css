@@ -214,3 +214,13 @@ footer.biz button{background:none;border:0;padding:0;color:inherit;text-decorati
 .bit{position:absolute;top:-10%;font-size:1.6rem;animation:fall 1.8s ease-in forwards}
 @keyframes fall{to{transform:translateY(115vh) rotate(360deg)}}
 @media (prefers-reduced-motion: reduce){.pouch.shake,.pouch.open,.burst-msg,.bit{animation:none}.xpbar span{transition:none}}
+
+/* --- 부적냥 --- */
+.logo-img{width:34px;height:34px;object-fit:contain}
+.kkaebi.nyang{width:130px;height:auto;animation:none}
+.cta-img{width:56px;height:56px;object-fit:contain;flex:none}
+.loading img{width:90px;height:auto;animation:bob 1s ease-in-out infinite alternate}
+.card .mimg{width:100%;height:118px;object-fit:contain;margin:6px 0 2px}
+.card{min-height:0}
+.card strong{margin-top:4px}
+@media (prefers-reduced-motion: reduce){.loading img{animation:none}}

@@ -1,4 +1,4 @@
-// 복주머니 뽑기 (하루 1번, 깨비 패스는 2번)
+// 복주머니 뽑기 (하루 1번, 부적 패스는 2번)
 import { route, rpc } from "../_lib.js";
 
 export default route(async (req, res, user) => {

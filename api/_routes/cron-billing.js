@@ -1,4 +1,4 @@
-// 매일 1번 Vercel이 자동 실행: 결제일이 된 깨비 패스를 갱신 결제
+// 매일 1번 Vercel이 자동 실행: 결제일이 된 부적 패스를 갱신 결제
 // 실패하면 하루 뒤 다시 시도, 3번 연속 실패하면 자동 해지
 import { randomBytes } from "node:crypto";
 import { admin, rpc, chargeBilling } from "../_lib.js";

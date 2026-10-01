@@ -1,4 +1,4 @@
-// 깨비 패스 시작: 카드 등록(authKey) → 빌링키 발급 → 첫 달 결제 → 별사탕 지급
+// 부적 패스 시작: 카드 등록(authKey) → 빌링키 발급 → 첫 달 결제 → 별사탕 지급
 import { randomBytes } from "node:crypto";
 import { route, admin, rpc, issueBillingKey, chargeBilling } from "../_lib.js";
 import { SUB } from "../../public/products.js";
