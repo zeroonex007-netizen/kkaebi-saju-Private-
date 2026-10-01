@@ -325,13 +325,110 @@ export function dailyText(birth, time) {
   return `오늘은 ${gz(t)}일.\n총운: ${all}\n연애: ${love}\n돈: ${money}\n행운의 색: ${COLORS[w]} · 행운의 메뉴: ${MENUS[(t.s * 7 + p.day.b * 3 + d) % MENUS.length]}`;
 }
 
-// 고민 상담 (AI 없이): 고민 키워드 + 오늘 기운 + 작은 행동
-export function chatReply(q, pr) {
-  const parts = [worryLine(q)];
+/* ── 고민 상담 (AI 없이) ──
+   공감 → 내 사주로 짚기 → "할까 말까"면 오늘 기운으로 딱 정해주기 → 해볼 일 하나 → 되묻기
+   앞에서 한 얘기(주제)를 기억해서 이어감 */
+const CHAT_CAT = [
+  ["crisis", /죽고|자살|자해|살기 ?싫|사라지고 ?싶/],
+  ["love", /연애|남친|여친|남자친구|여자친구|썸|짝사랑|고백|헤어|이별|재회|결혼|소개팅|좋아하|사랑|연락|카톡 ?답|읽씹|안읽씹|데이트|전남친|전여친|애인/],
+  ["money", /돈|월급|투자|주식|코인|빚|대출|재테크|저축|부자|용돈|알바비|적금|카드값|월세/],
+  ["work", /이직|퇴사|취업|취직|회사|직장|사업|창업|알바|진로|면접|상사|팀장|출근|야근|일이|업무|자소서/],
+  ["study", /시험|공부|합격|수능|자격증|대학|성적|토익|학점|과제|재수|편입|공시|임용/],
+  ["people", /친구|엄마|아빠|부모|가족|동료|인간관계|사람들|손절|서운|싸웠|무시|눈치/],
+  ["health", /아파|아프|병원|다이어트|살 ?빼|몸이|두통|감기/],
+  ["tired", /우울|불안|힘들|지쳐|지침|외로|자존감|스트레스|잠이|무기력|번아웃|울었|눈물|짜증/],
+  ["thanks", /고마|감사|ㄳ|땡큐|최고|좋았어|맞았어|소름/],
+  ["greet", /^(안녕|하이|ㅎㅇ|헬로|반가|hello|hi)/i],
+  ["laugh", /^[ㅋㅎ]+$|웃기|ㅋㅋㅋ/],
+  ["who", /너 ?누구|넌 ?뭐|부적냥(이)? ?(뭐|누구)|고양이야/],
+];
+const YESNO = /할까|될까|해도 ?돼|해도 ?될까|말까|괜찮을까|갈까|살까|사도 ?돼|보낼까|그만둘까|헤어질까|만날까|해야 ?(돼|할까)|하는 ?게 ?(나을까|맞을까)/;
+const EMP = {
+  love: ["아 그거 신경 쓰이지. 연애 고민은 밤에 더 커짐.", "그 마음 앎. 별거 아닌 척해도 하루 종일 생각나는 거.", "연애 얘기네. 부적냥 귀 쫑긋함."],
+  money: ["돈 얘기는 현실이라 더 무겁지.", "통장 보면 한숨 나오는 거 정상임. 다들 그럼.", "돈 고민이네. 진지하게 들어줌."],
+  work: ["일 얘기는 하루 대부분이라 더 지치지.", "그 고민 꽤 오래 했지? 표정이 보임.", "일 때문에 머리 아프구나."],
+  study: ["시험 앞두면 다 불안함. 니가 이상한 게 아님.", "공부 고민이네. 이미 반은 하고 있다는 뜻임.", "성적 얘기면 예민해지는 거 당연함."],
+  people: ["사람 때문에 지치는 게 제일 지치는 거임.", "그 사람 때문에 마음 쓰였구나.", "관계 고민은 정답이 없어서 더 어렵지."],
+  tired: ["오늘 많이 버텼네. 일단 그거부터 잘했음.", "힘들다고 말한 거 잘했어. 그것도 용기임.", "지친 날엔 부적냥처럼 좀 누워도 됨."],
+  health: ["몸 상태가 안 좋으면 다 안 좋아 보이지.", "아픈 건 참지 말고 챙겨야 됨."],
+};
+const STUDY = ["넌 목표 정하면 끝까지 가는 타입이라 계획표가 무기임.", "넌 같이 하면 잘하는 타입. 스터디나 친구랑 하면 효율 두 배.", "넌 기분 좋을 때 몰아서 잘하는 타입. 컨디션 관리가 곧 공부임.",
+  "넌 한 번 꽂히면 깊게 파는 타입. 범위를 좁히면 확 올라감.", "넌 느리지만 안 무너지는 타입. 꾸준함으로 이김.", "넌 정리 잘하는 타입. 오답 노트가 제일 잘 맞음.",
+  "넌 마감 있으면 폭발하는 타입. 스스로 마감을 정해.", "넌 완벽하게 하려다 시작이 늦는 타입. 70%만 하고 넘어가.", "넌 넓게 아는 타입. 기출로 범위를 좁혀야 됨.", "넌 감이 좋은 타입. 근데 감만 믿지 말고 한 번 더 확인."];
+const COMFORT = ["넌 버티는 힘이 센 대신 쉬는 걸 잘 못 함. 오늘은 쉬는 것도 일임.", "넌 남 기분 맞추느라 니 기분을 뒤로 미룸. 오늘은 니 편 들어.", "넌 밝아 보여서 다들 괜찮은 줄 앎. 안 괜찮다고 말해도 됨.",
+  "넌 속으로 혼자 다 태우는 타입. 꺼내놔야 덜 탐.", "넌 다들 기대는 사람이라 정작 기댈 데가 없지. 오늘은 기대.", "넌 걱정을 미리 다 해두는 타입. 지금 걱정의 반은 안 일어남.",
+  "넌 강해 보이는데 속은 여림. 그거 약점 아님.", "넌 기준이 높아서 스스로한테 제일 엄격함. 오늘 점수는 내가 100점 줌.", "넌 생각이 깊어서 밤에 더 커짐. 자고 일어나면 반으로 줄어있음.", "넌 남의 감정까지 다 느끼는 타입. 지금 그거 니 몫 아닌 것도 섞여 있음."];
+const ACTION = {
+  love: ["오늘은 먼저 가볍게 한마디만 해봐. 답장 기다리지 말고 폰 내려놓기까지가 미션.", "그 사람 생각 날 때마다 니 장점 하나씩 적어봐. 자신감이 매력임.", "답 안 올 때 다시 보내지 말기. 24시간 룰."],
+  money: ["오늘 쓴 돈 세 줄만 적어봐. 새는 데가 보임.", "이번 주는 배달 한 번만 참기. 그게 시작임.", "큰돈 결정이면 일주일 묵히고, 전문가한테 한 번 더 물어봐."],
+  work: ["그만두고 싶은 이유 세 개, 남고 싶은 이유 세 개 써봐.", "오늘 할 일 딱 세 개만 정하고 나머진 내일로.", "이력서 한 줄만 고쳐놔. 기회는 준비된 데로 옴."],
+  study: ["오늘은 새 거 말고 틀린 것만 다시 봐.", "25분 공부, 5분 쉬기. 딱 네 번만.", "내일 아침에 볼 거 하나만 책상에 펴놓고 자."],
+  people: ["서운한 거 하나만, 탓하지 말고 '나는 ~해서 서운했어'로 말해봐.", "오늘은 그 사람 말고 니 편인 사람한테 연락해.", "답 없는 관계는 잠깐 음소거해도 됨."],
+  tired: ["따뜻한 거 마시고 오늘은 일찍 누워.", "폰 내려놓고 10분만 창밖 보기.", "좋아하는 노래 한 곡 크게 듣기. 그게 오늘 숙제."],
+  health: ["몸이 계속 안 좋으면 병원부터 가. 부적냥은 의사가 아님.", "오늘은 물 많이 마시고 푹 자."],
+};
+const ASK = {
+  love: ["근데 그 사람이랑 지금 어떤 사이야? 썸? 연애 중?", "니 마음은 몇 퍼센트야? 솔직하게.", "마지막으로 연락한 게 언제야?"],
+  money: ["지금 제일 급한 건 모으는 거야, 갚는 거야?", "한 달에 고정으로 나가는 돈이 많은 편이야?"],
+  work: ["지금 제일 힘든 게 일 자체야, 사람이야?", "그만두면 하고 싶은 건 있어?"],
+  study: ["시험 언제야? 남은 기간 알려주면 더 콕 집어줌.", "제일 자신 없는 과목이 뭐야?"],
+  people: ["그 사람이랑은 원래 친했어?", "그 일 있고 나서 연락은 해봤어?"],
+  tired: ["요즘 잠은 잘 자?", "이런 기분 며칠째야?"],
+  health: ["병원은 가봤어?"],
+};
+const pick = (arr, seed, used = "") => { for (let k = 0; k < arr.length; k++) { const v = arr[(Math.abs(seed) + k) % arr.length]; if (!used.includes(v)) return v; } return arr[Math.abs(seed) % arr.length]; };
+const BIG = /그만둘|퇴사|헤어질|이혼|투자|대출|코인|주식|사업|창업|자퇴|휴학/;
+const hashStr = (t) => { let h = 7; for (const ch of t) h = (h * 31 + ch.charCodeAt(0)) | 0; return h; };
+const catOf = (t) => { for (const [c, re] of CHAT_CAT) if (re.test(t)) return c; return null; };
+const WD = "일월화수목금토";
+
+export function chatReply(messages, pr) {
+  const msgs = Array.isArray(messages) ? messages : [{ role: "user", content: String(messages || "") }];
+  const q = (msgs[msgs.length - 1].content || "").trim(), seed = hashStr(q);
+  const name = (pr && pr.name) || "";
+  const said = msgs.filter((x) => x.role === "assistant").map((x) => x.content || "").join("\n");
+  let cat = catOf(q);
+  // 이번 말에 주제가 없으면 앞에서 하던 얘기를 이어감
+  if (!cat || ["thanks", "laugh"].includes(cat) && YESNO.test(q)) {
+    for (let k = msgs.length - 2; k >= 0; k--) if (msgs[k].role === "user") { const c = catOf(msgs[k].content || ""); if (c && !["greet", "thanks", "laugh", "who"].includes(c)) { cat = cat || c; break; } }
+  }
+  if (cat === "crisis") return "그 말 그냥 못 넘김. 지금 많이 힘든 거 맞지.\n혼자 버티지 말고 지금 바로 109(자살예방 상담전화, 24시간)에 전화해서 지금 마음 그대로 말해줘. 문자 상담도 돼.\n부적냥은 니가 내일도 여기 있었으면 좋겠음. 진심임.";
+  if (cat === "greet") return pick([`왔어${name ? " " + name : ""}? 귀찮지만 들어줄게. 요즘 제일 신경 쓰이는 거 하나만 말해봐.`, "안녕. 부적냥 지금 누워있었음. 근데 니 얘기면 일어남. 뭐가 고민이야?"], seed);
+  if (cat === "thanks") return pick(["별말을. 근데 맞았다니 기분 좋음. 다음 고민도 가져와.", "고맙긴. 대신 친구한테 부적냥 소문 좀 내줘.", "그치? 부적냥 용함. 알고 있었음."], seed);
+  if (cat === "laugh") return pick(["웃었으면 됐음. 오늘 운 +5점.", "ㅋㅋ 근데 진짜 고민은 뭐야? 말해봐."], seed);
+  if (cat === "who") return "나 부적냥. 이마에 부적 붙인 무기력한 고양이. 귀찮은 척하는데 니 사주 보면 다 앎. 연애, 돈, 일, 사람 뭐든 털어놔.";
+
+  // 주제 없이 짧게 이어 말할 때(음.., 그냥.., 응)는 짧게 받아줌
+  if (!catOf(q) && q.length <= 6 && !YESNO.test(q)) return pick(["응, 천천히 말해도 돼. 부적냥 안 감.", "말하기 어려우면 한 줄만 써도 돼. 아까 그 얘기 더 해볼래?", "응응. 듣고 있음. 계속해."], seed, said);
+  const parts = [];
+  if (EMP[cat]) parts.push(pick(EMP[cat], seed, said));
+  else parts.push(pick(["그 얘기 들었음.", "음, 그렇구나. 부적냥이 같이 생각해봄."], seed));
+
   if (pr && pr.birth) {
-    const p = sajuOf(pr.birth, pr.birth_time || "모름"), [y, m, d] = todayKST(), tg = tenGod(p.day.s, dayP(y, m, d).s), w = weakEl(elCount(p));
-    parts.push(`그리고 오늘 너한테 들어오는 기운은 이래. ${TODAY[tg][0]}`);
-    parts.push(`오늘 해볼 거 하나: ${EL_ACT[w]}.`);
-  } else parts.push("생일 알려주면 니 사주 보고 더 콕 집어줄게. 메뉴 하나 보면 자동으로 저장됨.");
-  return parts.join(" ");
+    const p = sajuOf(pr.birth, pr.birth_time || "모름"), s0 = p.day.s, w = weakEl(elCount(p));
+    const [y, m, d] = todayKST(), tg = tenGod(s0, dayP(y, m, d).s);
+    const first = (t) => t.split(". ")[0] + ".";
+    const insight = { love: first(LOVE_STYLE[s0]) + ` 그러니까 너한테 필요한 건 ${LOVE_TIP[s0]}.`, money: first(MONEY[s0]), work: first(WORK[s0]), people: first(PEOPLE[s0]), study: STUDY[s0], tired: COMFORT[s0] }[cat];
+    if (insight && !said.includes(insight)) parts.push(`니 사주로 보면, ${insight}`);
+    if (YESNO.test(q) && BIG.test(q + " " + msgs.map((x) => x.content || "").join(" ").slice(-200))) {
+      parts.push(`이건 큰 결정이라 부적냥이 대신 정해주면 안 됨. 결정은 니가 해. 대신 오늘 기운은 이래: ${TODAY[tg][0]} 큰 결정은 일주일만 묵히고, 필요하면 믿을 만한 사람이나 전문가한테도 한 번 물어봐.`);
+    } else if (YESNO.test(q)) {
+      if (GOOD.has(tg)) parts.push(`결론: 해. 오늘 너한테 들어오는 기운이 좋음. ${TODAY[tg][0]}`);
+      else if (BAD.has(tg)) {
+        let when = "";
+        for (let k = 1; k <= 10 && !when; k++) { const t = new Date(Date.UTC(y, m - 1, d + k)), dp = dayP(t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate());
+          if (GOOD.has(tenGod(s0, dp.s))) when = `${t.getUTCMonth() + 1}/${t.getUTCDate()}(${WD[t.getUTCDay()]})`; }
+        parts.push(`결론: 오늘은 말고 ${when || "며칠 뒤"}에 해. 오늘은 ${CAUTION[tg]} 조심하는 날이라 급하게 하면 꼬임.`);
+      } else parts.push(`결론: 해도 되는데 천천히. ${TODAY[tg][0]}`);
+    } else {
+      const idx = cat === "love" ? 1 : cat === "money" ? 2 : 0;
+      if (!said.includes(TODAY[tg][idx])) parts.push(`오늘 기운은 이래. ${TODAY[tg][idx]}`);
+    }
+    if (!ACTION[cat]) parts.push(`오늘 해볼 거 하나: ${EL_ACT[w]}.`);
+  } else if (YESNO.test(q)) parts.push("생일 알려주면 오늘 기운 보고 할지 말지 딱 정해줄게. 메뉴 하나 보면 자동 저장됨.");
+
+  if (ACTION[cat]) parts.push(pick(ACTION[cat], seed >> 3, said));
+  if (ASK[cat]) parts.push(pick(ASK[cat], seed >> 5, said));
+  else if (!cat) parts.push("조금만 더 자세히 말해줘. 연애야, 돈이야, 일이야, 사람이야?");
+  return parts.join("\n");
 }

@@ -16,8 +16,8 @@ export default route(async (req, res, user, b) => {
   if (!messages.length || messages[messages.length - 1].role !== "user") return res.status(400).json({ error: "input" });
 
   if (!process.env.ANTHROPIC_API_KEY) {
-    const { data: pr } = await admin.from("profiles").select("birth,birth_time").eq("id", user.id).single();
-    return res.json({ text: chatReply(messages[messages.length - 1].content, pr), free: true, canned: true });
+    const { data: pr } = await admin.from("profiles").select("name,birth,birth_time").eq("id", user.id).single();
+    return res.json({ text: chatReply(messages, { ...pr, name: pr && pr.name }), free: true, canned: true });
   }
 
   const free = await rpc("use_free_chat", { uid: user.id });
