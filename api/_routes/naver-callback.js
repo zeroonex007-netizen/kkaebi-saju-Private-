@@ -1,15 +1,16 @@
 // 네이버 로그인 완료: 네이버 계정 확인 → Supabase 회원 생성/조회 → 일회용 로그인 토큰을 붙여 사이트로 돌려보냄
 import { admin } from "../_lib.js";
+import { signState } from "./naver-start.js";
 
 const back = (res, q) => res.redirect(302, "/?" + new URLSearchParams(q));
 
 export default async function handler(req, res) {
   try {
     const { code, state, error } = req.query || {};
-    const cookie = (req.headers.cookie || "").match(/(?:^|;\s*)nv_state=([a-f0-9]+)/);
-    res.setHeader("Set-Cookie", "nv_state=; HttpOnly; Secure; SameSite=Lax; Path=/api; Max-Age=0");
     if (error) return back(res, { login_error: "naver_cancel" });
-    if (!code || !state || !cookie || cookie[1] !== state) return back(res, { login_error: "naver_state" });
+    const [nonce, ts, sig] = String(state || "").split(".");
+    const fresh = ts && Date.now() - parseInt(ts, 36) < 15 * 60 * 1000;
+    if (!code || !nonce || !sig || !fresh || signState(nonce, ts) !== sig) return back(res, { login_error: "naver_state" });
 
     // 1) 코드 → 접근 토큰
     const tq = new URLSearchParams({

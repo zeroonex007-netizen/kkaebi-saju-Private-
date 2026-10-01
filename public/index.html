@@ -178,6 +178,8 @@
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
     <h2 id="loginTitle">3초 만에 시작하기</h2>
     <p style="margin:4px 0 0;color:var(--muted)">로그인하면 별사탕이랑 내 사주 정보가 저장돼.</p>
+    <p class="err" id="loginErr" hidden style="margin:8px 0 0;white-space:pre-line"></p>
+    <p class="agree" id="kakaoHint" hidden style="margin-top:8px">💡 카톡 안에서는 <b>카카오로 시작하기</b>가 가장 빠르고 확실해요.</p>
     <div class="login-btns">
       <button class="kakao" id="kakaoBtn">카카오로 시작하기</button>
       <button class="naver" id="naverBtn">네이버로 시작하기</button>
@@ -286,7 +288,8 @@ import {sajuOf,gz,elCount,TYPES,STEMS,STEM_KO,STEM_EL,BR,BR_KO,BR_EL,cardName,ca
 import {PRODUCTS,PACKS,LOVE_STATES,PURPOSES,LEVELS,XP_RULES,LEVEL_REWARD,GACHA_ODDS,SUB} from "/products.js";
 
 const C=window.KKAEBI_CONFIG;
-const sb=window.supabase.createClient(C.SUPABASE_URL,C.SUPABASE_ANON_KEY);
+// implicit: 로그인 후 돌아올 때 다른 브라우저로 열려도 주소에 담긴 토큰으로 로그인되게
+const sb=window.supabase.createClient(C.SUPABASE_URL,C.SUPABASE_ANON_KEY,{auth:{flowType:"implicit",detectSessionInUrl:true,persistSession:true}});
 const $=id=>document.getElementById(id);
 let session=null,me=null,cur=null,lastType=null,stars=5,chat=[];
 
@@ -337,9 +340,21 @@ if(qs.get("ref"))try{localStorage.setItem("kkaebi_ref",qs.get("ref"));}catch(e){
 // 네이버 로그인에서 돌아온 경우
 const LOGIN_ERR={naver_cancel:"네이버 로그인을 취소했어.",naver_email:"네이버에서 이메일 제공에 동의해야 가입할 수 있어.",
   naver_exists:"이 이메일은 카카오로 이미 가입돼 있어. 카카오로 로그인해줘!",naver_setup:"네이버 로그인은 준비 중이야. 카카오로 시작해줘!"};
-if(qs.get("login_error"))setTimeout(()=>toast(LOGIN_ERR[qs.get("login_error")]||"로그인에 실패했어. 다시 해줘."),300);
-if(qs.get("nv")){sb.auth.verifyOtp({token_hash:qs.get("nv"),type:"email"}).then(({error})=>{if(error)toast("네이버 로그인에 실패했어. 다시 해줘.");});}
-if(qs.get("nv")||qs.get("login_error"))history.replaceState(null,"",location.pathname);
+function loginError(msg){$("loginErr").textContent=msg;$("loginErr").hidden=false;$("login").hidden=false;}
+if(qs.get("login_error"))loginError(LOGIN_ERR[qs.get("login_error")]||"로그인에 실패했어. 카카오로 시작하기를 눌러 줘!");
+if(qs.get("nv")){const th=qs.get("nv");
+  sb.auth.verifyOtp({token_hash:th,type:"email"}).then(async({error})=>{
+    if(error){const r=await sb.auth.verifyOtp({token_hash:th,type:"magiclink"});if(r.error)loginError("네이버 로그인을 마무리하지 못했어. 한 번 더 눌러 주거나 카카오로 시작해 줘!");}});}
+// 카톡 안에서 열었으면 카카오 로그인을 먼저 권하기
+if(/KAKAOTALK/i.test(navigator.userAgent)){$("kakaoHint").hidden=false;}
+// 카카오 로그인 실패 시 Supabase가 붙여 보내는 이유를 그대로 보여주기 (주소 ?error=… 또는 #error=…)
+const hs=new URLSearchParams(location.hash.replace(/^#/,""));
+const oErr=qs.get("error_description")||hs.get("error_description")||qs.get("error")||hs.get("error");
+if(oErr){const d=decodeURIComponent(oErr.replace(/\+/g," "));
+  const hint=/email/i.test(d)?"카카오에서 이메일 제공 동의가 필요해. 다시 로그인하면서 이메일 동의를 체크해 줘!":
+    /code|exchange|verifier/i.test(d)?"로그인 확인이 중간에 끊겼어. 이 화면에서 카카오로 시작하기를 한 번 더 눌러 줘!":"카카오 로그인에 실패했어.";
+  loginError(`${hint}\n(오류: ${d})`);}
+if(qs.get("nv")||qs.get("login_error")||oErr)history.replaceState(null,"",location.pathname);
 
 let booted=false;
 sb.auth.onAuthStateChange((ev,s)=>{session=s;setTimeout(async()=>{
