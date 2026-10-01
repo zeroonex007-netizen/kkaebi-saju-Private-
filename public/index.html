@@ -67,7 +67,46 @@
 
   <h2 class="sec">부적냥 메뉴판</h2>
   <div class="grid" id="menu"></div>
+  <p class="price-line">모든 메뉴 별사탕 1개 = 990원 · 5개 4,500원 · 11개 9,900원 · <a href="/terms.html#refund">환불 정책</a></p>
 
+  <div class="today">
+    <h2>내 사주로 보는 오늘 운세 · 무료</h2>
+    <p>내 일주 기준으로 총운·연애·돈을 봐줄게.</p>
+    <button class="btn" id="dailyBtn">오늘 운세 뽑기</button>
+    <div class="out" id="dailyOut" hidden></div>
+  </div>
+
+  <h2 class="sec">먼저 본 친구들 후기</h2>
+  <div class="reviews" id="reviewList"><p style="color:var(--muted)">후기를 불러오고 있어…</p></div>
+
+  <h2 class="sec">자주 묻는 질문</h2>
+  <div class="faq" id="faq">
+    <details><summary>부적냥은 어떤 서비스예요?</summary><p>생년월일시로 만세력(사주 여덟 글자)을 세워서 성격, 재물운, 일·진로, 연애운을 풀어주는 사주 서비스예요. 사주 말고도 궁합, 올해 운세, 대운, 좋은 날 고르기(택일)를 볼 수 있고, 내 사주에 부족한 기운을 채워주는 이미지 부적도 받을 수 있어요.</p></details>
+    <details><summary>990원 사주, 진짜 990원이에요?</summary><p>네. 모든 메뉴가 별사탕 1개(990원)예요. 추가 결제나 자동 결제 없어요. 여러 개 보고 싶으면 별사탕 5개(4,500원), 11개(9,900원) 묶음이 더 싸요.</p></details>
+    <details><summary>풀이는 뭘 근거로 만들어져요?</summary><p>양력 생년월일과 태어난 시각으로 사주 여덟 글자를 계산하고, 일간·오행의 강약·십신·합과 충 같은 명리학 기준으로 풀어요. 그래서 같은 날 태어나도 시각과 성별에 따라 풀이가 달라져요.</p></details>
+    <details><summary>태어난 시간을 몰라도 볼 수 있어요?</summary><p>볼 수 있어요. '시간 몰라'를 체크하면 시주를 빼고 나머지 여섯 글자로 풀어요. 시간을 알면 조금 더 정확해져요.</p></details>
+    <details><summary>음력 생일만 알아요.</summary><p>지금은 양력 기준이에요. 음력 생일은 포털에서 '음력 양력 변환'으로 바꿔서 넣어주세요. 음력 입력은 곧 붙일게요.</p></details>
+    <details><summary>무료로 볼 수 있는 건 뭐예요?</summary><p>맨 위 '오늘의 행운 부적'은 로그인 없이 매일 무료예요. 로그인하면 내 사주로 보는 오늘 운세, 부적냥 고민 상담, 매일 출석·복주머니 뽑기도 무료예요. 친구 초대와 공유 미션으로 별사탕을 받을 수도 있어요.</p></details>
+    <details><summary>이미지 부적은 뭐예요?</summary><p>부적냥이 내 이름을 부르며 빌어서 그려주는 폰 배경화면 부적이에요. 내 이름, 일주, 사주에서 가장 부족한 기운이 들어가요. 바라는 일이 잘 되길 비는 마음을 담은 기원 부적이라, 결과를 보장하진 않아요. 친구한테 선물할 수도 있어요.</p></details>
+    <details><summary>환불할 수 있어요?</summary><p>사용하지 않은 별사탕은 구매일로부터 7일 안에 전액 환불돼요. 이미 풀이를 본 별사탕과 받은 이미지 부적은 디지털 콘텐츠라 환불이 안 돼요. 오류로 풀이가 안 나오면 별사탕은 자동으로 돌려드려요.</p></details>
+    <details><summary>내 정보는 안전해요?</summary><p>생년월일과 이름은 풀이에만 쓰고, 탈퇴하면 바로 지워요. 결제 카드 정보는 토스페이먼츠가 처리해서 부적냥은 보관하지 않아요. 자세한 건 개인정보처리방침에 있어요.</p></details>
+  </div>
+  <div class="ask" id="askBox"></div>
+
+  <p class="fine">양력 기준이며 절기는 해마다 하루 정도 차이가 날 수 있어요. 부적냥의 풀이는 명리학을 바탕으로 한 참고용이에요. 중요한 결정은 꼭 전문가와 상의해요.</p>
+</section>
+
+<section id="v-amulet" hidden>
+  <h1 class="ftitle">🧧 부적냥 부적 상점</h1>
+  <p class="shop-sub">폰 배경화면으로 쓰는 내 이름 박힌 이미지 부적. 하나에 별사탕 1개(990원)</p>
+  <div class="amulets" id="amuletShop"></div>
+  <div class="sent" id="giftsSent" hidden></div>
+
+  <p class="refund" style="margin-top:12px">부적냥이 이름을 부르며 진심으로 빌어서 그려주는 폰 배경화면 부적이에요. 한 번 받은 부적은 언제든 무료로 다시 저장할 수 있고, 친구한테 선물할 수도 있어요.</p>
+</section>
+
+<section id="v-my" hidden>
+  <h1 class="ftitle">😺 MY</h1>
   <div class="mykb" id="myKb" hidden>
     <button class="lvrow" id="lvBtn" aria-label="레벨 안내">
       <span class="lv" id="lvBadge">Lv.1</span><b id="lvName">아기 부적냥</b><span class="passbadge" id="passBadge" hidden>PASS</span>
@@ -88,28 +127,14 @@
     <span class="btn">3초 만에 시작하기</span>
   </button>
 
-  <div class="today">
-    <h2>내 사주로 보는 오늘 운세 · 무료</h2>
-    <p>내 일주 기준으로 총운·연애·돈을 봐줄게.</p>
-    <button class="btn" id="dailyBtn">오늘 운세 뽑기</button>
-    <div class="out" id="dailyOut" hidden></div>
-  </div>
-
   <button class="gift" id="shareApp"><span class="em" aria-hidden="true">🎁</span><span><strong>카톡으로 친구 초대하고 별사탕 받기</strong><br><small id="shareHint">친구가 내 링크로 가입하면 둘 다 1개씩!</small></span></button>
 
-  <h2 class="sec">부적냥 부적 상점</h2>
-  <p class="shop-sub">폰 배경화면으로 쓰는 내 이름 박힌 이미지 부적. 하나에 별사탕 1개(990원)</p>
-  <div class="amulets" id="amuletShop"></div>
-  <div class="sent" id="giftsSent" hidden></div>
 
-  <button class="chatcta" id="openChat">
-    <img src="/img/nyang-cross.png" alt="" class="cta-img">
-    <span><strong>부적냥한테 고민 털기</strong><br><small style="color:var(--muted)">지금은 무료! 부담 없이 털어놔</small></span>
-  </button>
-
-  <h2 class="sec">별사탕 가격</h2>
+  <h2 class="sec">별사탕</h2>
+  <button class="btn" id="myShopBtn" style="margin-bottom:10px">별사탕 충전하기</button>
   <div class="prices" id="priceList"></div>
   <p class="refund" style="margin-top:6px">모든 메뉴는 별사탕 1개로 볼 수 있어요. 결제 즉시 화면으로 풀이를 보여줘요. 사용하지 않은 별사탕은 구매일로부터 7일 이내 환불돼요. <a href="/terms.html#refund" style="color:inherit">환불 정책 보기</a></p>
+
 
   <button class="passcard" id="passCard">
     <span class="pc-top"><b>부적 패스</b><span class="pc-price" id="passPrice"></span></span>
@@ -117,24 +142,7 @@
     <span class="btn" id="passCta">자세히 보기</span>
   </button>
 
-  <h2 class="sec">먼저 본 친구들 후기</h2>
-  <div class="reviews" id="reviewList"><p style="color:var(--muted)">후기를 불러오고 있어…</p></div>
-
-  <h2 class="sec">자주 묻는 질문</h2>
-  <div class="faq" id="faq">
-    <details><summary>부적냥은 어떤 서비스예요?</summary><p>생년월일시로 만세력(사주 여덟 글자)을 세워서 성격, 재물운, 일·진로, 연애운을 풀어주는 사주 서비스예요. 사주 말고도 궁합, 올해 운세, 대운, 좋은 날 고르기(택일)를 볼 수 있고, 내 사주에 부족한 기운을 채워주는 이미지 부적도 받을 수 있어요.</p></details>
-    <details><summary>990원 사주, 진짜 990원이에요?</summary><p>네. 모든 메뉴가 별사탕 1개(990원)예요. 추가 결제나 자동 결제 없어요. 여러 개 보고 싶으면 별사탕 5개(4,500원), 11개(9,900원) 묶음이 더 싸요.</p></details>
-    <details><summary>풀이는 뭘 근거로 만들어져요?</summary><p>양력 생년월일과 태어난 시각으로 사주 여덟 글자를 계산하고, 일간·오행의 강약·십신·합과 충 같은 명리학 기준으로 풀어요. 그래서 같은 날 태어나도 시각과 성별에 따라 풀이가 달라져요.</p></details>
-    <details><summary>태어난 시간을 몰라도 볼 수 있어요?</summary><p>볼 수 있어요. '시간 몰라'를 체크하면 시주를 빼고 나머지 여섯 글자로 풀어요. 시간을 알면 조금 더 정확해져요.</p></details>
-    <details><summary>음력 생일만 알아요.</summary><p>지금은 양력 기준이에요. 음력 생일은 포털에서 '음력 양력 변환'으로 바꿔서 넣어주세요. 음력 입력은 곧 붙일게요.</p></details>
-    <details><summary>무료로 볼 수 있는 건 뭐예요?</summary><p>맨 위 '오늘의 행운 부적'은 로그인 없이 매일 무료예요. 로그인하면 내 사주로 보는 오늘 운세, 부적냥 고민 상담, 매일 출석·복주머니 뽑기도 무료예요. 친구 초대와 공유 미션으로 별사탕을 받을 수도 있어요.</p></details>
-    <details><summary>이미지 부적은 뭐예요?</summary><p>부적냥이 내 이름을 부르며 빌어서 그려주는 폰 배경화면 부적이에요. 내 이름, 일주, 사주에서 가장 부족한 기운이 들어가요. 바라는 일이 잘 되길 비는 마음을 담은 기원 부적이라, 결과를 보장하진 않아요. 친구한테 선물할 수도 있어요.</p></details>
-    <details><summary>환불할 수 있어요?</summary><p>사용하지 않은 별사탕은 구매일로부터 7일 안에 전액 환불돼요. 이미 풀이를 본 별사탕과 받은 이미지 부적은 디지털 콘텐츠라 환불이 안 돼요. 오류로 풀이가 안 나오면 별사탕은 자동으로 돌려드려요.</p></details>
-    <details><summary>내 정보는 안전해요?</summary><p>생년월일과 이름은 풀이에만 쓰고, 탈퇴하면 바로 지워요. 결제 카드 정보는 토스페이먼츠가 처리해서 부적냥은 보관하지 않아요. 자세한 건 개인정보처리방침에 있어요.</p></details>
-  </div>
-  <div class="ask" id="askBox"></div>
-
-  <p class="fine">양력 기준이며 절기는 해마다 하루 정도 차이가 날 수 있어요. 부적냥의 풀이는 명리학을 바탕으로 한 참고용이에요. 중요한 결정은 꼭 전문가와 상의해요.</p>
+  <button class="btn-soft" id="myInfoBtn2" style="margin-top:14px">내 정보 보기</button>
 </section>
 
 <section id="v-form" hidden>
@@ -204,6 +212,13 @@
   <small id="chatHint">부적냥이 듣고 있어. 지금은 무료야.</small>
   <div class="in"><input id="chatIn" maxlength="300" placeholder="요즘 무슨 고민 있어?"><button class="btn" id="chatSend">보내기</button></div>
 </div>
+
+<nav class="tabbar" id="tabbar" aria-label="메뉴">
+  <button data-tab="v-home" class="on"><span class="ti">🏠</span>홈</button>
+  <button data-tab="v-amulet"><span class="ti">🧧</span>부적</button>
+  <button id="openChat"><span class="ti">💬</span>상담</button>
+  <button data-tab="v-my"><span class="ti">😺</span>MY<i class="dot" id="myDot" hidden></i></button>
+</nav>
 
 <!-- 로그인 -->
 <div class="sheet-bg" id="login" hidden>
@@ -375,7 +390,11 @@ async function api(path,body){
 }
 
 /* ---------- 화면 ---------- */
-function show(v){for(const id of["v-home","v-form","v-result","v-chat"])$(id).hidden=id!==v;$("chatbar").hidden=v!=="v-chat";$("biz").hidden=v==="v-chat";window.scrollTo(0,0);}
+function show(v){for(const id of["v-home","v-form","v-result","v-chat","v-amulet","v-my"])$(id).hidden=id!==v;$("chatbar").hidden=v!=="v-chat";$("biz").hidden=v==="v-chat";
+  const tab=["v-home","v-amulet","v-my"].includes(v);$("tabbar").hidden=!tab;document.body.classList.toggle("has-tab",tab);
+  document.querySelectorAll("#tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.tab===v));window.scrollTo(0,0);}
+document.querySelectorAll("#tabbar [data-tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));
+document.body.classList.add("has-tab");
 document.querySelectorAll("[data-home]").forEach(b=>b.onclick=()=>show("v-home"));
 $("goHome").onclick=()=>show("v-home");
 
@@ -397,6 +416,7 @@ $("logoutBtn").onclick=async()=>{await sb.auth.signOut();toast("로그아웃했�
 function renderWallet(){
   $("walletText").textContent=me?`${me.coins}${me.bonus?` ✨${me.bonus}`:""}${me.pieces?` +조각 ${me.pieces}/3`:""}`:"로그인";
   renderKb();renderAmuletShop();renderSent();
+  $("myDot").hidden=!(me&&me.gacha_left>0);
   $("walletBtn").setAttribute("aria-label",me?`별사탕 ${me.coins}개, 충전하기`:"로그인");
   $("logoutBtn").hidden=!me;$("myInfoBtn").hidden=!me;
   // 로그인 계정 표시 (네이버·카카오에서 받은 닉네임·이메일)
@@ -726,6 +746,8 @@ function openInfo(){if(!me)return;const a=me.account||{},u=session&&session.user
   const dl=$("infoList");dl.textContent="";for(const[k,v]of rows){const dt=document.createElement("dt"),dd=document.createElement("dd");dt.textContent=k;dd.textContent=v;dl.append(dt,dd);}
   const img=$("infoAvatar");img.hidden=!a.avatar_url;if(a.avatar_url)img.src=a.avatar_url;openSheet("infoSheet");}
 $("myInfoBtn").onclick=openInfo;
+$("myInfoBtn2").onclick=()=>{if(needLogin())return;openInfo();};
+$("myShopBtn").onclick=()=>openShop();
 
 
 /* ---------- 첫 화면: 오늘의 행운 부적 ---------- */
