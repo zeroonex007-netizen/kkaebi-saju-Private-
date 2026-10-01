@@ -214,3 +214,23 @@ footer.biz button{background:none;border:0;padding:0;color:inherit;text-decorati
 .bit{position:absolute;top:-10%;font-size:1.6rem;animation:fall 1.8s ease-in forwards}
 @keyframes fall{to{transform:translateY(115vh) rotate(360deg)}}
 @media (prefers-reduced-motion: reduce){.pouch.shake,.pouch.open,.burst-msg,.bit{animation:none}.xpbar span{transition:none}}
+
+/* --- 메뉴 카드: 말랑 액자 + 깨비 (10~20대 감성) --- */
+.grid{gap:12px}
+.mcard{min-height:0;padding:14px 14px 16px;border-radius:26px;gap:4px;box-shadow:0 2px 0 rgba(58,43,74,.06)}
+.mcard .art{width:100%;aspect-ratio:1;display:block;margin-bottom:8px}
+.mcard .mrow{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:0}
+.mcard strong{font-family:"Jua";font-weight:400;font-size:clamp(1rem,4.6vw,1.22rem);white-space:nowrap;margin-top:0;color:#2B2233;letter-spacing:-.01em}
+.mcard small{color:#7E6E8C;font-size:.84rem}
+.mcard .cost{position:static;background:#fff;border-radius:999px;padding:3px 10px 3px 7px;font-size:.92rem;color:#2B2233}
+.mcard .new{top:14px;left:14px;z-index:1}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mcard{filter:saturate(.9) brightness(.92)}}
+.mcard:active{transform:scale(.98)}
+/* 하단 탭바 */
+.tabbar{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:15;
+  display:flex;gap:6px;background:var(--surface);border-radius:999px;padding:8px 14px;box-shadow:0 6px 24px rgba(58,43,74,.16);width:min(360px,calc(100% - 48px));justify-content:space-around}
+.tabbar button{background:none;border:0;padding:8px 12px;border-radius:999px;display:grid;place-items:center}
+.tabbar svg{width:28px;height:28px;fill:var(--line)}
+.tabbar button.on svg{fill:var(--ink)}
+main{padding-bottom:120px}
+footer.biz{padding-bottom:110px}
