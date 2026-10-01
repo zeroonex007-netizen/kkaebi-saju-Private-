@@ -8,6 +8,11 @@
 <meta property="og:title" content="깨비사주 | 별사탕 하나에 990원">
 <meta property="og:description" content="꼬마 도깨비 깨비가 봐주는 990원 사주·궁합·연애운">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://kkaebi-saju.vercel.app/share.png">
+<meta property="og:image:width" content="800">
+<meta property="og:image:height" content="400">
+<link rel="icon" href="/icon.png">
+<link rel="apple-touch-icon" href="/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
@@ -15,6 +20,7 @@
 <script src="/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://js.tosspayments.com/v2/standard"></script>
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -54,7 +60,7 @@
     <div class="out" id="dailyOut" hidden></div>
   </div>
 
-  <button class="gift" id="shareApp"><span class="em" aria-hidden="true">🎁</span><span><strong>친구 초대하고 별사탕 받기</strong><br><small id="shareHint">친구가 내 링크로 가입하면 둘 다 1개씩!</small></span></button>
+  <button class="gift" id="shareApp"><span class="em" aria-hidden="true">🎁</span><span><strong>카톡으로 친구 초대하고 별사탕 받기</strong><br><small id="shareHint">친구가 내 링크로 가입하면 둘 다 1개씩!</small></span></button>
 
   <h2 class="sec">깨비 메뉴판</h2>
   <div class="grid" id="menu"></div>
@@ -119,7 +125,7 @@
     <button class="btn" id="reviewBtn">후기 남기고 조각 받기</button>
   </div>
   <div class="review" id="reviewDone" hidden><h3 class="j">이 메뉴 후기는 이미 남겼어. 고마워! ✨</h3></div>
-  <button class="gift" id="shareResult" style="margin-top:12px"><span class="em" aria-hidden="true">🎁</span><span><strong>이 결과 친구한테 공유하기</strong><br><small>친구가 가입하면 둘 다 별사탕 1개</small></span></button>
+  <button class="gift" id="shareResult" style="margin-top:12px"><span class="em" aria-hidden="true">🎁</span><span><strong>카톡으로 내 결과 자랑하기</strong><br><small>친구가 가입하면 둘 다 별사탕 1개</small></span></button>
   <button class="btn-soft" data-home style="margin-top:12px">다른 메뉴 보기</button>
 </section>
 
@@ -321,13 +327,27 @@ async function loadReviews(){const el=$("reviewList");
 loadReviews();
 
 /* ---------- 공유·초대 ---------- */
+const KAKAO_OK=(()=>{try{if(C.KAKAO_JS_KEY&&window.Kakao){if(!Kakao.isInitialized())Kakao.init(C.KAKAO_JS_KEY);return true;}}catch(e){}return false;})();
 async function share(fromResult){
   if(needLogin())return;
   const url=location.origin+"/?ref="+me.ref_code;
-  const text=fromResult&&lastType?`나 ${lastType.type[0]} 유형이래 ㅋㅋ 깨비사주에서 너도 봐봐! 이 링크로 가입하면 별사탕 하나 줘`:"깨비사주 진짜 용함 ㅋㅋ 이 링크로 가입하면 별사탕 하나 줘!";
+  const t=fromResult&&lastType;
   let ok=false;
-  try{if(navigator.share){await navigator.share({title:"깨비사주",text,url});ok=true;}}catch(e){if(e&&e.name==="AbortError")return;}
-  if(!ok){try{await navigator.clipboard.writeText(text+" "+url);ok=true;toast("초대 링크 복사됐어! 친구한테 붙여넣어줘.");}catch(e){}}
+  if(KAKAO_OK){
+    try{
+      Kakao.Share.sendDefault({objectType:"feed",
+        content:{title:t?`${lastType.name}님은 '${lastType.type[0]}' 유형!`:"별사탕 하나에 990원, 깨비사주",
+          description:t?`${lastType.type[1]} · 너는 무슨 유형이야? 이 링크로 가입하면 별사탕 1개 선물!`:"꼬마 도깨비가 봐주는 사주·궁합·연애운. 이 링크로 가입하면 별사탕 1개 선물!",
+          imageUrl:location.origin+"/share.png",imageWidth:800,imageHeight:400,link:{mobileWebUrl:url,webUrl:url}},
+        buttons:[{title:t?"나도 내 유형 보기":"깨비한테 사주 보기",link:{mobileWebUrl:url,webUrl:url}}]});
+      ok=true;
+    }catch(e){console.error(e);}
+  }
+  if(!ok){
+    const text=t?`나 ${lastType.type[0]} 유형이래 ㅋㅋ 깨비사주에서 너도 봐봐! 이 링크로 가입하면 별사탕 하나 줘`:"깨비사주 진짜 용함 ㅋㅋ 이 링크로 가입하면 별사탕 하나 줘!";
+    try{if(navigator.share){await navigator.share({title:"깨비사주",text,url});ok=true;}}catch(e){if(e&&e.name==="AbortError")return;}
+    if(!ok){try{await navigator.clipboard.writeText(text+" "+url);ok=true;toast("초대 링크 복사됐어! 친구한테 붙여넣어줘.");}catch(e){}}
+  }
   if(!ok){toast("공유가 안 됐어. 다시 눌러줘!");return;}
   try{const r=await api("share");if(r.rewarded){await refreshMe();setTimeout(()=>toast("첫 공유 선물! 별사탕 1개 충전 🎁"),700);}}catch(e){}
 }
