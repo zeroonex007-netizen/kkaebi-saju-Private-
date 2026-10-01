@@ -83,14 +83,17 @@
   <div class="faq" id="faq">
     <details><summary>부적냥은 어떤 서비스예요?</summary><p>생년월일시로 만세력(사주 여덟 글자)을 세워서 성격, 재물운, 일·진로, 연애운을 풀어주는 사주 서비스예요. 사주 말고도 궁합, 올해 운세, 대운, 좋은 날 고르기(택일)를 볼 수 있고, 내 사주에 부족한 기운을 채워주는 이미지 부적도 받을 수 있어요.</p></details>
     <details><summary>990원 사주, 진짜 990원이에요?</summary><p>네. 모든 메뉴가 별사탕 1개(990원)예요. 추가 결제나 자동 결제 없어요. 여러 개 보고 싶으면 별사탕 5개(4,500원), 11개(9,900원) 묶음이 더 싸요.</p></details>
+    <details><summary>무료로 볼 수 있는 건 뭐예요?</summary><p>맨 위 '오늘의 행운 부적'은 로그인 없이 매일 무료예요. 로그인하면 내 사주로 보는 오늘 운세, 부적냥 고민 상담, 매일 출석·복주머니 뽑기도 무료예요. 친구 초대와 공유 미션으로 별사탕을 받을 수도 있어요.</p></details>
+    <details><summary>환불할 수 있어요?</summary><p>사용하지 않은 별사탕은 구매일로부터 7일 안에 전액 환불돼요. 이미 풀이를 본 별사탕과 받은 이미지 부적은 디지털 콘텐츠라 환불이 안 돼요. 오류로 풀이가 안 나오면 별사탕은 자동으로 돌려드려요.</p></details>
+    <div id="faqMore" hidden>
     <details><summary>풀이는 뭘 근거로 만들어져요?</summary><p>양력 생년월일과 태어난 시각으로 사주 여덟 글자를 계산하고, 일간·오행의 강약·십신·합과 충 같은 명리학 기준으로 풀어요. 그래서 같은 날 태어나도 시각과 성별에 따라 풀이가 달라져요.</p></details>
     <details><summary>태어난 시간을 몰라도 볼 수 있어요?</summary><p>볼 수 있어요. '시간 몰라'를 체크하면 시주를 빼고 나머지 여섯 글자로 풀어요. 시간을 알면 조금 더 정확해져요.</p></details>
     <details><summary>음력 생일만 알아요.</summary><p>지금은 양력 기준이에요. 음력 생일은 포털에서 '음력 양력 변환'으로 바꿔서 넣어주세요. 음력 입력은 곧 붙일게요.</p></details>
-    <details><summary>무료로 볼 수 있는 건 뭐예요?</summary><p>맨 위 '오늘의 행운 부적'은 로그인 없이 매일 무료예요. 로그인하면 내 사주로 보는 오늘 운세, 부적냥 고민 상담, 매일 출석·복주머니 뽑기도 무료예요. 친구 초대와 공유 미션으로 별사탕을 받을 수도 있어요.</p></details>
     <details><summary>이미지 부적은 뭐예요?</summary><p>부적냥이 내 이름을 부르며 빌어서 그려주는 폰 배경화면 부적이에요. 내 이름, 일주, 사주에서 가장 부족한 기운이 들어가요. 바라는 일이 잘 되길 비는 마음을 담은 기원 부적이라, 결과를 보장하진 않아요. 친구한테 선물할 수도 있어요.</p></details>
-    <details><summary>환불할 수 있어요?</summary><p>사용하지 않은 별사탕은 구매일로부터 7일 안에 전액 환불돼요. 이미 풀이를 본 별사탕과 받은 이미지 부적은 디지털 콘텐츠라 환불이 안 돼요. 오류로 풀이가 안 나오면 별사탕은 자동으로 돌려드려요.</p></details>
     <details><summary>내 정보는 안전해요?</summary><p>생년월일과 이름은 풀이에만 쓰고, 탈퇴하면 바로 지워요. 결제 카드 정보는 토스페이먼츠가 처리해서 부적냥은 보관하지 않아요. 자세한 건 개인정보처리방침에 있어요.</p></details>
+    </div>
   </div>
+  <button class="faq-more" id="faqMoreBtn">질문 더 보기 ⌄</button>
   <div class="ask" id="askBox"></div>
 
   <p class="fine">양력 기준이며 절기는 해마다 하루 정도 차이가 날 수 있어요. 부적냥의 풀이는 명리학을 바탕으로 한 참고용이에요. 중요한 결정은 꼭 전문가와 상의해요.</p>
@@ -360,6 +363,19 @@
   </div>
 </div>
 
+<div class="sheet-bg" id="shareSheet" hidden>
+  <div class="sheet center" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <h2 id="shareTitle">어디로 보낼까?</h2>
+    <div class="share-grid">
+      <button id="shKakao"><span class="si" style="background:#FEE500">💬</span>카카오톡</button>
+      <button id="shInsta"><span class="si" style="background:linear-gradient(45deg,#FEDA75,#FA7E1E,#D62976,#962FBF)">📸</span>인스타·스토리</button>
+      <button id="shMore"><span class="si" style="background:var(--lavSoft)">📤</span>다른 앱</button>
+      <button id="shCopy"><span class="si" style="background:var(--mintSoft)">🔗</span>링크 복사</button>
+    </div>
+    <button class="btn-soft" data-close style="margin-top:14px">닫기</button>
+  </div>
+</div>
+
 <div class="burst" id="burst" hidden aria-live="polite"><div class="burst-msg" id="burstMsg"></div></div>
 
 <div class="sheet-bg" id="cardSheet" hidden>
@@ -569,27 +585,35 @@ loadReviews();
 const KAKAO_OK=(()=>{try{if(C.KAKAO_JS_KEY&&window.Kakao){if(!Kakao.isInitialized())Kakao.init(C.KAKAO_JS_KEY);return true;}}catch(e){}return false;})();
 async function share(fromResult){
   if(needLogin())return;
-  const url=location.origin+"/?ref="+me.ref_code;
-  const t=fromResult&&lastType;
-  let ok=false;
-  if(KAKAO_OK){
-    try{
-      Kakao.Share.sendDefault({objectType:"feed",
-        content:{title:t?`${lastType.name}님은 '${lastType.type[0]}' 유형!`:"니 팔자 내가 앎. 부적냥 990원 사주",
-          description:t?`${lastType.type[1]} · 너는 무슨 유형이야? 이 링크로 가입하면 별사탕 1개 선물!`:"무기력한데 은근 용한 고양이가 봐주는 사주. 이 링크로 가입하면 별사탕 1개 선물",
-          imageUrl:location.origin+(t?`/share/type-${TYPES.indexOf(lastType.type)}.jpg`:"/share.png"),imageWidth:800,imageHeight:400,link:{mobileWebUrl:url,webUrl:url}},
-        buttons:[{title:t?"나도 내 유형 보기":"부적냥한테 사주 보기",link:{mobileWebUrl:url,webUrl:url}}]});
-      ok=true;
-    }catch(e){console.error(e);}
-  }
-  if(!ok){
-    const text=t?`나 ${lastType.type[0]} 유형이래 ㅋㅋ 부적냥 사주에서 너도 봐봐 이 링크로 가입하면 별사탕 하나 줘`:"부적냥 사주 진짜 용함 ㅋㅋ 이 링크로 가입하면 별사탕 하나 줘!";
-    try{if(navigator.share){await navigator.share({title:"부적냥 사주",text,url});ok=true;}}catch(e){if(e&&e.name==="AbortError")return;}
-    if(!ok){try{await navigator.clipboard.writeText(text+" "+url);ok=true;toast("초대 링크 복사됐어! 친구한테 붙여넣어줘.");}catch(e){}}
-  }
-  if(!ok){toast("공유가 안 됐어. 다시 눌러줘!");return;}
-  try{const r=await api("share");if(r.rewarded){await refreshMe();setTimeout(()=>toast("첫 공유 선물! 별사탕 1개 충전 🎁"),700);}}catch(e){}
+  const url=location.origin+"/?ref="+me.ref_code,t=fromResult&&lastType;
+  openShare({url,btn:t?"나도 내 유형 보기":"부적냥한테 사주 보기",
+    title:t?`${lastType.name}님은 '${lastType.type[0]}' 유형!`:"니 팔자 내가 앎. 부적냥 990원 사주",
+    desc:t?`${lastType.type[1]} · 너는 무슨 유형이야? 이 링크로 가입하면 별사탕 1개 선물!`:"무기력한데 은근 용한 고양이가 봐주는 사주. 이 링크로 가입하면 별사탕 1개 선물",
+    text:t?`나 ${lastType.type[0]} 유형이래 ㅋㅋ 부적냥 사주에서 너도 봐봐`:"부적냥 사주 진짜 용함 ㅋㅋ 이 링크로 가입하면 별사탕 하나 줘!",
+    img:t?`/share/type-${TYPES.indexOf(lastType.type)}.jpg`:"/share.png"});
 }
+/* 공유 창: 카카오톡 · 인스타/다른 앱(그림째로) · 링크 복사 */
+let shareCtx=null;
+function openShare(ctx){shareCtx=ctx;ctx.file=fetch(ctx.img).then(r=>r.blob()).then(b=>new File([b],"bujeoknyang.jpg",{type:b.type||"image/jpeg"})).catch(()=>null);openSheet("shareSheet");}
+async function shareDone(){$("shareSheet").hidden=true;
+  if(session){try{const x=await api("share");if(x.rewarded){await refreshMe();setTimeout(()=>toast("첫 공유 선물! 별사탕 1개 충전 🎁"),700);}}catch(e){}}}
+const shareText=c=>`${c.text||c.title}\n${c.url}`;
+$("shKakao").onclick=()=>{const c=shareCtx;if(!c)return;
+  if(!KAKAO_OK){toast("카카오톡을 못 불러왔어. 링크 복사로 보내줘!");return;}
+  try{Kakao.Share.sendDefault({objectType:"feed",content:{title:c.title,description:c.desc,imageUrl:location.origin+c.img,imageWidth:800,imageHeight:400,link:{mobileWebUrl:c.url,webUrl:c.url}},buttons:[{title:c.btn,link:{mobileWebUrl:c.url,webUrl:c.url}}]});shareDone();}
+  catch(e){console.error(e);toast("카톡 공유가 안 됐어. 링크 복사로 보내줘!");}};
+$("shInsta").onclick=async()=>{const c=shareCtx;if(!c)return;const f=await c.file;
+  try{if(f&&navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],text:shareText(c)});shareDone();return;}}catch(e){if(e&&e.name==="AbortError")return;}
+  // 파일 공유가 안 되는 브라우저: 그림 저장 + 링크 복사
+  if(f){const u=URL.createObjectURL(f),a=document.createElement("a");a.href=u;a.download="부적냥_공유.jpg";a.click();setTimeout(()=>URL.revokeObjectURL(u),5000);}
+  try{await navigator.clipboard.writeText(c.url);}catch(e){}
+  toast("그림 저장하고 링크 복사했어! 인스타 스토리에 올리고 링크 스티커에 붙여넣어줘.");shareDone();};
+$("shMore").onclick=async()=>{const c=shareCtx;if(!c)return;
+  try{if(navigator.share){await navigator.share({title:c.title,text:c.text||c.title,url:c.url});shareDone();return;}}catch(e){if(e&&e.name==="AbortError")return;}
+  $("shCopy").click();};
+$("shCopy").onclick=async()=>{const c=shareCtx;if(!c)return;
+  try{await navigator.clipboard.writeText(shareText(c));toast("링크 복사됐어! 아무 데나 붙여넣어줘.");shareDone();}
+  catch(e){prompt("이 링크를 복사해줘",c.url);shareDone();}};
 $("shareApp").onclick=()=>share(false);$("shareResult").onclick=()=>share(true);
 
 /* ---------- 공유 카드 ---------- */
@@ -699,18 +723,16 @@ async function drawAmulet(cv,a,el,own,preview,opt={}){
 /* ---------- 부적 선물 ---------- */
 $("amGift").onclick=()=>{if(needLogin())return;$("giftForm").hidden=false;$("amGift").hidden=true;$("gFrom").value=(me&&me.name)||"";$("gErr").textContent="";$("gTo").focus();};
 async function sendGiftLink(g){const a=amOf(g.kind),url=`${location.origin}/?gift=${g.code}${me&&me.ref_code?"&ref="+me.ref_code:""}`;
-  const title=`${g.from}님이 ${g.to}님 위해 ${a.name}을 부탁했어요`,desc=`부적냥이 ${g.to}님 이름 부르면서 진심으로 빌었어. "${a.pray}"`;let ok=false;
-  if(KAKAO_OK){try{Kakao.Share.sendDefault({objectType:"feed",content:{title,description:desc,imageUrl:location.origin+`/share/amulet-${g.kind}.jpg`,imageWidth:800,imageHeight:400,link:{mobileWebUrl:url,webUrl:url}},buttons:[{title:"내 부적 받기",link:{mobileWebUrl:url,webUrl:url}}]});ok=true;}catch(e){console.error(e);}}
-  if(!ok){try{if(navigator.share){await navigator.share({title,text:title,url});ok=true;}}catch(e){if(e&&e.name==="AbortError")return true;}}
-  if(!ok){try{await navigator.clipboard.writeText(title+" "+url);ok=true;toast("선물 링크 복사됐어! 친구한테 붙여넣어줘.");}catch(e){}}
-  return ok;}
+  openShare({url,btn:"내 부적 받기",img:`/share/amulet-${g.kind}.jpg`,title:`${g.from}님이 ${g.to}님 위해 ${a.name}을 부탁했어요`,
+    desc:`부적냥이 ${g.to}님 이름 부르면서 진심으로 빌었어. "${a.pray}"`,text:`${g.to}! ${g.from}이(가) 너 위해 부적냥한테 ${a.name} 부탁했어 🧧 열어봐`});
+  return true;}
 $("gSend").onclick=async()=>{const a=amOf(amCur),to=$("gTo").value.trim(),from=$("gFrom").value.trim();
   if(!to){$("gErr").textContent="받는 친구 이름을 알려줘!";return;}if(!from){$("gErr").textContent="보내는 사람 이름도 적어줘!";return;}
   if(!me||(me.coins+(me.bonus||0))<1){toast("별사탕이 모자라!");$("amuletSheet").hidden=true;openShop();return;}
   const b=$("gSend");b.disabled=true;
   try{const r=await api("gift",{action:"send",kind:a.id,to,from,msg:$("gMsg").value.trim()});await refreshMe();
     await drawAmulet($("amCv"),a,null,null,false,{to,from});$("giftForm").hidden=true;$("amWhy").textContent=`부적냥이 ${to}님 이름 부르면서 빌었어. 이제 카톡으로 보내줘.`;
-    const ok=await sendGiftLink({code:r.code,kind:a.id,to,from});if(!ok)toast("공유가 안 됐어. 홈의 '보낸 선물'에서 다시 보낼 수 있어.");}
+    await sendGiftLink({code:r.code,kind:a.id,to,from});}
   catch(e){if(e.status===402){toast("별사탕이 모자라!");openShop();}else $("gErr").textContent="선물을 못 만들었어. 다시 눌러줘.";}
   finally{b.disabled=false;}};
 function renderSent(){const el=$("giftsSent");if(!el)return;const gs=(me&&me.gifts_sent)||[];el.hidden=!gs.length;el.textContent="";if(!gs.length)return;
@@ -746,6 +768,7 @@ function openInfo(){if(!me)return;const a=me.account||{},u=session&&session.user
   const dl=$("infoList");dl.textContent="";for(const[k,v]of rows){const dt=document.createElement("dt"),dd=document.createElement("dd");dt.textContent=k;dd.textContent=v;dl.append(dt,dd);}
   const img=$("infoAvatar");img.hidden=!a.avatar_url;if(a.avatar_url)img.src=a.avatar_url;openSheet("infoSheet");}
 $("myInfoBtn").onclick=openInfo;
+$("faqMoreBtn").onclick=()=>{const m=$("faqMore");m.hidden=!m.hidden;$("faqMoreBtn").textContent=m.hidden?"질문 더 보기 ⌄":"접기 ⌃";};
 $("myInfoBtn2").onclick=()=>{if(needLogin())return;openInfo();};
 $("myShopBtn").onclick=()=>openShop();
 
@@ -766,12 +789,9 @@ $("luckDev").onclick=()=>{if(luckDone){$("luck").classList.remove("pop");void $(
   const t=setInterval(()=>{el.textContent=10+Math.floor(Math.random()*90);if(++n>16){clearInterval(t);$("luckDev").classList.remove("rolling");showLuck(r);$("luck").classList.add("pop");
     try{localStorage.setItem("nyang_luck_"+new Date().toDateString(),"1");}catch(e){}if(r.score>=88)celebrate(`오늘 행운점수 ${r.score}점! 🍀`);}},70);};
 try{if(localStorage.getItem("nyang_luck_"+new Date().toDateString()))showLuck(luckToday());}catch(e){}
-$("luckShare").onclick=async()=>{if(!luckDone)return;const r=luckDone,url=location.origin+(me&&me.ref_code?"/?ref="+me.ref_code:"/");
-  const title=`오늘 내 행운점수 ${r.score}점 🍀`,desc=`부적냥 한마디: "${r.quote}" 너도 뽑아봐.`;let ok=false;
-  if(KAKAO_OK){try{Kakao.Share.sendDefault({objectType:"feed",content:{title,description:desc,imageUrl:location.origin+`/share/luck-${r.score}.jpg`,imageWidth:800,imageHeight:400,link:{mobileWebUrl:url,webUrl:url}},buttons:[{title:"나도 뽑기",link:{mobileWebUrl:url,webUrl:url}}]});ok=true;}catch(e){}}
-  if(!ok){try{if(navigator.share){await navigator.share({title,text:title+" "+desc,url});ok=true;}}catch(e){if(e&&e.name==="AbortError")return;}}
-  if(!ok){try{await navigator.clipboard.writeText(title+" "+desc+" "+url);toast("링크 복사됐어! 친구한테 붙여넣어줘.");ok=true;}catch(e){}}
-  if(ok&&session){try{const x=await api("share");if(x.rewarded){await refreshMe();setTimeout(()=>toast("첫 공유 선물! 별사탕 1개 충전 🎁"),700);}}catch(e){}}};
+$("luckShare").onclick=()=>{if(!luckDone)return;const r=luckDone,url=location.origin+(me&&me.ref_code?"/?ref="+me.ref_code:"/");
+  openShare({url,btn:"나도 뽑기",img:`/share/luck-${r.score}.jpg`,title:`오늘 내 행운점수 ${r.score}점 🍀`,desc:`부적냥 한마디: "${r.quote}" 너도 뽑아봐.`,
+    text:`오늘 내 행운점수 ${r.score}점 🍀 부적냥이 "${r.quote}"래 ㅋㅋ 너도 뽑아봐`});};
 $("luckMore").onclick=()=>{if(needLogin())return;if(!me||!me.birth){toast("생일 알려주면 내 사주로 봐줄게!");openForm(PRODUCTS[0]);return;}
   document.querySelector(".today").scrollIntoView({behavior:"smooth",block:"center"});$("dailyBtn").click();};
 

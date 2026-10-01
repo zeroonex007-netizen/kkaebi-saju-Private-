@@ -313,10 +313,10 @@ footer.biz button{background:none;border:0;padding:0;color:inherit;text-decorati
 /* 자주 묻는 질문 */
 .faq{background:var(--surface);border-radius:20px;overflow:hidden;border:2px solid var(--line)}
 .faq details{border-top:1px solid var(--line)}.faq details:first-child{border-top:0}
-.faq summary{list-style:none;cursor:pointer;padding:14px 40px 14px 16px;font-family:"Jua";font-size:1.02rem;position:relative}
+.faq summary{list-style:none;cursor:pointer;padding:11px 40px 11px 16px;font-family:"Jua";font-size:.96rem;position:relative}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--line);margin-right:10px;vertical-align:3px}
-.faq summary::after{content:"⌄";position:absolute;right:16px;top:10px;color:var(--muted);transition:transform .2s}
+.faq summary::after{content:"⌄";position:absolute;right:16px;top:7px;color:var(--muted);transition:transform .2s}
 .faq details[open] summary{background:var(--lavSoft)}.faq details[open] summary::before{background:var(--sun)}
 .faq details[open] summary::after{transform:rotate(180deg)}
 .faq details p{margin:0;padding:6px 16px 16px 33px;color:var(--muted);font-size:.93rem;line-height:1.75}
@@ -336,3 +336,10 @@ body.has-tab footer.biz{padding-bottom:110px}
 body.has-tab main{padding-bottom:20px}
 .price-line{margin:10px 2px 22px;font-size:.82rem;color:var(--muted);text-align:center}
 .price-line a{color:inherit}
+
+/* 공유 창 */
+.share-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
+.share-grid button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.8rem;color:var(--ink);padding:4px 0}
+.share-grid .si{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:1.5rem}
+.faq #faqMore details{border-top:1px solid var(--line)}
+.faq-more{display:block;margin:8px auto 0;border:0;background:none;color:var(--muted);font-size:.88rem;padding:6px 12px}
