@@ -18,6 +18,7 @@ export default route(async (req, res, user) => {
   const gachaLimit = isSub ? 2 : 1;
   res.json({
     name: p.name, sex: p.sex, birth: p.birth, birth_time: p.birth_time,
+    account: { nickname: p.nickname || null, real_name: p.real_name || null, phone: p.phone || null, avatar_url: p.avatar_url || null, age_range: p.age_range || null, provider: p.provider || null },
     coins: p.coins, pieces: p.pieces, ref_code: p.ref_code, shared_once: p.shared_once,
     bonus: p.bonus_day === today ? p.bonus_coins : 0,
     // 어제나 오늘 출석했으면 연속 기록 유지, 아니면 끊긴 것

@@ -310,6 +310,15 @@
   </div>
 </div>
 
+<div class="sheet-bg" id="infoSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="infoTitle" style="max-height:92vh;overflow:auto">
+    <div class="info-top"><img id="infoAvatar" alt="" hidden><h2 id="infoTitle">내 정보</h2></div>
+    <dl class="info" id="infoList"></dl>
+    <p class="refund">이름·성별·생년월일은 사주 입력칸을 자동으로 채우는 데 써요. 휴대전화번호는 본인 확인, 중복 가입·보상 부정 수령 방지, 결제·환불 문의 연락에만 쓰고 광고 문자는 보내지 않아요. 자세한 내용은 <a href="/privacy.html" target="_blank">개인정보처리방침</a>에 있어요.</p>
+    <button class="btn-soft" data-close style="margin-top:8px">닫기</button>
+  </div>
+</div>
+
 <div class="burst" id="burst" hidden aria-live="polite"><div class="burst-msg" id="burstMsg"></div></div>
 
 <div class="sheet-bg" id="cardSheet" hidden>
@@ -354,7 +363,7 @@ for(const s of LOVE_STATES)$("loveState").add(new Option(s));
 for(const s of PURPOSES)$("purpose").add(new Option(s));
 
 const B=C.BIZ;
-$("biz").innerHTML=`<b>부적냥 사주</b> · 상호 ${B.name} · 대표 ${B.owner}<br>사업자등록번호 ${B.regNo} · 통신판매업 신고 ${B.ecomNo||"신고 진행 중"}<br>${B.address}<br>${[B.email&&"고객센터 "+B.email,B.phone].filter(Boolean).join(" · ")}${B.email||B.phone?"<br>":""}<a href="/terms.html">이용약관</a><a href="/privacy.html"><b>개인정보처리방침</b></a><span class="acct" id="acctLine" hidden></span><button id="logoutBtn" hidden>로그아웃</button>`;
+$("biz").innerHTML=`<b>부적냥 사주</b> · 상호 ${B.name} · 대표 ${B.owner}<br>사업자등록번호 ${B.regNo} · 통신판매업 신고 ${B.ecomNo||"신고 진행 중"}<br>${B.address}<br>${[B.email&&"고객센터 "+B.email,B.phone].filter(Boolean).join(" · ")}${B.email||B.phone?"<br>":""}<a href="/terms.html">이용약관</a><a href="/privacy.html"><b>개인정보처리방침</b></a><span class="acct" id="acctLine" hidden></span><button id="myInfoBtn" hidden>내 정보</button><button id="logoutBtn" hidden>로그아웃</button>`;
 $("logoutBtn").onclick=async()=>{await sb.auth.signOut();toast("로그아웃했어. 또 놀러 와!");};
 
 /* ---------- 로그인 ---------- */
@@ -362,7 +371,7 @@ function renderWallet(){
   $("walletText").textContent=me?`${me.coins}${me.bonus?` ✨${me.bonus}`:""}${me.pieces?` +조각 ${me.pieces}/3`:""}`:"로그인";
   renderKb();renderAmuletShop();renderSent();
   $("walletBtn").setAttribute("aria-label",me?`별사탕 ${me.coins}개, 충전하기`:"로그인");
-  $("logoutBtn").hidden=!me;
+  $("logoutBtn").hidden=!me;$("myInfoBtn").hidden=!me;
   // 로그인 계정 표시 (네이버·카카오에서 받은 닉네임·이메일)
   const u=session&&session.user,md=(u&&u.user_metadata)||{},nick=md.name||md.nickname||md.full_name||md.user_name||"",mail=(u&&u.email)||"";
   $("acctLine").hidden=!(me&&(nick||mail));$("acctLine").textContent=`로그인 계정: ${[nick,mail].filter(Boolean).join(" · ")}`;
@@ -680,6 +689,16 @@ async function giftFlow(){let code=null;try{code=localStorage.getItem("nyang_gif
     if(e.status===409||e.status===404){try{localStorage.removeItem("nyang_gift");}catch(_){}toast(e.status===404?"선물을 못 찾았어. 링크를 다시 확인해줘.":"이 선물은 받을 수 없어. 이미 받았거나 내가 보낸 선물이야.");}
   }finally{giftBusy=false;}}
 $("giftClaim").onclick=()=>{$("giftSheet").hidden=true;needLogin();};
+
+
+/* ---------- 내 정보 ---------- */
+function maskPhone(p){const d=(p||"").replace(/\D/g,"");return d.length>=10?`${d.slice(0,3)}-****-${d.slice(-4)}`:p;}
+function openInfo(){if(!me)return;const a=me.account||{},u=session&&session.user||{},md=u.user_metadata||{};
+  const rows=[["로그인",a.provider==="naver"?"네이버":(u.app_metadata&&u.app_metadata.provider)==="kakao"?"카카오":(a.provider||"-")],["닉네임",a.nickname||md.name||md.nickname||"-"],["이름",a.real_name||me.name||"-"],
+    ["이메일",u.email||"-"],["휴대전화",a.phone?maskPhone(a.phone):"-"],["성별",me.sex||"-"],["생년월일",me.birth?me.birth.replaceAll("-","."):"-"],["연령대",a.age_range?a.age_range.replace("-","~")+"세":"-"]];
+  const dl=$("infoList");dl.textContent="";for(const[k,v]of rows){const dt=document.createElement("dt"),dd=document.createElement("dd");dt.textContent=k;dd.textContent=v;dl.append(dt,dd);}
+  const img=$("infoAvatar");img.hidden=!a.avatar_url;if(a.avatar_url)img.src=a.avatar_url;openSheet("infoSheet");}
+$("myInfoBtn").onclick=openInfo;
 
 /* ---------- 오늘의 운세 ---------- */
 $("dailyBtn").onclick=async()=>{if(needLogin())return;
