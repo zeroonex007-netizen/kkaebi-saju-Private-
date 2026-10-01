@@ -70,6 +70,10 @@
     <span><strong>깨비랑 고민 수다</strong><br><small style="color:var(--muted)">하루 한 번 공짜, 그다음은 별사탕 1개</small></span>
   </button>
 
+  <h2 class="sec">별사탕 가격</h2>
+  <div class="prices" id="priceList"></div>
+  <p class="refund" style="margin-top:6px">모든 메뉴는 별사탕 1개로 볼 수 있어요. 결제 즉시 화면으로 풀이를 보여줘요. 사용하지 않은 별사탕은 구매일로부터 7일 이내 환불돼요. <a href="/terms.html#refund" style="color:inherit">환불 정책 보기</a></p>
+
   <h2 class="sec">먼저 본 친구들 후기</h2>
   <div class="reviews" id="reviewList"><p style="color:var(--muted)">후기를 불러오고 있어…</p></div>
 
@@ -205,6 +209,8 @@ $("goHome").onclick=()=>show("v-home");
 for(const p of PRODUCTS){const b=document.createElement("button");b.className="card "+p.c;
   b.innerHTML=`${p.isNew?'<span class="new">NEW</span>':""}<span class="cost"><svg class="candy"><use href="#candy"/></svg>1</span><span class="em" aria-hidden="true">${p.em}</span><strong></strong><small></small>`;
   b.querySelector("strong").textContent=p.name;b.querySelector("small").textContent=p.sub;b.onclick=()=>openForm(p);$("menu").appendChild(b);}
+for(const p of PACKS){const d=document.createElement("div");d.className="price";
+  d.innerHTML=`<span><svg class="candy"><use href="#candy"/></svg> 별사탕 ${p.n}개${p.tag?` <em>${p.tag}</em>`:""}</span><strong>${p.price.toLocaleString()}원</strong>`;$("priceList").appendChild(d);}
 for(const s of LOVE_STATES)$("loveState").add(new Option(s));
 for(const s of PURPOSES)$("purpose").add(new Option(s));
 

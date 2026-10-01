@@ -150,3 +150,7 @@ footer.biz{max-width:480px;margin:0 auto;padding:24px 16px 40px;color:var(--mute
 footer.biz a{color:inherit;margin-right:10px}
 footer.biz button{background:none;border:0;padding:0;color:inherit;text-decoration:underline;font-size:inherit}
 #payment-method,#agreement{margin:4px -8px}
+
+.prices{display:grid;gap:8px}
+.price{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:12px 14px}
+.price em{font-style:normal;color:var(--pink);font-size:.82rem;font-weight:700}
