@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>깨비사주 | 별사탕 하나에 990원 사주·궁합·연애운</title>
+<meta name="description" content="꼬마 도깨비 깨비가 봐주는 990원 사주, 궁합, 연애운, 택일. 매일 무료 운세와 고민 수다까지.">
+<meta property="og:title" content="깨비사주 | 별사탕 하나에 990원">
+<meta property="og:description" content="꼬마 도깨비 깨비가 봐주는 990원 사주·궁합·연애운">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<script src="/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://js.tosspayments.com/v2/standard"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="candy" viewBox="0 0 24 24"><path d="M12 1.8l2.6 6 6.5.6-4.9 4.3 1.5 6.4L12 15.8l-5.7 3.3 1.5-6.4L2.9 8.4l6.5-.6z" fill="#FFB3C7" stroke="#E86A8E" stroke-width="1.4" stroke-linejoin="round"/><circle cx="10" cy="9.5" r="1.3" fill="#fff"/></symbol>
+  <symbol id="kb" viewBox="0 0 140 140">
+    <path d="M52 30 L58 8 L66 28 Z" fill="#FFD166" stroke="#E0A92B" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M88 30 L82 8 L74 28 Z" fill="#FFD166" stroke="#E0A92B" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M18 92 C18 50 40 26 70 26 C100 26 122 50 122 92 C122 118 100 130 70 130 C40 130 18 118 18 92Z" fill="#9EC9FF"/>
+    <path d="M22 86 C30 70 46 62 70 62 C94 62 110 70 118 86" fill="none" stroke="#7FB2F5" stroke-width="2" opacity=".6"/>
+    <g class="eye"><ellipse cx="52" cy="80" rx="7" ry="9" fill="#3A2B4A"/><circle cx="54.5" cy="76.5" r="2.5" fill="#fff"/></g>
+    <g class="eye"><ellipse cx="88" cy="80" rx="7" ry="9" fill="#3A2B4A"/><circle cx="90.5" cy="76.5" r="2.5" fill="#fff"/></g>
+    <ellipse cx="38" cy="96" rx="9" ry="5.5" fill="#FF9DB6" opacity=".75"/><ellipse cx="102" cy="96" rx="9" ry="5.5" fill="#FF9DB6" opacity=".75"/>
+    <path d="M62 98 Q70 106 78 98" fill="none" stroke="#3A2B4A" stroke-width="3" stroke-linecap="round"/>
+    <path d="M66 101 L67.5 106 L69.5 101.5" fill="#fff" stroke="#3A2B4A" stroke-width="1.2" stroke-linejoin="round"/>
+  </symbol>
+</svg>
+
+<main>
+<header class="top">
+  <button class="logo" id="goHome"><svg><use href="#kb"/></svg>깨비사주</button>
+  <button class="wallet" id="walletBtn"><svg class="candy"><use href="#candy"/></svg><span id="walletText">로그인</span></button>
+</header>
+
+<section id="v-home">
+  <div class="hero">
+    <svg class="kkaebi" role="img" aria-label="꼬마 도깨비 깨비"><use href="#kb"/></svg>
+    <div class="bubble">
+      <h1>네 팔자, 깨비가 콕 집어줄게!</h1>
+      <p>별사탕 하나에 990원. 사주, 궁합, 연애운까지.</p>
+    </div>
+  </div>
+
+  <div class="today">
+    <h2>오늘의 깨비 운세 · 무료</h2>
+    <p>매일 바뀌어. 행운의 색이랑 메뉴도 골라줄게.</p>
+    <button class="btn" id="dailyBtn">오늘 운세 뽑기</button>
+    <div class="out" id="dailyOut" hidden></div>
+  </div>
+
+  <button class="gift" id="shareApp"><span class="em" aria-hidden="true">🎁</span><span><strong>친구 초대하고 별사탕 받기</strong><br><small id="shareHint">친구가 내 링크로 가입하면 둘 다 1개씩!</small></span></button>
+
+  <h2 class="sec">깨비 메뉴판</h2>
+  <div class="grid" id="menu"></div>
+
+  <button class="chatcta" id="openChat">
+    <svg aria-hidden="true"><use href="#kb"/></svg>
+    <span><strong>깨비랑 고민 수다</strong><br><small style="color:var(--muted)">하루 한 번 공짜, 그다음은 별사탕 1개</small></span>
+  </button>
+
+  <h2 class="sec">먼저 본 친구들 후기</h2>
+  <div class="reviews" id="reviewList"><p style="color:var(--muted)">후기를 불러오고 있어…</p></div>
+
+  <p class="fine">양력 기준이며 절기는 해마다 하루 정도 차이가 날 수 있어요. 깨비의 풀이는 재미와 참고용이에요.</p>
+</section>
+
+<section id="v-form" hidden>
+  <button class="back" data-home>‹ 메뉴판으로</button>
+  <h1 class="ftitle" id="formTitle"></h1>
+  <p id="formDesc" style="color:var(--muted);margin:0 0 14px"></p>
+  <div class="form">
+    <fieldset>
+      <legend>나</legend>
+      <div class="row">
+        <label>이름<input id="name" maxlength="20" placeholder="홍길동" autocomplete="name"></label>
+        <label>성별<select id="sex"><option>여</option><option>남</option></select></label>
+      </div>
+      <label>생년월일 (양력)<input id="birth" type="date" min="1920-01-01" max="2026-12-31" value="1998-03-15"></label>
+      <div class="row">
+        <label>태어난 시각<input id="time" type="time" value="12:00"></label>
+        <label class="check" style="align-self:end;padding-bottom:12px"><input id="noTime" type="checkbox"> 시간 몰라</label>
+      </div>
+    </fieldset>
+    <fieldset id="partnerBox" hidden>
+      <legend>상대방</legend>
+      <div class="row">
+        <label>이름<input id="pName" maxlength="20" placeholder="애칭도 OK"></label>
+        <label>성별<select id="pSex"><option>남</option><option>여</option></select></label>
+      </div>
+      <label>생년월일 (양력)<input id="pBirth" type="date" min="1920-01-01" max="2026-12-31"></label>
+    </fieldset>
+    <label id="loveBox" hidden>지금 내 상태<select id="loveState"></select></label>
+    <label id="purposeBox" hidden>무슨 날을 잡을까?<select id="purpose"></select></label>
+    <label>깨비한테 하고 싶은 말 (선택)<textarea id="worry" rows="2" maxlength="200" placeholder="예: 이직할까 말까 고민돼"></textarea></label>
+    <p class="err" id="err" role="alert"></p>
+    <button class="btn" id="runBtn">별사탕 1개로 보기</button>
+  </div>
+</section>
+
+<section id="v-result" hidden>
+  <button class="back" data-home>‹ 메뉴판으로</button>
+  <h1 class="ftitle" id="resTitle"></h1>
+  <p id="resWho" style="color:var(--muted);margin:0"></p>
+  <div class="pillars" id="pillars"></div>
+  <div class="typecard"><div><b id="typeName"></b><span id="typeLine"></span></div><button id="cardBtn">카드 저장</button></div>
+  <div class="reading" id="reading"></div>
+  <div class="review" id="reviewBox" hidden>
+    <h3 class="j">후기 남기고 별사탕 조각 받기</h3>
+    <p>조각 3개면 별사탕 1개! 솔직한 후기면 다 좋아.</p>
+    <div class="stars" id="stars" role="radiogroup" aria-label="별점"></div>
+    <textarea id="reviewText" rows="3" maxlength="300" placeholder="어떤 부분이 잘 맞았어? (10자 이상)"></textarea>
+    <p class="err" id="reviewErr" role="alert"></p>
+    <button class="btn" id="reviewBtn">후기 남기고 조각 받기</button>
+  </div>
+  <div class="review" id="reviewDone" hidden><h3 class="j">이 메뉴 후기는 이미 남겼어. 고마워! ✨</h3></div>
+  <button class="gift" id="shareResult" style="margin-top:12px"><span class="em" aria-hidden="true">🎁</span><span><strong>이 결과 친구한테 공유하기</strong><br><small>친구가 가입하면 둘 다 별사탕 1개</small></span></button>
+  <button class="btn-soft" data-home style="margin-top:12px">다른 메뉴 보기</button>
+</section>
+
+<section id="v-chat" hidden>
+  <button class="back" data-home>‹ 메뉴판으로</button>
+  <h1 class="ftitle">깨비 수다방</h1>
+  <div class="chatlog" id="chatlog"></div>
+</section>
+</main>
+
+<footer class="biz" id="biz"></footer>
+
+<div class="chatbar" id="chatbar" hidden>
+  <small id="chatHint">하루 한 번 공짜, 그다음은 별사탕 1개야.</small>
+  <div class="in"><input id="chatIn" maxlength="300" placeholder="요즘 무슨 고민 있어?"><button class="btn" id="chatSend">보내기</button></div>
+</div>
+
+<!-- 로그인 -->
+<div class="sheet-bg" id="login" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <h2 id="loginTitle">3초 만에 시작하기</h2>
+    <p style="margin:4px 0 0;color:var(--muted)">로그인하면 별사탕이랑 내 사주 정보가 저장돼.</p>
+    <div class="login-btns">
+      <button class="kakao" id="kakaoBtn">카카오로 시작하기</button>
+      <button class="naver" disabled title="준비 중">네이버로 시작하기 (곧 열려요)</button>
+    </div>
+    <p class="agree">시작하면 <a href="/terms.html" target="_blank">이용약관</a>과 <a href="/privacy.html" target="_blank">개인정보처리방침</a>에 동의하는 것으로 봐요.</p>
+    <button class="btn-soft" id="loginClose" style="margin-top:12px">닫기</button>
+  </div>
+</div>
+
+<!-- 충전 -->
+<div class="sheet-bg" id="shop" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shopTitle" style="max-height:92vh;overflow:auto">
+    <h2 id="shopTitle">별사탕 충전</h2>
+    <p style="margin:2px 0 10px;color:var(--muted)">지금 <b id="shopCoins">0</b>개 있어.</p>
+    <div class="packs" id="packs"></div>
+    <div id="payment-method"></div>
+    <div id="agreement"></div>
+    <button class="btn" id="buyBtn">결제하기</button>
+    <p class="refund">사용하지 않은 별사탕은 구매일로부터 7일 이내 환불할 수 있어요. 이미 사용한 별사탕(풀이 제공이 시작된 것)은 환불되지 않아요.</p>
+    <button class="btn-soft" id="shopClose" style="margin-top:8px">닫기</button>
+  </div>
+</div>
+
+<div class="sheet-bg" id="cardSheet" hidden>
+  <div class="sheet sharewrap" role="dialog" aria-modal="true" aria-label="공유 카드">
+    <canvas id="cv" width="1080" height="1350"></canvas>
+    <button class="btn" id="saveCard">이미지 저장·공유</button>
+    <button class="btn-soft" id="cardClose" style="margin-top:8px">닫기</button>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script type="module">
+import {sajuOf,gz,elCount,TYPES,STEMS,STEM_KO,STEM_EL,BR,BR_KO,BR_EL} from "/saju.js";
+import {PRODUCTS,PACKS,LOVE_STATES,PURPOSES} from "/products.js";
+
+const C=window.KKAEBI_CONFIG;
+const sb=window.supabase.createClient(C.SUPABASE_URL,C.SUPABASE_ANON_KEY);
+const $=id=>document.getElementById(id);
+let session=null,me=null,cur=null,lastType=null,stars=5,chat=[];
+
+function toast(t){const el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2600);}
+async function api(path,body){
+  const r=await fetch("/api/"+path,{method:"POST",headers:{"content-type":"application/json",...(session?{authorization:"Bearer "+session.access_token}:{})},body:JSON.stringify(body||{})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok){const e=new Error(j.error||"error");e.status=r.status;throw e;}
+  return j;
+}
+
+/* ---------- 화면 ---------- */
+function show(v){for(const id of["v-home","v-form","v-result","v-chat"])$(id).hidden=id!==v;$("chatbar").hidden=v!=="v-chat";$("biz").hidden=v==="v-chat";window.scrollTo(0,0);}
+document.querySelectorAll("[data-home]").forEach(b=>b.onclick=()=>show("v-home"));
+$("goHome").onclick=()=>show("v-home");
+
+for(const p of PRODUCTS){const b=document.createElement("button");b.className="card "+p.c;
+  b.innerHTML=`${p.isNew?'<span class="new">NEW</span>':""}<span class="cost"><svg class="candy"><use href="#candy"/></svg>1</span><span class="em" aria-hidden="true">${p.em}</span><strong></strong><small></small>`;
+  b.querySelector("strong").textContent=p.name;b.querySelector("small").textContent=p.sub;b.onclick=()=>openForm(p);$("menu").appendChild(b);}
+for(const s of LOVE_STATES)$("loveState").add(new Option(s));
+for(const s of PURPOSES)$("purpose").add(new Option(s));
+
+const B=C.BIZ;
+$("biz").innerHTML=`<b>깨비사주</b> · 상호 ${B.name} · 대표 ${B.owner}<br>사업자등록번호 ${B.regNo} · 통신판매업 신고 ${B.ecomNo}<br>${B.address}<br>${B.email} · ${B.phone}<br><a href="/terms.html">이용약관</a><a href="/privacy.html"><b>개인정보처리방침</b></a><button id="logoutBtn" hidden>로그아웃</button>`;
+$("logoutBtn").onclick=async()=>{await sb.auth.signOut();toast("로그아웃했어. 또 놀러 와!");};
+
+/* ---------- 로그인 ---------- */
+function renderWallet(){
+  $("walletText").textContent=me?`${me.coins}${me.pieces?` +조각 ${me.pieces}/3`:""}`:"로그인";
+  $("walletBtn").setAttribute("aria-label",me?`별사탕 ${me.coins}개, 충전하기`:"로그인");
+  $("logoutBtn").hidden=!me;
+  $("shareHint").textContent=me&&!me.shared_once?"첫 공유하면 바로 1개! 친구가 가입하면 둘 다 1개씩.":"친구가 내 링크로 가입하면 둘 다 1개씩!";
+}
+async function refreshMe(){if(!session){me=null;renderWallet();return;}try{me=await api("me");}catch(e){me=null;}renderWallet();}
+function needLogin(){if(session)return false;$("login").hidden=false;$("kakaoBtn").focus();return true;}
+$("kakaoBtn").onclick=()=>sb.auth.signInWithOAuth({provider:"kakao",options:{redirectTo:location.origin+location.pathname}});
+$("loginClose").onclick=()=>$("login").hidden=true;
+$("walletBtn").onclick=()=>{if(!needLogin())openShop();};
+
+// 초대 링크로 들어온 경우 코드 보관
+const qs=new URLSearchParams(location.search);
+if(qs.get("ref"))try{localStorage.setItem("kkaebi_ref",qs.get("ref"));}catch(e){}
+
+let booted=false;
+sb.auth.onAuthStateChange((ev,s)=>{session=s;setTimeout(async()=>{
+  await refreshMe();
+  if(!booted){booted=true;await afterBoot();}
+  if(ev==="SIGNED_IN"){$("login").hidden=true;await claimRef();}
+},0);});
+
+async function claimRef(){let code=null;try{code=localStorage.getItem("kkaebi_ref");}catch(e){}
+  if(!code||!session)return;try{localStorage.removeItem("kkaebi_ref");}catch(e){}
+  if(me&&code===me.ref_code)return;
+  try{const r=await api("ref",{code});if(r.rewarded){toast("초대 선물! 별사탕 1개가 들어왔어 🎁");await refreshMe();}}catch(e){}}
+
+async function afterBoot(){
+  await claimRef();
+  // 토스 결제 후 돌아온 경우
+  const pk=qs.get("paymentKey"),oid=qs.get("orderId"),amt=qs.get("amount");
+  if(qs.get("pay")==="fail")toast(qs.get("message")||"결제가 취소됐어.");
+  if(pk&&oid&&amt&&session){
+    try{const r=await api("pay-confirm",{paymentKey:pk,orderId:oid,amount:Number(amt)});await refreshMe();toast(r.already?"이미 충전된 결제야.":`별사탕 ${r.coins}개 충전 완료!`);}
+    catch(e){toast("결제 승인에 실패했어. 돈이 빠져나갔다면 고객센터로 알려줘.");}
+  }
+  if(pk||qs.get("pay")||qs.get("ref"))history.replaceState(null,"",location.pathname);
+}
+
+/* ---------- 충전 (토스 결제위젯) ---------- */
+let sel=1,widgets=null,widgetReady=false,afterBuy=null;
+function renderPacks(){const el=$("packs");el.textContent="";PACKS.forEach((p,i)=>{const b=document.createElement("button");b.className="pack";b.setAttribute("aria-pressed",i===sel);
+  b.innerHTML=`<span style="display:flex;align-items:center;gap:6px"><svg class="candy"><use href="#candy"/></svg>별사탕 ${p.n}개${p.tag?`<em>${p.tag}</em>`:""}</span><strong>${p.price.toLocaleString()}원</strong>`;
+  b.onclick=async()=>{sel=i;renderPacks();if(widgetReady)await widgets.setAmount({currency:"KRW",value:PACKS[sel].price});};el.appendChild(b);});}
+async function openShop(cb){
+  if(needLogin())return;afterBuy=cb||null;$("shopCoins").textContent=me?me.coins:0;renderPacks();$("shop").hidden=false;
+  if(!widgets){widgets=TossPayments(C.TOSS_CLIENT_KEY).widgets({customerKey:session.user.id});
+    await widgets.setAmount({currency:"KRW",value:PACKS[sel].price});
+    await Promise.all([widgets.renderPaymentMethods({selector:"#payment-method",variantKey:"DEFAULT"}),widgets.renderAgreement({selector:"#agreement",variantKey:"AGREEMENT"})]);
+    widgetReady=true;}
+  else await widgets.setAmount({currency:"KRW",value:PACKS[sel].price});
+}
+$("shopClose").onclick=()=>{$("shop").hidden=true;afterBuy=null;};
+$("buyBtn").onclick=async()=>{const b=$("buyBtn");b.disabled=true;
+  try{const o=await api("order",{pack:PACKS[sel].id});
+    await widgets.requestPayment({orderId:o.orderId,orderName:o.orderName,successUrl:location.origin+"/?pay=ok",failUrl:location.origin+"/?pay=fail",customerName:me&&me.name||undefined});}
+  catch(e){if(e&&e.code!=="USER_CANCEL")toast("결제를 시작하지 못했어. 다시 해줘.");}
+  finally{b.disabled=false;}};
+
+/* ---------- 메뉴 입력 ---------- */
+function fill(){if(!me||!me.birth)return;$("name").value=me.name||"";$("sex").value=me.sex||"여";$("birth").value=me.birth;
+  const nt=me.birth_time==="모름";$("noTime").checked=nt;$("time").disabled=nt;if(!nt&&me.birth_time)$("time").value=me.birth_time;}
+function openForm(p){cur=p;$("formTitle").textContent=p.em+" "+p.name;$("formDesc").textContent=p.desc;$("partnerBox").hidden=!p.partner;$("loveBox").hidden=!p.love;$("purposeBox").hidden=!p.purpose;$("err").textContent="";fill();show("v-form");}
+$("noTime").onchange=e=>$("time").disabled=e.target.checked;
+function readMe(){const name=$("name").value.trim(),birth=$("birth").value,nt=$("noTime").checked;
+  if(!name)return["이름을 알려줘!"];if(!birth)return["생년월일을 골라줘!"];if(!nt&&!$("time").value)return["태어난 시각을 넣거나 '시간 몰라'를 체크해줘."];
+  return[null,{name,sex:$("sex").value,birth,time:nt?"모름":$("time").value}];}
+
+function renderPillars(p){const w=$("pillars");w.textContent="";for(const[k,l]of[["hour","시"],["day","일"],["month","월"],["year","연"]]){const c=document.createElement("div");c.className="pillar";c.innerHTML=`<small>${l}주</small>`;const x=p[k];
+  for(const part of["s","b"]){const d=document.createElement("div");if(x){const ch=part==="s"?STEMS[x.s]:BR[x.b],el=part==="s"?STEM_EL[x.s]:BR_EL[x.b],ko=part==="s"?STEM_KO[x.s]:BR_KO[x.b];d.className="ch e-"+el;d.textContent=ch;const i=document.createElement("i");i.textContent=ko+"·"+el;d.appendChild(i);}else{d.className="ch unk";d.textContent="?";}c.appendChild(d);}w.appendChild(c);}}
+function loadingUI(t){$("reading").innerHTML=`<div class="loading"><svg><use href="#kb"/></svg><span></span></div>`;$("reading").querySelector("span").textContent=t;}
+function renderSections(keys,obj,days){const r=$("reading");r.textContent="";
+  if(days&&days.length){const s=document.createElement("section");s.innerHTML="<h3>깨비가 고른 후보일</h3>";const box=document.createElement("div");box.className="days";days.forEach(d=>{const x=document.createElement("span");x.textContent=d.label;box.appendChild(x);});s.appendChild(box);r.appendChild(s);}
+  for(const[k,t]of keys){if(!obj[k])continue;const s=document.createElement("section");const h=document.createElement("h3");h.textContent=t;const p=document.createElement("p");p.textContent=obj[k];s.append(h,p);r.appendChild(s);}}
+
+$("runBtn").onclick=async()=>{
+  const[err,my]=readMe();if(err){$("err").textContent=err;return;}
+  if(cur.partner&&(!$("pName").value.trim()||!$("pBirth").value)){$("err").textContent="상대방 이름이랑 생년월일도 알려줘!";return;}
+  $("err").textContent="";if(needLogin())return;
+  if(!me||me.coins<1){toast("별사탕이 모자라! 충전하면 바로 볼 수 있어.");openShop();return;}
+  const p=sajuOf(my.birth,my.time),ty=TYPES[p.day.s],prod=cur;
+  lastType={name:my.name,type:ty,gz:gz(p.day),el:elCount(p)};
+  $("resTitle").textContent=prod.em+" "+prod.name;
+  $("resWho").textContent=`${my.name} · ${my.sex} · ${my.birth.replaceAll("-",".")} ${my.time==="모름"?"시간 모름":my.time}`;
+  $("typeName").textContent=ty[0];$("typeLine").textContent=`${STEM_KO[p.day.s]}${BR_KO[p.day.b]}일주 · ${ty[1]}`;
+  renderPillars(p);$("reviewBox").hidden=true;$("reviewDone").hidden=true;show("v-result");loadingUI("깨비가 방망이 두드리는 중... 뚝딱뚝딱");
+  try{
+    const r=await api("reading",{product:prod.id,me:my,worry:$("worry").value,loveState:$("loveState").value,purpose:$("purpose").value,
+      partner:prod.partner?{name:$("pName").value.trim(),sex:$("pSex").value,birth:$("pBirth").value}:null});
+    renderSections(prod.keys,r.sections,r.days);await refreshMe();showReview();
+  }catch(e){
+    if(e.status===402){show("v-form");toast("별사탕이 모자라!");openShop();return;}
+    $("reading").innerHTML='<section><h3>앗, 깨비가 잠깐 졸았어</h3><p>풀이를 못 만들어서 별사탕은 돌려놨어. 다시 눌러줘!</p></section>';await refreshMe();
+  }
+};
+
+/* ---------- 후기 ---------- */
+function renderStars(){const el=$("stars");el.textContent="";for(let i=1;i<=5;i++){const b=document.createElement("button");b.type="button";b.textContent="★";b.setAttribute("role","radio");b.setAttribute("aria-label",i+"점");b.setAttribute("aria-checked",i<=stars);b.onclick=()=>{stars=i;renderStars();};el.appendChild(b);}}
+renderStars();
+function showReview(){const done=me&&me.reviewed.includes(cur.id);$("reviewBox").hidden=done;$("reviewDone").hidden=!done;$("reviewText").value="";$("reviewErr").textContent="";}
+$("reviewBtn").onclick=async()=>{const t=$("reviewText").value.trim();if(t.length<10){$("reviewErr").textContent="10자만 넘게 써주면 조각 줄게!";return;}
+  try{await api("review",{product:cur.id,stars,body:t});await refreshMe();toast(me&&me.pieces===0?"조각 3개 모여서 별사탕 1개 완성!":`별사탕 조각 +1 (${me?me.pieces:1}/3)`);showReview();loadReviews();}
+  catch(e){$("reviewErr").textContent=e.status===409?"이 메뉴 후기는 이미 남겼어.":"저장이 안 됐어. 다시 해줘.";}};
+async function loadReviews(){const el=$("reviewList");
+  try{const r=await fetch("/api/reviews");const {reviews}=await r.json();el.textContent="";
+    if(!reviews.length){el.innerHTML='<p style="color:var(--muted)">아직 후기가 없어. 첫 후기를 남기면 조각을 줄게!</p>';return;}
+    for(const v of reviews){const d=document.createElement("div");d.className="rv";const name=(PRODUCTS.find(p=>p.id===v.product)||{}).name||"";
+      d.innerHTML=`<div class="top"><span><span class="st"></span> <span class="pn"></span></span>${v.rewarded?'<span class="badge">별사탕 조각 지급 후기</span>':""}</div><p></p>`;
+      d.querySelector(".st").textContent="★".repeat(v.stars);d.querySelector(".pn").textContent=name;d.querySelector("p").textContent=v.body;el.appendChild(d);}}
+  catch(e){el.innerHTML='<p style="color:var(--muted)">후기를 못 불러왔어.</p>';}}
+loadReviews();
+
+/* ---------- 공유·초대 ---------- */
+async function share(fromResult){
+  if(needLogin())return;
+  const url=location.origin+"/?ref="+me.ref_code;
+  const text=fromResult&&lastType?`나 ${lastType.type[0]} 유형이래 ㅋㅋ 깨비사주에서 너도 봐봐! 이 링크로 가입하면 별사탕 하나 줘`:"깨비사주 진짜 용함 ㅋㅋ 이 링크로 가입하면 별사탕 하나 줘!";
+  let ok=false;
+  try{if(navigator.share){await navigator.share({title:"깨비사주",text,url});ok=true;}}catch(e){if(e&&e.name==="AbortError")return;}
+  if(!ok){try{await navigator.clipboard.writeText(text+" "+url);ok=true;toast("초대 링크 복사됐어! 친구한테 붙여넣어줘.");}catch(e){}}
+  if(!ok){toast("공유가 안 됐어. 다시 눌러줘!");return;}
+  try{const r=await api("share");if(r.rewarded){await refreshMe();setTimeout(()=>toast("첫 공유 선물! 별사탕 1개 충전 🎁"),700);}}catch(e){}
+}
+$("shareApp").onclick=()=>share(false);$("shareResult").onclick=()=>share(true);
+
+/* ---------- 공유 카드 ---------- */
+const ELC={목:"#5CBF8A",화:"#FF7A7A",토:"#F2B544",금:"#AEB4C4",수:"#6F8BE8"};
+async function drawCard(){await document.fonts.ready;const cv=$("cv"),x=cv.getContext("2d"),W=1080;
+  x.fillStyle="#FFE3EA";x.fillRect(0,0,W,1350);x.fillStyle="#FFF6F1";x.beginPath();x.roundRect(60,60,W-120,1230,60);x.fill();
+  const img=new Image();img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140">${$("kb").innerHTML}</svg>`);
+  await new Promise(r=>{img.onload=r;img.onerror=r;});x.drawImage(img,W/2-150,120,300,300);
+  x.textAlign="center";x.fillStyle="#7E6E8C";x.font="44px 'Gowun Dodum'";x.fillText(`${lastType.name}의 사주 유형은`,W/2,500);
+  x.fillStyle="#3A2B4A";x.font="96px Jua";x.fillText(lastType.type[0],W/2,630);
+  x.fillStyle="#FF8FAB";x.font="46px Jua";x.fillText(lastType.gz.replace(/\(.*\)/,"")+"일주",W/2,710);
+  x.fillStyle="#3A2B4A";x.font="42px 'Gowun Dodum'";x.fillText(lastType.type[1],W/2,790);
+  const els=Object.entries(lastType.el),tot=els.reduce((a,b)=>a+b[1],0)||1,bw=W-360;let bx=180;
+  els.forEach(([k,v])=>{const w=bw*v/tot;if(w>0){x.fillStyle=ELC[k];x.fillRect(bx,880,w,44);}bx+=w;});
+  x.font="34px Jua";bx=180;els.forEach(([k,v])=>{const w=bw*v/tot;if(v){x.fillStyle="#3A2B4A";x.fillText(k,bx+w/2,970);}bx+=w;});
+  x.fillStyle="#7E6E8C";x.font="38px 'Gowun Dodum'";x.fillText("너의 유형도 궁금하다면?",W/2,1130);
+  x.fillStyle="#3A2B4A";x.font="56px Jua";x.fillText("깨비사주 · "+location.host,W/2,1210);}
+$("cardBtn").onclick=async()=>{$("cardSheet").hidden=false;await drawCard();};
+$("cardClose").onclick=()=>$("cardSheet").hidden=true;
+$("saveCard").onclick=async()=>{const blob=await new Promise(r=>$("cv").toBlob(r,"image/png"));const file=new File([blob],"깨비사주_카드.png",{type:"image/png"});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return;}}catch(e){if(e&&e.name==="AbortError")return;}
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);};
+
+/* ---------- 오늘의 운세 ---------- */
+$("dailyBtn").onclick=async()=>{if(needLogin())return;
+  if(!me||!me.birth){toast("먼저 메뉴 하나 보면서 생일을 알려줘!");openForm(PRODUCTS[0]);return;}
+  const out=$("dailyOut");out.hidden=false;out.textContent="깨비가 오늘 기운 냄새 맡는 중... 킁킁";
+  try{out.textContent=(await api("daily")).text;}catch(e){out.textContent="지금은 운세를 못 뽑았어. 조금 있다가 다시 눌러줘!";}};
+
+/* ---------- 수다 ---------- */
+function addMsg(w,t){const d=document.createElement("div");d.className="msg "+w;d.textContent=t;$("chatlog").appendChild(d);d.scrollIntoView({block:"end"});return d;}
+$("openChat").onclick=()=>{if(needLogin())return;show("v-chat");if(!chat.length)addMsg("bot",`안녕${me&&me.name?" "+me.name:""}! 나 깨비야 👋\n요즘 마음에 걸리는 거 있으면 편하게 털어놔.`);$("chatIn").focus();};
+async function send(){const q=$("chatIn").value.trim();if(!q)return;$("chatIn").value="";addMsg("me",q);chat.push({role:"user",content:q});
+  const b=addMsg("bot","뚝딱뚝딱...");$("chatSend").disabled=true;
+  try{const r=await api("chat",{messages:chat});b.textContent=r.text;chat.push({role:"assistant",content:r.text});
+    $("chatHint").textContent=r.free?"오늘 공짜 수다 썼어! 다음 질문은 별사탕 1개야.":"별사탕 1개 썼어.";await refreshMe();}
+  catch(e){chat.pop();b.remove();
+    if(e.status===402){toast("오늘 공짜 수다는 끝! 별사탕 충전하면 계속 얘기할 수 있어.");openShop();}
+    else toast("깨비가 잠깐 졸았어. 다시 보내줘!");$("chatIn").value=q;}
+  $("chatSend").disabled=false;}
+$("chatSend").onclick=send;$("chatIn").onkeydown=e=>{if(e.key==="Enter"&&!e.isComposing)send();};
+</script>
+</body>
+</html>
