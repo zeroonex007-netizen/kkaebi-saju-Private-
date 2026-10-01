@@ -1,5 +1,6 @@
 // 모든 /api/<이름> 요청을 한 함수에서 받아 나눠 줌
 // (Vercel 무료 플랜은 함수 12개 제한 → 실제 처리는 _routes/ 안에 두고 여기서 하나로 묶음)
+import amulet from "./_routes/amulet.js";
 import chat from "./_routes/chat.js";
 import checkin from "./_routes/checkin.js";
 import cronBilling from "./_routes/cron-billing.js";
@@ -20,7 +21,7 @@ import subStart from "./_routes/sub-start.js";
 import visit from "./_routes/visit.js";
 
 const ROUTES = {
-  chat, checkin, "cron-billing": cronBilling, daily, gacha, me,
+  amulet, chat, checkin, "cron-billing": cronBilling, daily, gacha, me,
   "naver-callback": naverCallback, "naver-start": naverStart, order, "pay-confirm": payConfirm,
   reading, ref, review, reviews, share, "sub-cancel": subCancel, "sub-start": subStart, visit,
 };

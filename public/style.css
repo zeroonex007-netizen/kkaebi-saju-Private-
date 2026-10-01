@@ -224,3 +224,21 @@ footer.biz button{background:none;border:0;padding:0;color:inherit;text-decorati
 .card{min-height:0}
 .card strong{margin-top:4px}
 @media (prefers-reduced-motion: reduce){.loading img{animation:none}}
+
+/* 이미지 부적 */
+.shop-sub{color:var(--muted);margin:-4px 0 10px;font-size:.9rem}
+.amulets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.am-card{border:0;background:var(--surface);border-radius:18px;padding:10px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;text-align:center}
+.am-card strong{font-family:"Jua";font-weight:400;font-size:1rem}
+.am-card small{color:var(--muted);font-size:.72rem;line-height:1.35}
+.am-paper{width:54px;height:80px;background:var(--pp);border:3px double var(--pi);border-radius:3px;display:grid;place-items:center;transform:rotate(-3deg);box-shadow:0 3px 8px rgba(0,0,0,.12);margin:2px 0 4px}
+.am-paper b{color:var(--pi);font-family:"Noto Serif KR",serif;font-weight:900;font-size:1.9rem}
+.am-card .own{position:absolute;top:6px;right:6px;background:var(--mint);color:#fff;font-size:.66rem;border-radius:999px;padding:0 7px;font-weight:700}
+.am-card .own.buy{background:var(--pink)}
+.rx{background:var(--lavSoft);border-radius:22px;padding:16px 14px;margin-top:14px}
+.rx h3{margin:0 0 4px;font-size:1.2rem}
+.rx-line{margin:0 0 12px;font-size:.95rem}
+.rx .amulets{grid-template-columns:repeat(2,1fr)}
+.am-why{color:var(--muted);margin:4px 0 10px;font-size:.92rem}
+.am-prev{display:flex;justify-content:center;margin-bottom:12px}
+.am-prev canvas{width:min(62vw,260px);height:auto;border-radius:16px;box-shadow:0 6px 20px rgba(0,0,0,.25)}

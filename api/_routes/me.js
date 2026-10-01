@@ -5,12 +5,13 @@ import { todayKST } from "../../public/saju.js";
 export default route(async (req, res, user) => {
   const [y, m, d] = todayKST();
   const today = `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-  const [{ data: p }, { data: rv }, { data: cards }, { data: sub }, { count: visits }] = await Promise.all([
+  const [{ data: p }, { data: rv }, { data: cards }, { data: sub }, { count: visits }, { data: am }] = await Promise.all([
     admin.from("profiles").select("*").eq("id", user.id).single(),
     admin.from("reviews").select("product").eq("user_id", user.id),
     admin.from("collection").select("card").eq("user_id", user.id),
     admin.from("subscriptions").select("status,current_period_end,next_billing_at,card_label,amount").eq("user_id", user.id).maybeSingle(),
     admin.from("share_visits").select("*", { count: "exact", head: true }).eq("referrer", user.id).eq("day", today),
+    admin.from("amulets").select("kind,el,serial,created_at").eq("user_id", user.id), // 표가 아직 없으면 빈 목록
   ]);
   const isSub = !!(sub && sub.current_period_end && new Date(sub.current_period_end) > new Date());
   const gachaLimit = isSub ? 2 : 1;
@@ -26,5 +27,6 @@ export default route(async (req, res, user) => {
     cards: (cards || []).map((c) => c.card),
     sub: sub ? { ...sub, active: isSub } : null,
     reviewed: (rv || []).map((r) => r.product),
+    amulets: am || [],
   });
 });

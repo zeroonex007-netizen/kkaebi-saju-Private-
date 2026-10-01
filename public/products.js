@@ -46,3 +46,28 @@ export const SUB = {
   coins: 6,
   perks: ["매달 별사탕 6개 (5,940원어치)", "복주머니 뽑기 하루 2번", "경험치 2배", "패스 전용 배지"],
 };
+
+// ── 이미지 부적 (폰 배경화면, 별사탕 1개 = 990원) ──
+// 효능 보장 문구 금지(표시광고법): "응원용·재미로" 톤만 사용
+export const AMULETS = [
+  { id: "money",  name: "재물부적",  hanja: "財", big: "재물", paper: "#FFD648", ink: "#CD261E", line: "통장에 운 충전 중",     wish: "이번 달 수입이 지출을 이기기를" },
+  { id: "love",   name: "연애부적",  hanja: "戀", big: "연애", paper: "#FFC4CE", ink: "#C41E4A", line: "먼저 연락 오길 빌어드림", wish: "답장 3분 안에 오기를" },
+  { id: "pass",   name: "합격부적",  hanja: "合", big: "합격", paper: "#CFE3FF", ink: "#1F4FB0", line: "찍은 것도 맞기를",       wish: "시험장에서 머리 하얘지지 않기를" },
+  { id: "job",    name: "취뽀부적",  hanja: "就", big: "취뽀", paper: "#D6F2DE", ink: "#1E7A45", line: "서류 광탈 금지",         wish: "최종 합격 문자 오기를" },
+  { id: "people", name: "귀인부적",  hanja: "貴", big: "귀인", paper: "#F4E4C1", ink: "#8A5A12", line: "좋은 사람만 걸리기를",   wish: "도와줄 사람이 먼저 나타나기를" },
+  { id: "guard",  name: "무탈부적",  hanja: "安", big: "무탈", paper: "#E6DBFF", ink: "#5B2DA8", line: "이상한 사람 접근 금지",  wish: "오늘도 무사히 집에 가기를" },
+];
+// 부족한 오행 → 처방 (부적냥 말투)
+export const EL_HANJA = { 목: "木", 화: "火", 토: "土", 금: "金", 수: "水" };
+export const EL_RX = {
+  목: { amulet: "job",    why: "시작 버튼 누르는 데 오래 걸림. 판 벌리는 기운 좀 넣자." },
+  화: { amulet: "love",   why: "좋아해도 티가 안 남. 표현하는 기운 좀 넣자." },
+  토: { amulet: "people", why: "혼자 다 버티는 타입임. 기댈 사람 붙여주는 기운 넣자." },
+  금: { amulet: "money",  why: "버는 건 하는데 어디서 자꾸 샘. 지갑 잠그는 기운 넣자." },
+  수: { amulet: "pass",   why: "생각은 많은데 정리가 안 됨. 머리 맑게 하는 기운 넣자." },
+};
+// 메뉴별 기본 추천
+export const MENU_AMULET = { love: "love", gunghap: "love", yearly: "money", daewoon: "job" };
+export const PURPOSE_AMULET = { "고백·첫 데이트": "love", "이사": "guard", "면접·시험": "pass", "결혼·상견례": "people", "새로운 시작": "job" };
+// 가장 적은 오행 (같으면 목화토금수 순)
+export const weakEl = (c) => Object.entries(c).reduce((a, b) => (b[1] < a[1] ? b : a))[0];

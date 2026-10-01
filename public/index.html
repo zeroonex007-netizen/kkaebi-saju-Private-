@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&family=Noto+Serif+KR:wght@900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 <script src="/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -85,6 +85,10 @@
   <h2 class="sec">부적냥 메뉴판</h2>
   <div class="grid" id="menu"></div>
 
+  <h2 class="sec">부적냥 부적 상점</h2>
+  <p class="shop-sub">폰 배경화면으로 쓰는 내 이름 박힌 이미지 부적. 하나에 별사탕 1개(990원)</p>
+  <div class="amulets" id="amuletShop"></div>
+
   <button class="chatcta" id="openChat">
     <img src="/img/nyang-cross.png" alt="" class="cta-img">
     <span><strong>부적냥한테 고민 털기</strong><br><small style="color:var(--muted)">하루 한 번 공짜, 그다음은 별사탕 1개</small></span>
@@ -146,6 +150,7 @@
   <div class="pillars" id="pillars"></div>
   <div class="typecard"><div><b id="typeName"></b><span id="typeLine"></span></div><button id="cardBtn">카드 저장</button></div>
   <div class="reading" id="reading"></div>
+  <div class="rx" id="rx" hidden></div>
   <div class="review" id="reviewBox" hidden>
     <h3 class="j">후기 남기고 별사탕 조각 받기</h3>
     <p>조각 3개면 별사탕 1개! 솔직한 후기면 다 좋아.</p>
@@ -272,6 +277,17 @@
   </div>
 </div>
 
+<div class="sheet-bg" id="amuletSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="amTitle" style="max-height:94vh;overflow:auto">
+    <h2 id="amTitle"></h2>
+    <p class="am-why" id="amWhy"></p>
+    <div class="am-prev"><canvas id="amCv" width="1080" height="1920"></canvas></div>
+    <button class="btn" id="amBuy"></button>
+    <p class="refund" id="amNote">내 이름·일주·부족한 기운이 들어간 폰 배경화면(1080×1920)이에요. 응원용 이미지라 효과를 보장하진 않아요. 디지털 이미지라 받은 뒤에는 환불이 안 되고, 한 번 받은 부적은 언제든 무료로 다시 저장할 수 있어요.</p>
+    <button class="btn-soft" data-close style="margin-top:8px">닫기</button>
+  </div>
+</div>
+
 <div class="burst" id="burst" hidden aria-live="polite"><div class="burst-msg" id="burstMsg"></div></div>
 
 <div class="sheet-bg" id="cardSheet" hidden>
@@ -285,7 +301,7 @@
 
 <script type="module">
 import {sajuOf,gz,elCount,TYPES,STEMS,STEM_KO,STEM_EL,BR,BR_KO,BR_EL,cardName,cardHanja,cardEl} from "/saju.js";
-import {PRODUCTS,PACKS,LOVE_STATES,PURPOSES,LEVELS,XP_RULES,LEVEL_REWARD,GACHA_ODDS,SUB} from "/products.js";
+import {PRODUCTS,PACKS,LOVE_STATES,PURPOSES,LEVELS,XP_RULES,LEVEL_REWARD,GACHA_ODDS,SUB,AMULETS,EL_HANJA,EL_RX,MENU_AMULET,PURPOSE_AMULET,weakEl} from "/products.js";
 
 const C=window.KKAEBI_CONFIG;
 // implicit: 로그인 후 돌아올 때 다른 브라우저로 열려도 주소에 담긴 토큰으로 로그인되게
@@ -322,7 +338,7 @@ $("logoutBtn").onclick=async()=>{await sb.auth.signOut();toast("로그아웃했�
 /* ---------- 로그인 ---------- */
 function renderWallet(){
   $("walletText").textContent=me?`${me.coins}${me.bonus?` ✨${me.bonus}`:""}${me.pieces?` +조각 ${me.pieces}/3`:""}`:"로그인";
-  renderKb();
+  renderKb();renderAmuletShop();
   $("walletBtn").setAttribute("aria-label",me?`별사탕 ${me.coins}개, 충전하기`:"로그인");
   $("logoutBtn").hidden=!me;
   $("shareHint").textContent=me&&!me.shared_once?"첫 공유하면 바로 1개! 친구가 가입하면 둘 다 1개씩.":"친구가 내 링크로 가입하면 둘 다 1개씩!";
@@ -439,11 +455,11 @@ $("runBtn").onclick=async()=>{
   $("resTitle").textContent=prod.em+" "+prod.name;
   $("resWho").textContent=`${my.name} · ${my.sex} · ${my.birth.replaceAll("-",".")} ${my.time==="모름"?"시간 모름":my.time}`;
   $("typeName").textContent=ty[0];$("typeLine").textContent=`${STEM_KO[p.day.s]}${BR_KO[p.day.b]}일주 · ${ty[1]}`;
-  renderPillars(p);$("reviewBox").hidden=true;$("reviewDone").hidden=true;show("v-result");loadingUI("부적냥이 귀찮아하면서 보는 중…");
+  renderPillars(p);$("rx").hidden=true;$("reviewBox").hidden=true;$("reviewDone").hidden=true;show("v-result");loadingUI("부적냥이 귀찮아하면서 보는 중…");
   try{
     const r=await api("reading",{product:prod.id,me:my,worry:$("worry").value,loveState:$("loveState").value,purpose:$("purpose").value,
       partner:prod.partner?{name:$("pName").value.trim(),sex:$("pSex").value,birth:$("pBirth").value}:null});
-    renderSections(prod.keys,r.sections,r.days);const before=me;await refreshMe();showReview();showRewards(r.rewards,before);
+    renderSections(prod.keys,r.sections,r.days);const before=me;await refreshMe();renderRx(prod,p,$("purpose").value);showReview();showRewards(r.rewards,before);
   }catch(e){
     if(e.status===402){show("v-form");toast("별사탕이 모자라!");openShop();return;}
     $("reading").innerHTML='<section><h3>부적냥이 잠깐 누웠어</h3><p>풀이를 못 만들어서 별사탕은 돌려놨어. 다시 눌러줘!</p></section>';await refreshMe();
@@ -511,6 +527,83 @@ $("cardClose").onclick=()=>$("cardSheet").hidden=true;
 $("saveCard").onclick=async()=>{const blob=await new Promise(r=>$("cv").toBlob(r,"image/png"));const file=new File([blob],"부적냥_카드.png",{type:"image/png"});
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return;}}catch(e){if(e&&e.name==="AbortError")return;}
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);};
+
+
+/* ---------- 이미지 부적 ---------- */
+function amOf(id){return AMULETS.find(a=>a.id===id);}
+function ownedAm(id){return me&&(me.amulets||[]).find(a=>a.kind===id);}
+function myEl(){if(!me||!me.birth)return null;return weakEl(elCount(sajuOf(me.birth,me.birth_time||"모름")));}
+function amCardHTML(a){return `<span class="am-paper" style="--pp:${a.paper};--pi:${a.ink}"><b>${a.hanja}</b></span><strong>${a.name}</strong><small>${a.line}</small>`;}
+function renderAmuletShop(){const el=$("amuletShop");if(!el)return;el.textContent="";
+  for(const a of AMULETS){const b=document.createElement("button");b.className="am-card";b.innerHTML=amCardHTML(a)+(ownedAm(a.id)?'<span class="own">보유</span>':"");
+    b.onclick=()=>openAmulet(a.id);el.appendChild(b);}}
+// 풀이 끝 처방전: 부족한 오행 + 메뉴(목적) 기준으로 1~2개 추천
+function renderRx(prod,p,purpose){const c=elCount(p),w=weakEl(c),rx=EL_RX[w];
+  const picks=[];const first=prod.purpose?PURPOSE_AMULET[purpose]:MENU_AMULET[prod.id];if(first)picks.push(first);if(!picks.includes(rx.amulet))picks.push(rx.amulet);
+  const box=$("rx");box.innerHTML=`<h3 class="j">부적냥 처방전</h3><p class="rx-line"></p><div class="amulets"></div>`;
+  box.querySelector(".rx-line").textContent=`너 ${w}(${EL_HANJA[w]}) 기운 ${c[w]}개임. ${rx.why}`;
+  const g=box.querySelector(".amulets");for(const id of picks){const a=amOf(id),b=document.createElement("button");b.className="am-card";
+    b.innerHTML=amCardHTML(a)+(ownedAm(id)?'<span class="own">보유</span>':'<span class="own buy">990원</span>');b.onclick=()=>openAmulet(id,id===rx.amulet?rx.why:null);g.appendChild(b);}
+  box.hidden=false;}
+
+let amCur=null;renderAmuletShop();
+async function openAmulet(id,why){if(needLogin())return;amCur=id;const a=amOf(id),own=ownedAm(id);
+  $("amTitle").textContent=a.hanja+" "+a.name;
+  const el=own?own.el:myEl();
+  $("amWhy").textContent=why?why:el?`${a.line}. 니 사주에 제일 적은 ${el}(${EL_HANJA[el]}) 기운도 같이 넣어줄게.`:`${a.line}. 메뉴 하나 보면 니 사주에 부족한 기운도 같이 넣어줄게.`;
+  $("amBuy").textContent=own?"배경화면 저장하기":"별사탕 1개로 받기 (990원)";
+  openSheet("amuletSheet");await drawAmulet(a,el,own,!own);}
+$("amBuy").onclick=async()=>{const a=amOf(amCur);if(!a)return;
+  if(ownedAm(a.id)){saveAmulet(a);return;}
+  if(!me||(me.coins+(me.bonus||0))<1){toast("별사탕이 모자라! 충전하면 바로 받을 수 있어.");$("amuletSheet").hidden=true;openShop();return;}
+  const btn=$("amBuy");btn.disabled=true;
+  try{const r=await api("amulet",{kind:a.id});const before=me;await refreshMe();
+    const own=ownedAm(a.id)||r;await drawAmulet(a,own.el,own,false);$("amBuy").textContent="배경화면 저장하기";
+    if(!r.owned){celebrate(`${a.name} 획득! 🧧`);xpToast({gained:10,xp:me?me.xp:0},null);}
+    if(document.querySelector("#rx:not([hidden])"))$("rx").querySelectorAll(".am-card").forEach(b=>{if(b.textContent.includes(a.name)){const o=b.querySelector(".own");o.textContent="보유";o.classList.remove("buy");}});}
+  catch(e){if(e.status===402){toast("별사탕이 모자라!");$("amuletSheet").hidden=true;openShop();}else toast("부적을 못 받았어. 다시 눌러줘!");}
+  finally{btn.disabled=false;}};
+async function saveAmulet(a){const blob=await new Promise(r=>$("amCv").toBlob(r,"image/png"));const file=new File([blob],`부적냥_${a.name}.png`,{type:"image/png"});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return;}}catch(e){if(e&&e.name==="AbortError")return;}
+  const u=URL.createObjectURL(blob),l=document.createElement("a");l.href=u;l.download=file.name;l.click();setTimeout(()=>URL.revokeObjectURL(u),5000);toast("저장했어! 배경화면으로 설정해줘.");}
+
+const amImg={};function loadImg(src){if(!amImg[src])amImg[src]=new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src;});return amImg[src];}
+async function drawAmulet(a,el,own,preview){
+  await Promise.all([document.fonts.load("900 100px 'Noto Serif KR'",a.hanja+"木火土金水"),document.fonts.load("100px Jua"),document.fonts.ready]);
+  const cv=$("amCv"),x=cv.getContext("2d"),W=1080,H=1920,PW=820,PH=1480;
+  x.setTransform(1,0,0,1,0,0);x.fillStyle="#281E2E";x.fillRect(0,0,W,H);
+  // 반짝이
+  let sd=a.hanja.charCodeAt(0);const rnd=()=>((sd=(sd*9301+49297)%233280)/233280);
+  x.fillStyle="rgba(255,240,200,.5)";for(let i=0;i<60;i++){const r=rnd()*3+1;x.beginPath();x.arc(rnd()*W,rnd()*H,r,0,7);x.fill();}
+  x.save();x.translate(W/2,150+PH/2);x.rotate(-0.035);x.translate(-PW/2,-PH/2);
+  x.fillStyle=a.paper;x.fillRect(0,0,PW,PH);
+  x.fillStyle="rgba(120,80,20,.08)";for(let i=0;i<2200;i++)x.fillRect(rnd()*PW,rnd()*PH,2,2);
+  x.strokeStyle=a.ink;x.lineWidth=10;x.strokeRect(24,24,PW-48,PH-48);x.lineWidth=4;x.strokeRect(44,44,PW-88,PH-88);
+  // 큰 한자 워터마크
+  x.globalAlpha=.1;x.fillStyle=a.ink;x.textAlign="center";x.textBaseline="middle";x.font="900 640px 'Noto Serif KR'";x.fillText(a.hanja,PW/2,640);x.globalAlpha=1;
+  x.font="900 64px 'Noto Serif KR'";x.fillText(a.hanja,PW/2-150,150);x.font="64px Jua";x.fillText(a.name,PW/2+40,155);
+  x.lineWidth=4;x.beginPath();x.moveTo(120,215);x.lineTo(PW-120,215);x.stroke();
+  x.font="230px Jua";[...a.big].forEach((ch,i)=>x.fillText(ch,PW/2,390+i*240));
+  // 소용돌이
+  x.lineWidth=8;x.beginPath();x.ellipse(PW/2,1010,110,56,0,0.6,Math.PI*2.4);x.stroke();x.lineWidth=6;x.beginPath();x.ellipse(PW/2,1012,72,32,0,0,Math.PI*1.7);x.stroke();
+  x.font="40px 'Gowun Dodum'";x.fillText(a.line,PW/2,1110);
+  x.font="36px Jua";x.fillText(a.wish,PW/2,1170);
+  // 내 기운 배지
+  if(el){const t=`${EL_HANJA[el]}  ${el} 기운 충전`;x.font="40px Jua";const tw=x.measureText(t).width+70;
+    x.fillStyle=ELC[el];x.beginPath();x.roundRect(PW/2-tw/2,1215,tw,70,35);x.fill();x.fillStyle="#fff";x.fillText(t,PW/2,1252);x.fillStyle=a.ink;}
+  const nm=(me&&me.name)||"";const gzs=me&&me.birth?gz(sajuOf(me.birth,me.birth_time||"모름").day).replace(/\(.*\)/,"")+"일주":"";
+  x.font="34px 'Gowun Dodum'";x.fillText([nm&&nm+"님 전용",gzs].filter(Boolean).join(" · "),PW/2,1335);
+  const dt=own&&own.created_at?new Date(own.created_at):new Date();
+  x.font="26px 'Gowun Dodum'";x.globalAlpha=.75;x.fillText(`No.${String(own&&own.serial||0).padStart(6,"0")} · ${dt.getFullYear()}.${String(dt.getMonth()+1).padStart(2,"0")}.${String(dt.getDate()).padStart(2,"0")} 발급`,PW/2,1395);x.globalAlpha=1;
+  // 도장
+  x.save();x.translate(140,1370);x.rotate(-0.12);x.strokeStyle="#D3271E";x.fillStyle="rgba(211,39,30,.12)";x.lineWidth=6;x.beginPath();x.roundRect(-60,-60,120,120,14);x.fill();x.stroke();
+  x.fillStyle="#D3271E";x.font="40px Jua";x.fillText("부적",0,-18);x.fillText("냥",0,26);x.restore();
+  x.restore();
+  const cat=await loadImg("/img/nyang-hold.png");if(cat){const h=340,w=cat.width*h/cat.height;x.drawImage(cat,W-w-40,H-h-70,w,h);}
+  x.textAlign="left";x.fillStyle="rgba(230,220,240,.85)";x.font="30px 'Gowun Dodum'";x.fillText("부적냥 · 응원용 부적 (재미로 붙여요)",56,H-60);
+  if(preview){x.save();x.translate(W/2,H/2);x.rotate(-0.5);x.textAlign="center";x.font="150px Jua";x.fillStyle="rgba(255,255,255,.55)";x.strokeStyle="rgba(40,30,46,.35)";x.lineWidth=6;
+    for(const dy of[-520,0,520]){x.strokeText("미리보기",0,dy);x.fillText("미리보기",0,dy);}x.restore();}
+}
 
 /* ---------- 오늘의 운세 ---------- */
 $("dailyBtn").onclick=async()=>{if(needLogin())return;
