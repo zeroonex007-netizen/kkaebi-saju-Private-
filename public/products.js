@@ -21,3 +21,28 @@ export const PACKS=[
  {id:"p11",n:11,price:9900,tag:"1개 더!"}
 ];
 export const SYS="너는 '깨비'라는 귀여운 꼬마 도깨비 사주쟁이야. 명리학은 진짜 전문가처럼 정확하게 보되, 말투는 다정한 반말 친구처럼 해. 이모지는 문단마다 최대 1개. 맞는 말은 솔직하게, 위로가 필요하면 따뜻하게. 공포 조장, 단정적 예언, 건강·사망·임신 예측은 절대 하지 마. 투자·대출·법률 같은 중대한 결정은 전문가와 상의하라고 짚어줘.";
+
+// 레벨 (DB의 lvl 함수와 같은 기준표)
+export const LEVELS = [
+  { xp: 0, name: "아기 깨비" }, { xp: 30, name: "꼬마 깨비" }, { xp: 80, name: "장난꾸러기 깨비" },
+  { xp: 150, name: "방망이 깨비" }, { xp: 250, name: "도깨비불 깨비" }, { xp: 400, name: "금방망이 깨비" },
+  { xp: 600, name: "구름 깨비" }, { xp: 850, name: "달빛 깨비" }, { xp: 1150, name: "별빛 깨비" }, { xp: 1500, name: "깨비 대왕" },
+];
+export const XP_RULES = "출석 +10 · 뽑기 +5 · 오늘의 운세 +5 · 풀이 +30 · 새 카드 +15 · 공유 미션 +20";
+export const LEVEL_REWARD = "레벨이 오를 때마다 별사탕 조각 1개, Lv.5에 별사탕 1개, Lv.10에 별사탕 3개";
+
+// 복주머니 뽑기 확률 (DB의 gacha 함수와 같아야 함)
+export const GACHA_ODDS = [
+  { prize: "coin", label: "별사탕 1개", p: 10 },
+  { prize: "piece", label: "별사탕 조각 1개", p: 35 },
+  { prize: "card", label: "도감 카드 1장", p: 15 },
+  { prize: "xp", label: "경험치 +20", p: 40 },
+];
+
+// 깨비 패스 (월 구독)
+export const SUB = {
+  name: "깨비 패스",
+  price: 4900,
+  coins: 6,
+  perks: ["매달 별사탕 6개 (5,940원어치)", "복주머니 뽑기 하루 2번", "경험치 2배", "패스 전용 배지"],
+};

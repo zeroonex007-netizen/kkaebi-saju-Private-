@@ -51,3 +51,9 @@ export const TYPES=[
  ["반짝이는 보석","예민하고 섬세한 완벽주의 미학가"],
  ["넓고 깊은 바다","생각이 깊고 품이 넓은 자유로운 영혼"],
  ["보슬보슬 이슬비","눈치 백단, 마음을 읽는 직관러"]];
+
+// 도감: 60갑자 카드 번호 (0=갑자 … 59=계해)
+export const cardOf = (x) => ((6 * x.s - 5 * x.b) % 60 + 60) % 60;
+export const cardName = (i) => STEM_KO[i % 10] + BR_KO[i % 12];
+export const cardHanja = (i) => STEMS[i % 10] + BR[i % 12];
+export const cardEl = (i) => STEM_EL[i % 10];

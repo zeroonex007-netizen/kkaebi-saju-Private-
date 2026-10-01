@@ -6,6 +6,8 @@ window.KKAEBI_CONFIG = {
   // 카카오 디벨로퍼스 > 앱 > 플랫폼 키 > JavaScript 키 (공개해도 되는 키)
   KAKAO_JS_KEY: "6d27b6bb085994fc5c94d499391e2209",
   TOSS_CLIENT_KEY: "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm",
+  // 깨비 패스(월 구독) 카드 등록용 "API 개별 연동" 클라이언트 키. 아래는 토스 문서용 테스트 키 (실제 돈 안 나감)
+  TOSS_BILLING_CLIENT_KEY: "test_ck_docs_Ovk5rk1EwkEbP0W43n07xlzm",
   BIZ: {
     name: "영일경영전략연구소",
     owner: "강기훈",

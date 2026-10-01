@@ -1,5 +1,5 @@
 // 오늘의 무료 운세 (하루 한 번 만들어 저장해 두고 재사용)
-import { route, admin, claude } from "./_lib.js";
+import { route, admin, rpc, claude } from "./_lib.js";
 import { sajuOf, gz, dayP, todayKST, STEM_EL } from "../public/saju.js";
 import { SYS } from "../public/products.js";
 
@@ -26,6 +26,7 @@ export default route(async (req, res, user) => {
       max_tokens: 400,
     });
   } catch (e) { console.error(e); }
-  await admin.from("daily").upsert({ user_id: user.id, day, text });
-  res.json({ text });
+  const { error: dupe } = await admin.from("daily").insert({ user_id: user.id, day, text });
+  const xp = dupe ? null : await rpc("add_xp", { uid: user.id, amt: 5 });
+  res.json({ text, xp });
 });

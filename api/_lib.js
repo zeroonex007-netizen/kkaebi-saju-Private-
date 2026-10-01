@@ -63,3 +63,20 @@ export const isDate = (v) => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test
 export const isTime = (v) => v === "모름" || (typeof v === "string" && /^\d{2}:\d{2}$/.test(v));
 export const isSex = (v) => v === "남" || v === "여";
 export const clip = (v, n) => (typeof v === "string" ? v.trim().slice(0, n) : "");
+
+// ── 토스 자동결제(빌링) ──
+// 결제위젯 키(gck/gsk)와 별개인 "API 개별 연동" 시크릿 키가 필요합니다.
+// 비어 있으면 토스 문서용 테스트 키로 동작(실제 돈 안 나감). 실결제는 토스 정기결제 계약 후 라이브 키를 넣으세요.
+const BILLING_SK = () => process.env.TOSS_BILLING_SECRET_KEY || "test_sk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
+async function toss(path, body) {
+  const r = await fetch("https://api.tosspayments.com" + path, {
+    method: "POST",
+    headers: { Authorization: "Basic " + Buffer.from(BILLING_SK() + ":").toString("base64"), "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const j = await r.json().catch(() => ({}));
+  return { ok: r.ok, ...j };
+}
+export const issueBillingKey = (authKey, customerKey) => toss("/v1/billing/authorizations/issue", { authKey, customerKey });
+export const chargeBilling = (billingKey, customerKey, amount, orderId, orderName) =>
+  toss("/v1/billing/" + encodeURIComponent(billingKey), { customerKey, amount, orderId, orderName });

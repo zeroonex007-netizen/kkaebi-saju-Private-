@@ -1,6 +1,6 @@
 // 990원 메뉴 풀이: 별사탕 1개 차감 → AI 풀이 → 실패하면 환불
 import { route, admin, rpc, claude, parseJSON, isDate, isTime, isSex, clip } from "./_lib.js";
-import { sajuOf, gz, elCount, goodDays, todayKST, STEM_KO, STEM_EL } from "../public/saju.js";
+import { sajuOf, gz, elCount, goodDays, todayKST, cardOf, STEM_KO, STEM_EL } from "../public/saju.js";
 import { PRODUCTS, SYS, LOVE_STATES, PURPOSES } from "../public/products.js";
 
 export default route(async (req, res, user, b) => {
@@ -17,7 +17,8 @@ export default route(async (req, res, user, b) => {
     partner = { name: clip(p.name, 20), sex: p.sex, birth: p.birth };
   }
 
-  if (!(await rpc("spend_coin", { uid: user.id, n: 1 }))) return res.status(402).json({ error: "coins" });
+  const kind = await rpc("spend_any", { uid: user.id, n: 1 });
+  if (!kind) return res.status(402).json({ error: "coins" });
 
   await admin.from("profiles").update({ name, sex: me.sex, birth: me.birth, birth_time: me.time }).eq("id", user.id);
 
@@ -40,9 +41,13 @@ export default route(async (req, res, user, b) => {
     const fmt = "{" + prod.keys.map(([k]) => `"${k}":""`).join(",") + "}";
     const prompt = `[메뉴] ${prod.name}: ${prod.desc}\n[사주]\n${ctx}\n\n각 항목 3~5문장, 반드시 다음 키만 가진 JSON 하나로만 답해:\n${fmt}\n항목 의미: ${prod.keys.map(([k, t]) => k + "=" + t).join(", ")}`;
     const sections = parseJSON(await claude({ system: SYS, messages: [{ role: "user", content: prompt }], max_tokens: 2000 }));
-    res.json({ sections, days });
+    // 보상: 경험치 + 도감 카드 (내 일주, 궁합이면 상대 일주)
+    const rewards = { xp: await rpc("add_xp", { uid: user.id, amt: 30 }), cards: [] };
+    rewards.cards.push(await rpc("add_card", { uid: user.id, c: cardOf(p.day), src: "reading" }));
+    if (partner) rewards.cards.push(await rpc("add_card", { uid: user.id, c: cardOf(sajuOf(partner.birth, "모름").day), src: "partner" }));
+    res.json({ sections, days, rewards, used: kind });
   } catch (e) {
-    await rpc("add_coins", { uid: user.id, n: 1 });
+    await rpc("refund_any", { uid: user.id, n: 1, kind });
     throw e;
   }
 });

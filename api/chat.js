@@ -13,10 +13,10 @@ export default route(async (req, res, user, b) => {
   if (!messages.length || messages[messages.length - 1].role !== "user") return res.status(400).json({ error: "input" });
 
   const free = await rpc("use_free_chat", { uid: user.id });
-  let paid = false;
+  let kind = null;
   if (!free) {
-    if (!(await rpc("spend_coin", { uid: user.id, n: 1 }))) return res.status(402).json({ error: "coins" });
-    paid = true;
+    kind = await rpc("spend_any", { uid: user.id, n: 1 });
+    if (!kind) return res.status(402).json({ error: "coins" });
   }
 
   try {
@@ -29,7 +29,7 @@ export default route(async (req, res, user, b) => {
     const text = await claude({ system, messages, max_tokens: 700 });
     res.json({ text, free });
   } catch (e) {
-    if (paid) await rpc("add_coins", { uid: user.id, n: 1 });
+    if (kind) await rpc("refund_any", { uid: user.id, n: 1, kind });
     throw e;
   }
 });

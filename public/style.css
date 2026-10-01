@@ -154,3 +154,63 @@ footer.biz button{background:none;border:0;padding:0;color:inherit;text-decorati
 .prices{display:grid;gap:8px}
 .price{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:12px 14px}
 .price em{font-style:normal;color:var(--pink);font-size:.82rem;font-weight:700}
+
+/* --- 매일 루프 · 레벨 · 도감 · 패스 --- */
+.mykb{display:block;width:100%;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:24px;padding:14px 16px;margin-bottom:16px}
+.mykb.guest{display:grid;gap:4px;background:var(--lavSoft);border:0}
+.mykb.guest b{font-family:"Jua";font-weight:400;font-size:1.15rem}
+.mykb.guest small{color:var(--muted)}
+.mykb.guest .btn{margin-top:8px;text-align:center}
+.lvrow{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;padding:0;text-align:left}
+.lvrow b{font-family:"Jua";font-weight:400;font-size:1.15rem}
+.lv{background:var(--btn);color:var(--btnInk);border-radius:999px;padding:1px 9px;font-size:.82rem;font-weight:700}
+.passbadge{background:linear-gradient(90deg,var(--pink),var(--lav));color:#fff;border-radius:999px;padding:1px 8px;font-size:.72rem;font-weight:700;letter-spacing:.04em}
+.streak{margin-left:auto;font-weight:700}
+.xpbar{height:10px;border-radius:999px;background:var(--lavSoft);margin:10px 0 4px;overflow:hidden}
+.xpbar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--lav));border-radius:999px;transition:width .6s ease}
+.xptxt{color:var(--muted);font-size:.8rem}
+.dailies{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.daily-btn{display:grid;justify-items:center;gap:2px;background:var(--pinkSoft);border:0;border-radius:18px;padding:10px 4px;font-family:"Jua";font-size:.98rem;position:relative}
+.daily-btn:nth-child(2){background:var(--mintSoft)}.daily-btn:nth-child(3){background:var(--lavSoft)}
+.daily-btn .em{font-size:1.5rem;line-height:1}
+.daily-btn small{font-family:"Gowun Dodum";color:var(--muted);font-size:.76rem}
+.daily-btn:not(.done)::after{content:"";position:absolute;top:8px;right:10px;width:8px;height:8px;border-radius:50%;background:var(--pink)}
+.daily-btn.done{opacity:.6}
+.bonusline{margin:10px 0 0;background:color-mix(in srgb,var(--sun) 35%,var(--bg));border-radius:12px;padding:8px 12px;font-size:.88rem}
+.passcard{display:grid;gap:6px;width:100%;text-align:left;margin-top:16px;border:0;border-radius:22px;padding:16px;color:#fff;background:linear-gradient(135deg,#8E7BEF,#FF8FAB)}
+.passcard .pc-top{display:flex;justify-content:space-between;align-items:baseline}
+.passcard b{font-family:"Jua";font-weight:400;font-size:1.3rem}
+.passcard .pc-price{font-weight:700}
+.passcard .pc-perks{font-size:.86rem;opacity:.95}
+.passcard .btn{background:#fff;color:#3A2B4A;text-align:center;margin-top:4px}
+.sheet.center{text-align:center}
+.pouch{font-size:5rem;line-height:1.2;margin:10px 0;display:inline-block}
+.pouch.shake{animation:shake .25s ease-in-out infinite}
+.pouch.open{animation:pop .4s ease-out}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+.gacha-res{font-family:"Jua";font-size:1.15rem;margin:4px 0 12px;min-height:1.5em}
+.odds{margin-top:10px;text-align:left;color:var(--muted);font-size:.86rem}
+.odds ul{list-style:none;padding:0;margin:6px 0}
+.odds li{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dashed var(--line)}
+.mbar{display:flex;justify-content:center;gap:12px;margin:8px 0}
+.mbar span{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--lavSoft);font-size:1.5rem;color:var(--muted)}
+.mbar span.on{background:var(--mintSoft)}
+.dex{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.dc{border-radius:12px;padding:8px 2px;text-align:center;color:#fff;display:grid;gap:1px}
+.dc b{font-family:"Jua";font-weight:400;font-size:1.05rem}
+.dc small{font-size:.66rem;opacity:.95}
+.dc.empty{background:var(--bg);border:2px dashed var(--line);color:var(--muted)}
+.lvlist{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+.lvlist li{display:flex;justify-content:space-between;border:2px solid var(--line);border-radius:14px;padding:9px 12px}
+.lvlist li.past{opacity:.55}
+.lvlist li.cur{border-color:var(--pink);background:var(--pinkSoft);font-weight:700}
+.pass-price{margin:4px 0 8px;font-size:1.05rem}
+.perks{margin:0 0 12px;padding-left:1.2em;display:grid;gap:4px}
+.notice{background:var(--bg);border-radius:14px;padding:12px 14px;font-size:.86rem;color:var(--muted)}
+.notice ul{margin:6px 0 0;padding-left:1.1em;display:grid;gap:4px}
+.burst{position:fixed;inset:0;z-index:40;display:grid;place-items:center;pointer-events:auto;background:rgba(30,20,40,.25)}
+.burst-msg{background:var(--surface);border-radius:22px;padding:18px 22px;font-family:"Jua";font-size:1.3rem;max-width:86vw;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.2);animation:pop .4s ease-out}
+.bit{position:absolute;top:-10%;font-size:1.6rem;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{transform:translateY(115vh) rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.pouch.shake,.pouch.open,.burst-msg,.bit{animation:none}.xpbar span{transition:none}}
