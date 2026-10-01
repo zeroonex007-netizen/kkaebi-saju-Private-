@@ -150,7 +150,7 @@
     <p style="margin:4px 0 0;color:var(--muted)">로그인하면 별사탕이랑 내 사주 정보가 저장돼.</p>
     <div class="login-btns">
       <button class="kakao" id="kakaoBtn">카카오로 시작하기</button>
-      <button class="naver" disabled title="준비 중">네이버로 시작하기 (곧 열려요)</button>
+      <button class="naver" id="naverBtn">네이버로 시작하기</button>
     </div>
     <p class="agree">시작하면 <a href="/terms.html" target="_blank">이용약관</a>과 <a href="/privacy.html" target="_blank">개인정보처리방침</a>에 동의하는 것으로 봐요.</p>
     <button class="btn-soft" id="loginClose" style="margin-top:12px">닫기</button>
@@ -222,12 +222,20 @@ function renderWallet(){
 async function refreshMe(){if(!session){me=null;renderWallet();return;}try{me=await api("me");}catch(e){me=null;}renderWallet();}
 function needLogin(){if(session)return false;$("login").hidden=false;$("kakaoBtn").focus();return true;}
 $("kakaoBtn").onclick=()=>sb.auth.signInWithOAuth({provider:"kakao",options:{redirectTo:location.origin+location.pathname}});
+$("naverBtn").onclick=()=>{location.href="/api/naver-start";};
 $("loginClose").onclick=()=>$("login").hidden=true;
 $("walletBtn").onclick=()=>{if(!needLogin())openShop();};
 
 // 초대 링크로 들어온 경우 코드 보관
 const qs=new URLSearchParams(location.search);
 if(qs.get("ref"))try{localStorage.setItem("kkaebi_ref",qs.get("ref"));}catch(e){}
+
+// 네이버 로그인에서 돌아온 경우
+const LOGIN_ERR={naver_cancel:"네이버 로그인을 취소했어.",naver_email:"네이버에서 이메일 제공에 동의해야 가입할 수 있어.",
+  naver_exists:"이 이메일은 카카오로 이미 가입돼 있어. 카카오로 로그인해줘!",naver_setup:"네이버 로그인은 준비 중이야. 카카오로 시작해줘!"};
+if(qs.get("login_error"))setTimeout(()=>toast(LOGIN_ERR[qs.get("login_error")]||"로그인에 실패했어. 다시 해줘."),300);
+if(qs.get("nv")){sb.auth.verifyOtp({token_hash:qs.get("nv"),type:"email"}).then(({error})=>{if(error)toast("네이버 로그인에 실패했어. 다시 해줘.");});}
+if(qs.get("nv")||qs.get("login_error"))history.replaceState(null,"",location.pathname);
 
 let booted=false;
 sb.auth.onAuthStateChange((ev,s)=>{session=s;setTimeout(async()=>{

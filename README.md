@@ -120,7 +120,7 @@ supabase/schema.sql  DB 테이블과 별사탕 함수
 
 ## 다음에 붙일 것
 
-- **네이버 로그인**: Supabase 기본 목록에 없어 별도 연동 작업이 필요합니다.
+- **네이버 로그인**: `api/naver-start.js`, `api/naver-callback.js`로 직접 연동돼 있습니다. 네이버 개발자센터에서 받은 Client ID·Secret을 Vercel 환경변수 `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET`에 넣으면 켜집니다.
 - **음력 입력·정확한 절기**: 한국천문연구원 음양력 API 연동
 - **월 990원 구독**: 토스 자동결제(빌링) 연동
 - **관리자 화면**: 매출, 별사탕 수동 지급·회수, 후기 숨김
