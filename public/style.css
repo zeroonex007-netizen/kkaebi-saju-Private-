@@ -135,8 +135,9 @@ legend{font-weight:700;padding:0 6px}
 
 /* --- 실서비스 추가 --- */
 .login-btns{display:grid;gap:8px;margin:14px 0 10px}
-.kakao{background:#FEE500;color:#191919;border:0;border-radius:16px;padding:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px}
-.naver{background:#03C75A;color:#fff;border:0;border-radius:16px;padding:14px;font-weight:700}
+.kakao{background:#FEE500;color:rgba(0,0,0,.85);border:0;border-radius:16px;padding:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px}
+.naver{background:#03C75A;color:#fff;border:0;border-radius:16px;padding:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px}
+.kakao .lg,.naver .lg{width:18px;height:18px;flex:none}
 .naver:disabled{opacity:.45;cursor:default}
 .agree{color:var(--muted);font-size:.8rem;margin:0}
 .agree a{color:inherit}
