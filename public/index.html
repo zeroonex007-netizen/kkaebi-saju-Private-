@@ -577,7 +577,7 @@ async function share(fromResult){
       Kakao.Share.sendDefault({objectType:"feed",
         content:{title:t?`${lastType.name}님은 '${lastType.type[0]}' 유형!`:"니 팔자 내가 앎. 부적냥 990원 사주",
           description:t?`${lastType.type[1]} · 너는 무슨 유형이야? 이 링크로 가입하면 별사탕 1개 선물!`:"무기력한데 은근 용한 고양이가 봐주는 사주. 이 링크로 가입하면 별사탕 1개 선물",
-          imageUrl:location.origin+"/share.png",imageWidth:800,imageHeight:400,link:{mobileWebUrl:url,webUrl:url}},
+          imageUrl:location.origin+(t?`/share/type-${TYPES.indexOf(lastType.type)}.jpg`:"/share.png"),imageWidth:800,imageHeight:400,link:{mobileWebUrl:url,webUrl:url}},
         buttons:[{title:t?"나도 내 유형 보기":"부적냥한테 사주 보기",link:{mobileWebUrl:url,webUrl:url}}]});
       ok=true;
     }catch(e){console.error(e);}
@@ -700,7 +700,7 @@ async function drawAmulet(cv,a,el,own,preview,opt={}){
 $("amGift").onclick=()=>{if(needLogin())return;$("giftForm").hidden=false;$("amGift").hidden=true;$("gFrom").value=(me&&me.name)||"";$("gErr").textContent="";$("gTo").focus();};
 async function sendGiftLink(g){const a=amOf(g.kind),url=`${location.origin}/?gift=${g.code}${me&&me.ref_code?"&ref="+me.ref_code:""}`;
   const title=`${g.from}님이 ${g.to}님 위해 ${a.name}을 부탁했어요`,desc=`부적냥이 ${g.to}님 이름 부르면서 진심으로 빌었어. "${a.pray}"`;let ok=false;
-  if(KAKAO_OK){try{Kakao.Share.sendDefault({objectType:"feed",content:{title,description:desc,imageUrl:location.origin+"/share.png",imageWidth:800,imageHeight:400,link:{mobileWebUrl:url,webUrl:url}},buttons:[{title:"내 부적 받기",link:{mobileWebUrl:url,webUrl:url}}]});ok=true;}catch(e){console.error(e);}}
+  if(KAKAO_OK){try{Kakao.Share.sendDefault({objectType:"feed",content:{title,description:desc,imageUrl:location.origin+`/share/amulet-${g.kind}.jpg`,imageWidth:800,imageHeight:400,link:{mobileWebUrl:url,webUrl:url}},buttons:[{title:"내 부적 받기",link:{mobileWebUrl:url,webUrl:url}}]});ok=true;}catch(e){console.error(e);}}
   if(!ok){try{if(navigator.share){await navigator.share({title,text:title,url});ok=true;}}catch(e){if(e&&e.name==="AbortError")return true;}}
   if(!ok){try{await navigator.clipboard.writeText(title+" "+url);ok=true;toast("선물 링크 복사됐어! 친구한테 붙여넣어줘.");}catch(e){}}
   return ok;}
@@ -768,7 +768,7 @@ $("luckDev").onclick=()=>{if(luckDone){$("luck").classList.remove("pop");void $(
 try{if(localStorage.getItem("nyang_luck_"+new Date().toDateString()))showLuck(luckToday());}catch(e){}
 $("luckShare").onclick=async()=>{if(!luckDone)return;const r=luckDone,url=location.origin+(me&&me.ref_code?"/?ref="+me.ref_code:"/");
   const title=`오늘 내 행운점수 ${r.score}점 🍀`,desc=`부적냥 한마디: "${r.quote}" 너도 뽑아봐.`;let ok=false;
-  if(KAKAO_OK){try{Kakao.Share.sendDefault({objectType:"feed",content:{title,description:desc,imageUrl:location.origin+"/share.png",imageWidth:800,imageHeight:400,link:{mobileWebUrl:url,webUrl:url}},buttons:[{title:"나도 뽑기",link:{mobileWebUrl:url,webUrl:url}}]});ok=true;}catch(e){}}
+  if(KAKAO_OK){try{Kakao.Share.sendDefault({objectType:"feed",content:{title,description:desc,imageUrl:location.origin+`/share/luck-${r.score}.jpg`,imageWidth:800,imageHeight:400,link:{mobileWebUrl:url,webUrl:url}},buttons:[{title:"나도 뽑기",link:{mobileWebUrl:url,webUrl:url}}]});ok=true;}catch(e){}}
   if(!ok){try{if(navigator.share){await navigator.share({title,text:title+" "+desc,url});ok=true;}}catch(e){if(e&&e.name==="AbortError")return;}}
   if(!ok){try{await navigator.clipboard.writeText(title+" "+desc+" "+url);toast("링크 복사됐어! 친구한테 붙여넣어줘.");ok=true;}catch(e){}}
   if(ok&&session){try{const x=await api("share");if(x.rewarded){await refreshMe();setTimeout(()=>toast("첫 공유 선물! 별사탕 1개 충전 🎁"),700);}}catch(e){}}};
