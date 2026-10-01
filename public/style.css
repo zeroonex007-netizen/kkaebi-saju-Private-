@@ -338,8 +338,14 @@ body.has-tab main{padding-bottom:20px}
 .price-line a{color:inherit}
 
 /* 공유 창 */
-.share-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
-.share-grid button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.8rem;color:var(--ink);padding:4px 0}
-.share-grid .si{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:1.5rem}
 .faq #faqMore details{border-top:1px solid var(--line)}
 .faq-more{display:block;margin:8px auto 0;border:0;background:none;color:var(--muted);font-size:.88rem;padding:6px 12px}
+.share-sub{margin:4px 0 0;color:var(--muted);font-size:.88rem}
+.share-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:18px 0 4px}
+.share-grid button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:.8rem;color:var(--ink);padding:4px 0;-webkit-tap-highlight-color:transparent}
+.share-grid .si{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;transition:transform .12s}
+.share-grid button:active .si{transform:scale(.92)}
+.share-grid .si svg{width:30px;height:30px}
+.si-kakao{background:#FEE500}
+.si-insta{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
+.si-more{background:#EEEAF2}.si-link{background:#EEEAF2}
