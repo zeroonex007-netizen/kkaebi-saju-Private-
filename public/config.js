@@ -4,7 +4,7 @@ window.KKAEBI_CONFIG = {
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1bGlucWN1Y3ZqcXRuY3VzcW9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4MzA1NzAsImV4cCI6MjEwNjQwNjU3MH0.bDmMLrjJGIGxgMYLInlON44hcizO2qeEeEy6p8oYEyk",
   // 토스페이먼츠 결제위젯 '클라이언트 키'. 아래는 토스 문서용 테스트 키 (실제 돈 안 나감)
   // 카카오 디벨로퍼스 > 앱 > 플랫폼 키 > JavaScript 키 (공개해도 되는 키)
-  KAKAO_JS_KEY: "",
+  KAKAO_JS_KEY: "6d27b6bb085994fc5c94d499391e2209",
   TOSS_CLIENT_KEY: "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm",
   BIZ: {
     name: "영일경영전략연구소",
