@@ -253,3 +253,5 @@ footer.biz button{background:none;border:0;padding:0;color:inherit;text-decorati
 .sent-h{margin:0 0 4px;font-size:.85rem;color:var(--muted)}
 .sent-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:.92rem}
 .sent-row button{border:0;background:var(--pink);color:#fff;border-radius:999px;padding:3px 12px;font-size:.8rem}
+
+.acct{display:block;margin:6px 0 2px;font-size:.8rem;color:var(--muted)}
