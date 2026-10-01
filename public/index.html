@@ -797,7 +797,7 @@ $("openChat").onclick=()=>{if(needLogin())return;show("v-chat");if(!chat.length)
 async function send(){const q=$("chatIn").value.trim();if(!q)return;$("chatIn").value="";addMsg("me",q);chat.push({role:"user",content:q});
   const b=addMsg("bot","부적냥이 듣는 중…");$("chatSend").disabled=true;
   try{const r=await api("chat",{messages:chat});b.textContent=r.text;chat.push({role:"assistant",content:r.text});
-    $("chatHint").textContent=r.ai==="gemini"?"✨ 부적냥 AI가 듣고 있어. 지금은 무료야.":r.canned?"부적냥이 듣고 있어. 지금은 무료야.":r.free?"오늘 공짜 수다 썼어! 다음 질문은 별사탕 1개야.":"별사탕 1개 썼어.";await refreshMe();}
+    $("chatHint").textContent=r.ai==="gemini"?"✨ 부적냥 AI가 듣고 있어. 지금은 무료야.":r.canned?"부적냥이 듣고 있어. 지금은 무료야."+(r.why?` (AI 연결 안 됨: ${r.why})`:""):r.free?"오늘 공짜 수다 썼어! 다음 질문은 별사탕 1개야.":"별사탕 1개 썼어.";await refreshMe();}
   catch(e){chat.pop();b.remove();
     if(e.status===402){toast("오늘 공짜 수다는 끝! 별사탕 충전하면 계속 얘기할 수 있어.");openShop();}
     else toast("부적냥이 잠깐 누웠어. 다시 보내줘");$("chatIn").value=q;}
