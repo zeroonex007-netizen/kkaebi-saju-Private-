@@ -96,12 +96,12 @@ export async function gemini({ system, messages, max_tokens = 2048 }) {
         generationConfig: { maxOutputTokens: max_tokens, temperature: 0.9 },
       }),
     });
-    if (r.status === 404 || r.status === 400) { last = new Error(`gemini ${r.status} ${model}: ` + (await r.text()).slice(0, 160)); continue; }
-    if (!r.ok) throw new Error(`gemini ${r.status} ${model}: ` + (await r.text()).slice(0, 160));
+    // 없는 모델(404)·요청 오류(400)·한도(429)·바쁨(5xx)이면 다음 모델로
+    if (!r.ok) { console.error(`gemini ${r.status} ${model}`, (await r.text()).slice(0, 200)); last = new Error(`${r.status} ${model}`); continue; }
     const j = await r.json();
     const text = (j.candidates?.[0]?.content?.parts || []).filter((p) => !p.thought).map((p) => p.text || "").join("").trim();
     if (text) return text;
-    last = new Error(`gemini empty ${model}`);
+    last = new Error(`empty ${model}`);
   }
   throw last || new Error("gemini no model");
 }
