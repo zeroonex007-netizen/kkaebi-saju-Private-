@@ -353,3 +353,41 @@ body.has-tab main{padding-bottom:20px}
 .mailform{display:grid;gap:8px;padding:4px 0 6px}
 .mailform input{font:inherit;border:2px solid var(--line);border-radius:14px;padding:12px;background:var(--surface);color:var(--ink)}
 .mailform small{color:var(--muted);font-size:.8rem}
+
+/* 부적냥 진화 */
+.evo{background:linear-gradient(180deg,#FFF6D8,#FFE9F0);border-radius:26px;padding:16px 14px 14px;text-align:center;margin-bottom:14px;color:#3A2B4A}
+.evo-main{display:flex;justify-content:center;padding:8px 0 4px}
+.evo-name{display:block;font-family:"Jua";font-weight:400;font-size:1.25rem;margin-top:4px}
+.evo-line{margin:2px 0 10px;color:#7E6E8C;font-size:.9rem}
+.evo-next{display:block;color:#7E6E8C;font-size:.8rem;margin-top:8px}
+.evo-road{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.evo-dot{display:flex;flex-direction:column;align-items:center;gap:2px;opacity:.9}
+.evo-dot img{width:46px;height:40px;object-fit:contain;filter:brightness(0) opacity(.25)}
+.evo-dot.got img{filter:none}
+.evo-dot.now img{transform:scale(1.15);filter:drop-shadow(0 0 6px #FFC93C)}
+.evo-dot small{font-size:.66rem;color:#7E6E8C;white-space:nowrap}
+.evo-dot.now small{color:#E5487B;font-weight:700}
+.evo-pop h2{margin-bottom:6px}
+.evo-pop .btn{margin-top:12px}
+/* 부적냥 몸 + 장식: data-st 1~5 */
+.pet{position:relative;display:inline-block;width:150px;height:150px}
+.pet.big{width:190px;height:180px}
+.pet img{position:absolute;inset:0;margin:auto;max-width:100%;max-height:100%;z-index:2;filter:drop-shadow(0 4px 6px rgba(0,0,0,.12))}
+.pet .gold,.pet .orbit,.pet .p2,.pet .crown,.pet .spark{display:none;position:absolute}
+.pet .gold{inset:-6%;border-radius:50%;z-index:0;background:radial-gradient(circle,rgba(255,214,72,.85) 0%,rgba(255,214,72,.35) 45%,transparent 70%);animation:glow 2.2s ease-in-out infinite}
+.pet .p2{z-index:3;width:13%;height:20%;left:18%;top:40%;background:#FFE27A;border:2px solid #3A2B4A;border-radius:2px;transform:rotate(-18deg)}
+.pet .p2::after{content:"";position:absolute;left:30%;top:20%;width:40%;height:55%;border-left:2px solid #E5483B;border-radius:40%}
+.pet .orbit{inset:0;z-index:1;animation:spin 6s linear infinite}
+.pet .orbit b{position:absolute;width:12%;height:18%;background:#FFE27A;border:2px solid #E5483B;border-radius:2px}
+.pet .orbit b:nth-child(1){left:44%;top:-4%}.pet .orbit b:nth-child(2){left:-2%;top:62%}.pet .orbit b:nth-child(3){right:-2%;top:62%}
+.pet .crown{z-index:4;width:30%;left:35%;top:-8%;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2));animation:bob 2s ease-in-out infinite}
+.pet .spark{z-index:4;right:4%;top:4%;font-size:1.3rem;animation:bob 1.6s ease-in-out infinite}
+.pet[data-st="2"] .p2,.pet[data-st="3"] .p2{display:block}
+.pet[data-st="3"] .gold,.pet[data-st="4"] .gold,.pet[data-st="5"] .gold{display:block}
+.pet[data-st="4"] .orbit,.pet[data-st="5"] .orbit{display:block}
+.pet[data-st="5"] .crown,.pet[data-st="5"] .spark,.pet[data-st="4"] .spark{display:block}
+.pet[data-st="5"] .gold{inset:-14%;background:radial-gradient(circle,rgba(255,200,40,.95) 0%,rgba(255,170,60,.45) 45%,transparent 72%)}
+@keyframes glow{0%,100%{opacity:.75;transform:scale(.96)}50%{opacity:1;transform:scale(1.04)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@media (prefers-reduced-motion: reduce){.pet .gold,.pet .orbit,.pet .crown,.pet .spark{animation:none}}

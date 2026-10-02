@@ -95,6 +95,13 @@
 
 <section id="v-my" hidden>
   <h1 class="ftitle">😺 MY</h1>
+  <div class="evo" id="evo" hidden>
+    <div class="evo-main"><span class="pet big" id="evoPet" data-st="1"><i class="gold"></i><span class="orbit"><b></b><b></b><b></b></span><img alt=""><i class="p2"></i><svg class="crown" viewBox="0 0 64 40" aria-hidden="true"><path d="M4 36 L8 10 L22 22 L32 4 L42 22 L56 10 L60 36 Z" fill="#FFD23F" stroke="#E0A92B" stroke-width="3" stroke-linejoin="round"/><circle cx="32" cy="24" r="4" fill="#E5487B"/></svg><i class="spark">✨</i></span></div>
+    <b class="evo-name" id="evoName"></b>
+    <p class="evo-line" id="evoLine"></p>
+    <div class="evo-road" id="evoRoad"></div>
+    <small class="evo-next" id="evoNext"></small>
+  </div>
   <div class="mykb" id="myKb" hidden>
     <button class="lvrow" id="lvBtn" aria-label="레벨 안내">
       <span class="lv" id="lvBadge">Lv.1</span><b id="lvName">아기 부적냥</b><span class="passbadge" id="passBadge" hidden>PASS</span>
@@ -366,6 +373,16 @@
   </div>
 </div>
 
+<div class="sheet-bg" id="evoSheet" hidden>
+  <div class="sheet center evo-pop" role="dialog" aria-modal="true" aria-labelledby="evoPopTitle">
+    <h2 id="evoPopTitle">✨ 부적냥이 진화했다!</h2>
+    <div class="evo-main"><span class="pet big" id="evoPopPet" data-st="1"><i class="gold"></i><span class="orbit"><b></b><b></b><b></b></span><img alt=""><i class="p2"></i><svg class="crown" viewBox="0 0 64 40" aria-hidden="true"><path d="M4 36 L8 10 L22 22 L32 4 L42 22 L56 10 L60 36 Z" fill="#FFD23F" stroke="#E0A92B" stroke-width="3" stroke-linejoin="round"/><circle cx="32" cy="24" r="4" fill="#E5487B"/></svg><i class="spark">✨</i></span></div>
+    <b class="evo-name" id="evoPopName"></b>
+    <p class="evo-line" id="evoPopLine"></p>
+    <button class="btn" data-close>좋아!</button>
+  </div>
+</div>
+
 <div class="burst" id="burst" hidden aria-live="polite"><div class="burst-msg" id="burstMsg"></div></div>
 
 <div class="sheet-bg" id="cardSheet" hidden>
@@ -379,7 +396,7 @@
 
 <script type="module">
 import {sajuOf,gz,elCount,TYPES,STEMS,STEM_KO,STEM_EL,BR,BR_KO,BR_EL,cardName,cardHanja,cardEl} from "/saju.js";
-import {PRODUCTS,PACKS,LOVE_STATES,PURPOSES,LEVELS,XP_RULES,LEVEL_REWARD,GACHA_ODDS,SUB,LUCK_QUOTES,LUCK_ITEMS,LUCK_COLORS,AMULETS,EL_HANJA,EL_RX,MENU_AMULET,PURPOSE_AMULET,weakEl} from "/products.js";
+import {EVOS,PRODUCTS,PACKS,LOVE_STATES,PURPOSES,LEVELS,XP_RULES,LEVEL_REWARD,GACHA_ODDS,SUB,LUCK_QUOTES,LUCK_ITEMS,LUCK_COLORS,AMULETS,EL_HANJA,EL_RX,MENU_AMULET,PURPOSE_AMULET,weakEl} from "/products.js";
 
 const C=window.KKAEBI_CONFIG;
 // implicit: 로그인 후 돌아올 때 다른 브라우저로 열려도 주소에 담긴 토큰으로 로그인되게
@@ -813,8 +830,21 @@ $("chatSend").onclick=send;$("chatIn").onkeydown=e=>{if(e.key==="Enter"&&!e.isCo
 
 /* ---------- 매일 루프 · 레벨 · 도감 · 패스 ---------- */
 const lvOf=xp=>{let i=0;LEVELS.forEach((L,k)=>{if(xp>=L.xp)i=k;});return i;};
+/* ---------- 부적냥 진화 ---------- */
+const evoOf=i=>{let k=0;EVOS.forEach((E,j)=>{if(i>=E.min)k=j;});return k;};
+function drawPet(el,k){el.dataset.st=k+1;el.querySelector("img").src=`/img/nyang-${EVOS[k].pose}.png`;}
+let evoSeen=null;
+function renderEvo(){const box=$("evo");box.hidden=!me;if(!me)return;
+  const i=lvOf(me.xp),k=evoOf(i),E=EVOS[k],N=EVOS[k+1];
+  drawPet($("evoPet"),k);$("evoName").textContent=`${k+1}단계 · ${E.name}`;$("evoLine").textContent=E.line;
+  const road=$("evoRoad");road.textContent="";
+  EVOS.forEach((X,j)=>{const d=document.createElement("span");d.className="evo-dot"+(j<=k?" got":"")+(j===k?" now":"");
+    d.innerHTML=`<img src="/img/nyang-${X.pose}.png" alt=""><small>${j<=k?X.name.replace(" 부적냥","").replace("부적냥 ",""):"???"}</small>`;road.appendChild(d);});
+  $("evoNext").textContent=N?`Lv.${N.min+1} 되면 다음 진화 · 경험치 ${LEVELS[N.min].xp-me.xp} 남음`:"최종 진화 완료! 부적냥 대왕 👑";
+  if(evoSeen!==null&&k>evoSeen){drawPet($("evoPopPet"),k);$("evoPopName").textContent=`${k+1}단계 · ${E.name}`;$("evoPopLine").textContent=E.line;$("evoSheet").hidden=false;celebrate("부적냥 진화! ✨");}
+  evoSeen=k;}
 function renderKb(){
-  $("myKb").hidden=!me;$("guestKb").hidden=!!me;
+  $("myKb").hidden=!me;$("guestKb").hidden=!!me;renderEvo();
   if(!me)return;
   const i=lvOf(me.xp),L=LEVELS[i],N=LEVELS[i+1];
   $("lvBadge").textContent="Lv."+(i+1);$("lvName").textContent=L.name;
