@@ -444,3 +444,28 @@ body.has-tab main{padding-bottom:20px}
 .rtop .sfx{position:absolute;left:6%;bottom:12%;font-family:"Jua";font-size:1.8rem;color:#FFD23F;transform:rotate(-10deg);text-shadow:2px 2px 0 #000}
 .rbody{background:#fff;border-top:3px solid #1E1729;padding:14px 16px;white-space:pre-line;line-height:1.75;font-size:.97rem;color:#2A2233}
 .rbody .days{display:flex;flex-wrap:wrap;gap:6px}
+
+/* 점 보는 시늉 컷 */
+.rpn.night .cap{background:#fff;color:#1E1729}
+.rtop .narr{position:absolute;left:12px;top:46px;z-index:5;font-size:.82rem;font-style:italic;color:#5B4A6B;background:rgba(255,255,255,.75);padding:2px 8px;border-radius:6px}
+.rtop .narr ~ .bub{top:80px}
+.rtop .rcat.small{height:56%}
+.rtop .rcat.zoom{height:86%}
+.rpn.in .rcat.zoom{animation:zoomin .5s ease-out}
+@keyframes zoomin{from{transform:scale(.6)}to{transform:scale(1)}}
+.tray{position:absolute;left:6%;bottom:12px;width:52%;height:58%;border-radius:50%;background:radial-gradient(ellipse at center,#C8874A,#9C5F2E 70%);box-shadow:inset 0 -6px 0 #7A4520,0 6px 10px rgba(0,0,0,.2)}
+.tray i{position:absolute;width:7px;height:4px;border-radius:50%;background:#FFFDF5;opacity:0}
+.rpn.in .tray i{animation:rice .7s ease-out forwards}
+@keyframes rice{0%{opacity:0;margin-top:-90px}70%{opacity:1}100%{opacity:1;margin-top:0}}
+.sfx.pink{color:#E5487B!important;text-shadow:2px 2px 0 #fff!important;left:auto!important;right:42%;bottom:auto!important;top:46px}
+.book{position:absolute;left:6%;bottom:16px;width:58%;height:62%;background:#FFFDF5;border:3px solid #1E1729;border-radius:6px;box-shadow:4px 4px 0 #1E1729}
+.book::before{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px dashed #C9B8D9}
+.book .pg{position:absolute;inset:8px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.book small{color:#7E6E8C;font-size:.72rem;letter-spacing:.6em}
+.book b{font-family:"Noto Serif KR",serif;font-weight:900;font-size:1.7rem;letter-spacing:.25em;color:#1E1729;clip-path:inset(0 100% 0 0)}
+.rpn.in .book b{animation:write 1.6s .2s steps(8) forwards}.rpn.in .book b+b{animation-delay:1s}
+@keyframes write{to{clip-path:inset(0 0 0 0)}}
+.candle{position:absolute;left:18%;bottom:20px;font-size:3.4rem;filter:drop-shadow(0 0 18px #FFB84D)}
+.rpn.in .candle{animation:flicker 1.2s ease-in-out infinite}
+@keyframes flicker{0%,100%{filter:drop-shadow(0 0 14px #FFB84D)}50%{filter:drop-shadow(0 0 26px #FFD23F)}}
+.rtop .spk{position:absolute;font-style:normal;font-size:1.5rem;z-index:3;animation:bob 1.4s ease-in-out infinite}.rtop .s1{left:10%;top:62%}.rtop .s3{left:34%;top:76%;animation-delay:.5s}
