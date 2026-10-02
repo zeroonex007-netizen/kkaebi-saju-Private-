@@ -706,9 +706,16 @@ $("reviewBtn").onclick=async()=>{const t=$("reviewText").value.trim();if(t.lengt
 async function loadReviews(){const el=$("reviewList");
   try{const r=await fetch("/api/reviews");const {reviews}=await r.json();el.textContent="";
     if(!reviews.length){el.innerHTML='<div class="rv-empty"><b>첫 후기의 주인공이 되어줘</b><p>풀이 보고 후기 남기면 별사탕 조각을 줘. 조각 3개면 별사탕 1개!</p></div>';return;}
-    for(const v of reviews){const d=document.createElement("div");d.className="rv";const name=(PRODUCTS.find(p=>p.id===v.product)||{}).name||"";
-      d.innerHTML=`<div class="top"><span><span class="st"></span> <span class="pn"></span></span>${v.rewarded?'<span class="badge">별사탕 조각 지급 후기</span>':""}</div><p></p>`;
-      d.querySelector(".st").textContent="★".repeat(v.stars);d.querySelector(".pn").textContent=name;d.querySelector("p").textContent=v.body;el.appendChild(d);}}
+    // 후기 카드가 양옆으로 흘러가는 띠 (4개 이상이면 두 줄, 서로 반대 방향)
+    const card=v=>{const d=document.createElement("div");d.className="rv";const name=((PRODUCTS.find(p=>p.id===v.product)||{}).name||"").replace("990원 ","");
+      d.innerHTML=`<div class="top"><span><span class="st"></span> <span class="rvn"></span></span>${v.rewarded?'<span class="badge">조각 지급</span>':""}</div><p></p>`;
+      d.querySelector(".st").textContent="★".repeat(v.stars);d.querySelector(".rvn").textContent=name;d.querySelector("p").textContent=v.body;return d;};
+    const rows=reviews.length>=4?[reviews.filter((_,i)=>i%2===0),reviews.filter((_,i)=>i%2===1)]:[reviews];
+    el.classList.add("rv-marq");
+    rows.forEach((list,ri)=>{const row=document.createElement("div");row.className="rv-row"+(ri?" rev":"");const tr=document.createElement("div");tr.className="rv-track";
+      let items=list.slice();while(items.length<4)items=items.concat(list);
+      for(const v of items)tr.appendChild(card(v));for(const v of items){const c=card(v);c.setAttribute("aria-hidden","true");tr.appendChild(c);}
+      tr.style.animationDuration=Math.max(18,items.length*6)+"s";row.appendChild(tr);el.appendChild(row);});}
   catch(e){el.innerHTML='<p style="color:var(--muted)">후기를 못 불러왔어.</p>';}}
 loadReviews();
 

@@ -608,3 +608,14 @@ body.has-tab main{padding-bottom:20px}
 .fu i{font-style:normal;font-family:"Noto Serif KR",serif;font-weight:900;font-size:.9rem;writing-mode:vertical-rl;letter-spacing:.2em}
 .rpn.in .fu b{animation:brush 1.2s .3s steps(6) forwards}
 @keyframes brush{to{clip-path:inset(0 0 0 0)}}
+/* 후기 흐르는 띠 */
+.reviews.rv-marq{display:flex;flex-direction:column;gap:10px;margin:0 -16px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.rv-row{overflow:hidden}
+.rv-track{display:flex;width:max-content;padding:2px 0;animation:rvmove 30s linear infinite}
+.rv-row.rev .rv-track{animation-direction:reverse}
+.rv-row:hover .rv-track,.rv-row:active .rv-track{animation-play-state:paused}
+.rv-track .rv{width:230px;flex:none;margin-right:10px}
+.rv-track .rv p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+@keyframes rvmove{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.rv-track{animation:none}.rv-row{overflow-x:auto}}
+.rv-track .rv .top{gap:6px;white-space:nowrap}.rv-track .rv .badge{white-space:nowrap}
