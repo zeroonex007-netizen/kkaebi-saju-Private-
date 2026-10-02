@@ -562,3 +562,49 @@ body.has-tab main{padding-bottom:20px}
 .dchips{position:absolute;left:5%;right:36%;top:60px;display:flex;flex-wrap:wrap;gap:6px}
 .dchips span{background:#fff;border:2px solid #E9C98A;border-radius:999px;padding:4px 10px;font-size:.85rem}
 .dchips span.on{border-color:#D7263D;color:#D7263D;font-weight:700}
+/* 섹션 소품 · 휴식 컷 · 엔딩 */
+.rtop.wp{height:300px}
+.sprop{position:absolute;left:4%;bottom:12px;width:58%;z-index:3}
+.sprop.rt{left:auto;right:4%}
+.sp-pil{display:flex;gap:5px;justify-content:center}
+.sp-pil span{display:flex;flex-direction:column;align-items:center;background:#fff;border:2px solid #C9B8D9;border-radius:8px;padding:3px 6px}
+.sp-pil small{font-size:.62rem;color:#7E6E8C}
+.sp-pil b{font-family:"Noto Serif KR",serif;font-weight:900;font-size:1.15rem;line-height:1.2}
+.sp-pil span.on{border:3px solid #1E1729;background:#FFF6D6;transform:translateY(-4px)}
+.sp-bars{display:flex;gap:6px;height:100px;align-items:flex-end;background:#fff;border:2px solid #1E1729;border-radius:10px;padding:8px 8px 4px}
+.sp-bars span{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.sp-bars i{display:block;width:72%;border-radius:4px 4px 0 0;transform-origin:bottom;transform:scaleY(0)}
+.rpn.in .sp-bars i{animation:grow .7s .2s ease-out forwards}
+@keyframes grow{to{transform:scaleY(1)}}
+.sp-bars em{font-style:normal;font-family:"Noto Serif KR",serif;font-weight:900;font-size:.85rem;display:flex;gap:2px;align-items:baseline}
+.sp-bars em small{font-family:"Jua";font-weight:400;font-size:.72rem;color:#7E6E8C}
+.sp-chips{display:flex;flex-wrap:wrap;gap:5px}
+.sp-chips span{display:flex;align-items:center;gap:4px;background:#fff;border:2px solid #C9B8D9;border-radius:999px;padding:3px 9px;font-size:.78rem}
+.sp-chips b{font-family:"Jua";font-weight:400;font-size:1rem}
+.sp-chips span.hi{border-color:#E5487B;background:#FFE3EC}.sp-chips span.lo{opacity:.5;border-style:dashed}
+.sp-stars{display:flex;gap:6px}
+.sp-stars span{flex:1;display:flex;flex-direction:column;align-items:center;background:#fff;border:2px dashed #C9B8D9;border-radius:10px;padding:6px 2px;font-size:1.3rem;opacity:.45;filter:grayscale(1)}
+.sp-stars small{font-size:.7rem}
+.sp-stars span.on{opacity:1;filter:none;border:2px solid #F2B705;background:#FFF8D9}
+.rpn.in .sp-stars span.on{animation:bob 1.3s ease-in-out infinite}
+.sp-years{display:flex;gap:5px}
+.sp-years span{flex:1;display:flex;flex-direction:column;align-items:center;background:#fff;border:2px solid #1E1729;border-top:8px solid #D7263D;border-radius:6px;padding:4px 2px}
+.sp-years small{font-size:.66rem;color:#7E6E8C}
+.sp-years b{font-family:"Noto Serif KR",serif;font-weight:900;font-size:1.1rem}
+.sp-years i{font-style:normal;font-size:.72rem;color:#D7263D;font-weight:700}
+.rpn.in .sp-years span{animation:chalk .4s both}.rpn.in .sp-years span+span{animation-delay:.25s}.rpn.in .sp-years span+span+span{animation-delay:.5s}
+.sp-coins{position:relative;height:96px}
+.sp-coins i{position:absolute;left:calc(20px + var(--i) * 6px);bottom:calc(var(--i) * 13px);width:64px;height:20px;border-radius:50%;background:#F2C14E;border:3px solid #1E1729;box-shadow:0 4px 0 #C8952A}
+.rpn.in .sp-coins i{animation:chalk .3s calc(var(--i) * .15s) both}
+.sp-coins b{position:absolute;left:100px;bottom:8px;font-family:"Jua";font-weight:400;background:#fff;border:2px solid #1E1729;border-radius:8px;padding:2px 8px}
+.sp-rx{display:flex;gap:10px;align-items:center;background:#FFFDF5;border:2px solid #1E1729;border-radius:8px;padding:8px 10px;box-shadow:3px 3px 0 #1E1729}
+.sp-rx .sw{width:42px;height:42px;border-radius:50%;border:3px solid #1E1729;flex:none}
+.sp-rx p{margin:0;font-size:.8rem;line-height:1.4}.sp-rx b{font-family:"Jua";font-weight:400;font-size:1rem}
+.sp-week{display:flex;flex-direction:column;gap:3px;background:#fff;border:2px solid #1E1729;border-radius:8px;padding:8px 10px;font-size:.8rem}
+.sp-week b{font-family:"Jua";font-weight:400;font-size:1rem}
+.fu{position:absolute;left:12%;top:60px;bottom:18px;width:34%;background:#FFE27A;border:3px solid #8B2E2E;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:8px 0;color:#B3261E;box-shadow:0 0 24px rgba(255,226,122,.5)}
+.fu small{font-family:"Jua";font-size:.8rem;color:#8B2E2E}
+.fu b{font-family:"Noto Serif KR",serif;font-weight:900;font-size:3.4rem;line-height:1;clip-path:inset(0 0 100% 0)}
+.fu i{font-style:normal;font-family:"Noto Serif KR",serif;font-weight:900;font-size:.9rem;writing-mode:vertical-rl;letter-spacing:.2em}
+.rpn.in .fu b{animation:brush 1.2s .3s steps(6) forwards}
+@keyframes brush{to{clip-path:inset(0 0 0 0)}}

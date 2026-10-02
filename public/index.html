@@ -67,7 +67,6 @@
 
   <h2 class="sec">부적냥 메뉴판</h2>
   <div class="grid" id="menu"></div>
-  <button class="toon-cta" data-toon="saju"><img src="/img/nyang-run.png" alt=""><span><b>📖 부적냥 이야기</b><small>새벽 2시, 읽씹당한 지민이 부적냥을 만났다</small></span><i>›</i></button>
   <p class="price-line">모든 메뉴 별사탕 1개 = 990원 · 5개 4,500원 · 11개 9,900원 · <a href="/terms.html#refund">환불 정책</a></p>
 
   <h2 class="sec">먼저 본 친구들 후기</h2>
@@ -580,7 +579,7 @@ function punch(t){const f=String(t).split(/\n/)[0];const m=f.match(/^.*?[.!?](?=
 // 명리학 공부한 냥이: 고전 → 만세력 → 칠판 분석 → 결론
 const NARR={ilju:"일주 카드를 확대했다.",ohaeng:"오행 막대를 하나씩 다시 셌다.",sipsin:"십신표를 칠판에 그렸다.",pillars:"네 기둥을 하나씩 짚었다.",life:"인생 그래프를 그렸다.",love:"일지, 배우자 자리를 확대했다.",year:"올해 세운을 대입했다.",daewoon:"대운표를 펼쳤다.",rx:"용신으로 처방전을 썼다.",summary:"칠판에 결론을 적었다.",personality:"일간과 일지를 나란히 대조했다.",money:"재성(財星)의 자리를 확인했다.",work:"관성(官星)과 식상(食傷)의 흐름을 봤다.",people:"비겁(比劫)과 귀인을 체크했다.",stars:"신살표를 펼쳤다.",advice:"용신(用神) 기준으로 처방을 적었다.",
   style:"일지, 배우자 자리를 확대했다.",match:"합(合)이 되는 지지를 찾았다.",timing:"월운에서 연애 별을 셌다.",now:"지금 운의 흐름과 대조했다.",score:"두 사람의 일간·일지를 겹쳐 봤다.",good:"천간합·육합을 체크했다.",clash:"충(沖)이 있는지 확인했다.",tip:"용신 기준으로 처방을 적었다.",
-  overall:"올해 세운(歲運)의 십신을 계산했다.",months:"달마다 월건(月建)을 대입했다.",luck:"길한 십신이 들어오는 달을 표시했다.",caution:"흉한 십신이 겹치는 달을 표시했다.",next:"내년 세운을 미리 대입했다.",rise:"대운표에서 길운을 찾았다.",rest:"대운표에서 쉬어갈 구간을 찾았다.",pick:"일진과 내 일지의 합을 찾았다.",others:"후보 일진을 몇 개 더 골랐다."};
+  overall:"올해 세운(歲運)의 십신을 계산했다.",months:"달마다 월건(月建)을 대입했다.",luck:"길한 십신이 들어오는 달을 표시했다.",caution:"흉한 십신이 겹치는 달을 표시했다.",next:"내년 세운을 미리 대입했다.",rise:"대운표에서 길운을 찾았다.",rest:"대운표에서 쉬어갈 구간을 찾았다.",pick:"일진과 내 일지의 합을 찾았다.",others:"후보 일진을 몇 개 더 골랐다.",mind:"오행의 넘침과 모자람을 몸과 마음에 대봤다.",study:"인성(印星)과 식상(食傷)을 셌다.",family:"연주·월주와 인성·비겁을 확인했다.",month:"이번 달 월건(月建)을 대입했다.",future:"3년치 세운을 나란히 놓았다.",lucky:"용신(用神)으로 행운 목록을 뽑았다."};
 const ELS="목화토금수",ELH={목:"木",화:"火",토:"土",금:"金",수:"水"},SEASON_OF=["겨울","겨울","봄","봄","봄","여름","여름","여름","가을","가을","가을","겨울"];
 function analyze(p){const de=STEM_EL[p.day.s],i=ELS.indexOf(de),mom=ELS[(i+4)%5],kid=ELS[(i+1)%5],c=elCount(p);
   let sup=0,tot=0;for(const k of["year","month","day","hour"])if(p[k]){for(const [e,w] of [[STEM_EL[p[k].s],k==="day"?0:1],[BR_EL[p[k].b],k==="month"?2:1]]){tot+=w;if(e===de||e===mom)sup+=w;}}
@@ -638,15 +637,41 @@ function storyPanels(nm,p,pid,S,days){
     ...(days&&days.length>1?[{bg:"#FFF1D6",html:`<div class="cap">후보일도 적어 둔다.</div><div class="dchips">${days.map((x,i)=>`<span class="${i?"":"on"}">${E(x.label)}</span>`).join("")}</div>${prof("hold","r small")}`}]:[]),
     end("…그날 챙길 것까지 다 적었음.")];}
   return null;}
+// 섹션별 소품(데이터 시각화) · 중간 휴식 컷 · 엔딩 시퀀스
+const ELCOL={목:"초록",화:"빨강",토:"노랑",금:"흰색",수:"네이비"},ELNUM={목:"3·8",화:"2·7",토:"5·10",금:"4·9",수:"1·6"};
+function secProp(k,S,p){const A=p&&p.day?analyze(p):null;
+  const pills=()=>`<div class="sp-pil">${["hour","day","month","year"].map(c=>`<span class="${c==="day"?"on":""}"><small>${{hour:"시",day:"일",month:"월",year:"연"}[c]}</small><b>${p[c]?STEMS[p[c].s]:"?"}</b><b>${p[c]?BR[p[c].b]:"?"}</b></span>`).join("")}</div>`;
+  switch(k){
+    case"ilju":case"style":return p&&p.day?pills():"";
+    case"pillars":case"life":return p&&p.day?pills():"";
+    case"ohaeng":case"mind":return A?`<div class="sp-bars">${ELS.split("").map(e=>`<span><i style="height:${Math.max(6,Math.min(100,A.c[e]*22))}%;background:${ELC[e]}"></i><em>${ELH[e]}<small>${A.c[e]}</small></em></span>`).join("")}</div>`:"";
+    case"sipsin":case"study":case"family":return S&&S.cnt?`<div class="sp-chips">${Object.entries(S.cnt).map(([g,n])=>`<span class="${n>=3?"hi":n===0?"lo":""}"><b>${n}</b>${g}</span>`).join("")}</div>`:"";
+    case"stars":return S&&S.stars?`<div class="sp-stars">${["도화","역마","화개","귀인"].map(t=>`<span class="${S.stars.includes(t)?"on":""}">${{도화:"🌸",역마:"🐎",화개:"📿",귀인:"🤝"}[t]}<small>${t}</small></span>`).join("")}</div>`:"";
+    case"year":case"future":case"overall":case"next":return S&&S.years?`<div class="sp-years">${S.years.map(q=>`<span><small>${q.y}</small><b>${STEMS[q.s]}${BR[q.b]}</b><i>${TGK[q.t]}</i></span>`).join("")}</div>`:"";
+    case"money":return S&&S.cnt?`<div class="sp-coins">${Array.from({length:Math.max(1,Math.min(5,S.cnt.재성+1))},(_,i)=>`<i style="--i:${i}"></i>`).join("")}<b>재성 ${S.cnt.재성}</b></div>`:"";
+    case"rx":case"lucky":case"advice":case"tip":return A?`<div class="sp-rx"><span class="sw" style="background:${ELC[A.yong]}"></span><p><b>용신 ${ELH[A.yong]}</b><br>색 ${ELCOL[A.yong]} · 숫자 ${ELNUM[A.yong]}</p></div>`:"";
+    case"month":return S&&S.mtg?`<div class="sp-week"><b>${S.m}월 · ${TGK[S.mtg]}</b>${[1,2,3,4].map(w=>`<span>☐ ${w}주차</span>`).join("")}</div>`:"";
+  }return"";}
+const INTER=[["잠깐, 물 한 모금.","…여기서부터가 진짜임.","lie","꿀꺽"],["책 한 권 더 꺼내 옴.","『궁통보감』 계절 편 확인 중.","hold","휘릭"],["꼬리가 저절로 흔들림.","이 사주, 은근 재밌는데?","cheer","살랑"],["…부적냥 집중 모드.","거의 다 왔음. 끝까지 읽어.","cross","집중"],["붓에 먹을 다시 묻힌다.","남은 거 마저 적을게.","run","촥"]];
+function interPanel(n){const t=INTER[n%INTER.length];return{bg:n%2?"#2B2140":"#F3EBDD",night:n%2,html:`<div class="cap">${t[0]}</div><img class="rcat r" src="/img/nyang-${t[2]}.png" alt=""><div class="bub l">${t[1]}</div><b class="sfx">${t[3]}</b>`};}
+function endPanels(nm,p){const A=p&&p.day?analyze(p):null,yh=A?ELH[A.yong]:"福",ye=A?A.yong:"";
+  return[
+  {bg:"#2B2140",night:1,tall:1,html:`<div class="cap">풀이를 다 쓰고, 붓을 들었다.</div><div class="fu"><small>${esc(nm)}</small><b>${yh}</b><i>勅令</i></div><span class="prof r"><img src="/img/nyang-hold.png" alt=""></span><div class="bub r top">${A?`니 용신 ${yh}(${ye}). 이 기운 한 장 그려 둠.`:"니 이름으로 한 장 그려 둠."}</div><b class="sfx">슥—</b>`},
+  {bg:"#FFF1D6",html:`<div class="cap">마지막으로 도장.</div><div class="stamp">完<small>${esc(nm)} 처방</small></div><span class="prof r"><img src="/img/nyang-cheer.png" alt=""></span><b class="sfx">쾅</b>`},
+  {bg:"#FFE9A8",html:`<div class="cap">부적냥은 다시 누웠다.</div><img class="rcat r" src="/img/nyang-lie.png" alt=""><div class="bub l">또 와. 니 사주, 부적냥이 기억하고 있을게.</div><i class="spk s1">✨</i><i class="spk s3">💤</i>`}];}
 function renderSections(keys,obj,days,story){const r=$("reading");r.textContent="";r.classList.add("rtoon");
   const nm=(lastType&&lastType.name)||"너",pid=lastType&&lastType.prod;
   let SP=null;try{SP=story&&storyPanels(nm,(lastType&&lastType.p)||{},pid,story,days);}catch(e){SP=null;}
   for(const o of SP||ritualPanels(nm,(lastType&&lastType.p)||{})){const d=document.createElement("div");d.className="rpn"+(o.night?" night":"");d.style.background=o.bg;d.innerHTML=`<div class="rtop${o.tall?" tall":""}">${o.html}</div>`;r.appendChild(d);}
   if(!SP&&days&&days.length){const d=document.createElement("div");d.className="rpn";d.style.background="#FFF1D6";
     d.innerHTML=`<div class="rtop short"><div class="cap">부적냥이 고른 날</div></div><div class="rbody"><div class="days">${days.map(x=>`<span>${esc(x.label)}</span>`).join("")}</div></div>`;r.appendChild(d);}
-  let i=0;for(const[k,t]of keys){if(!obj[k])continue;const side=i%2?"l":"r",d=document.createElement("div");d.className="rpn";d.style.background=RBG[i%RBG.length];
-    d.innerHTML=`<div class="rtop"><div class="cap">${esc(t)}</div>${NARR[k]?`<div class="narr">${esc(NARR[k])}</div>`:""}<img class="rcat ${side}" src="/img/nyang-${RPOSE[i%RPOSE.length]}.png" alt=""><div class="bub ${side==="r"?"l":"r"}">${esc(punch(obj[k]))}</div></div><div class="rbody"></div>`;
+  const P0=(lastType&&lastType.p)||{},addP=o=>{const d=document.createElement("div");d.className="rpn"+(o.night?" night":"");d.style.background=o.bg;d.innerHTML=`<div class="rtop${o.tall?" tall":""}">${o.html}</div>`;r.appendChild(d);};
+  let i=0,inter=0;for(const[k,t]of keys){if(!obj[k])continue;
+    if(i&&i%5===0)addP(interPanel(inter++));
+    const side=i%2?"l":"r",d=document.createElement("div");d.className="rpn";d.style.background=RBG[i%RBG.length];let pr="";try{pr=secProp(k,story,P0);}catch(e){pr="";}
+    d.innerHTML=`<div class="rtop${pr?" wp":""}"><div class="cap">${esc(t)}</div>${NARR[k]?`<div class="narr">${esc(NARR[k])}</div>`:""}<img class="rcat ${side}" src="/img/nyang-${RPOSE[i%RPOSE.length]}.png" alt=""><div class="bub ${side==="r"?"l":"r"}">${esc(punch(obj[k]))}</div>${pr?`<div class="sprop ${side==="r"?"":"rt"}">${pr}</div>`:""}</div><div class="rbody"></div>`;
     d.querySelector(".rbody").textContent=obj[k];r.appendChild(d);i++;}
+  for(const o of endPanels(nm,P0))addP(o);
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{threshold:.15});
   r.querySelectorAll(".rpn").forEach(p=>io.observe(p));}
 
