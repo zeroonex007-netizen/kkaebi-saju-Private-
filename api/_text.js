@@ -366,12 +366,12 @@ function readSaju(x, b, me) {
   const [y, m] = todayKST(), ytg = tenGod(x.s, yearP(y).s), ntg = tenGod(x.s, yearP(y + 1).s), mtg = tenGod(x.s, monthP(y, m).s), s = x.s, p = x.p;
   const yuk = (13 - x.b) % 12, sam = [4, 8].map((k) => (x.b + k) % 12), clash = (x.b + 6) % 12;
   const ei = "목화토금수".indexOf(STEM_EL[s]), yong = D.strong ? "목화토금수"[(ei + 1) % 5] : "목화토금수"[(ei + 4) % 5], R = RX[yong];
-  const P = (...a) => a.filter(Boolean).join("\n\n");
+  const P = (...a) => a.filter(Boolean).join("\n\n"), F = (t) => String(t || "").split("\n\n")[0];
   const pal = (k, tgv) => `${PALACE[k]}에 ${tgv}, 그러니까 ${j(TG_MEAN[tgv], "이", "가")} 자리 잡고 있음. ${PALACE_TONE[k][toneOf(tgv)]}`;
   const tgY = tenGod(s, p.year.s), tgM = tenGod(s, p.month.s), tgD = tenGod(s, MAIN_STEM[p.day.b]), tgH = p.hour ? tenGod(s, p.hour.s) : null;
   const L = readLove(x, b, me || { sex: "여" });
   let dw = "";
-  try { if (me && me.sex && me.birth) { const W = readDaewoon(x, {}, me); dw = P(W.now, W.rise, W.rest); } } catch (e) { dw = ""; }
+  try { if (me && me.sex && me.birth) { const W = readDaewoon(x, {}, me); dw = P(W.now, F(W.rise), F(W.rest), "10년 단위로 더 자세한 흐름은 990원 대운 메뉴에 따로 있음."); } } catch (e) { dw = ""; }
   return {
     summary: P(summaryOf(x), STRENGTH[D.strong], `한 줄로 정리하면, ${OUTER[s]} 겉모습 안에 ${INNER_ANIMAL[x.b]}가 사는 사람. 올해 키워드는 '${KEYWORD[ytg]}', 이번 달은 '${KEYWORD[mtg]}'.`,
       `이 풀이는 일간(${STEM_KO[s]}${STEM_EL[s]}), 월령, 오행 분포, 십신, 신살, 올해 세운까지 다 넣어서 본 거임. 길어도 끝까지 읽어. 뒤로 갈수록 니 얘기임.`),
@@ -406,14 +406,18 @@ function readSaju(x, b, me) {
       `📅 ${y}년 일 흐름: ${YEAR_WORK[ytg]}\n📅 ${y + 1}년 일 흐름: ${YEAR_WORK[ntg]}`, `🙅 잘 안 맞는 일: ${BAD_JOBS[s]}. 이런 데 오래 있으면 시들어.`,
       `회사에서 너는 '${PROS[s][0]}'(으)로 인정받고, '${CONS[s][0]}' 때문에 오해받음. 오해는 말 한마디로 풀리니까 먼저 말해.`,
       `👔 상사랑은: ${D.cnt.관성 >= 2 ? "규칙 지키는 너를 좋아함. 대신 다 받아주다 지치지 마." : "너는 간섭받기 싫어하는 편이라, 결과로 먼저 보여주면 간섭이 줄어듦."}\n🤝 동료랑은: ${D.cnt.비겁 >= 2 ? "경쟁심이 붙기 쉬움. 같은 편이라고 먼저 선 그어주면 편해짐." : "혼자 다 하려 하지 말고 나눠. 니 사주는 협업할 때 운이 붙음."}`),
-    love: P(L.style, L.match, L.timing, `더 자세한 연애 흐름, 지금 상태별 조언은 990원 연애운 메뉴에 따로 있음.`),
+    love: P(L.style, F(L.match), F(L.timing), `더 자세한 연애 흐름, 지금 상태별 조언은 990원 연애운 메뉴에 따로 있음.`),
     people: P(PEOPLE[s], `🤝 귀인 띠: ${[yuk, ...sam].map((v) => ANIMAL[v]).join("·")}띠. 이 띠 사람이 도와주면 일이 풀림.`, `⚡ 부딪히는 띠: ${ANIMAL[clash]}띠. 나쁜 사람이 아니라 리듬이 다른 거라, 선만 잘 지키면 오히려 배울 게 많음.`,
       `👨‍👩‍👧 가족·윗사람: ${line("인성")}\n👯 친구·동료: ${line("비겁")}`),
     stars: P("신살은 사주에 붙은 특별한 별 같은 거임. 무섭게 들려도 다 쓰기 나름이야.",
       ...(D.stars.length ? D.stars.map((k) => STARS[k] + "\n" + STAR_USE[k]) : ["특별한 살은 안 보임. 대신 기복이 적고 꾸준한 사주라 오래갈수록 유리함."]),
-      D.stars.includes("도화") ? "" : "도화살이 없다고 매력이 없는 게 아님. 너는 오래 볼수록 진가가 드러나는 '은은한 매력'형임."),
+      D.stars.includes("도화") ? "" : "도화살이 없다고 매력이 없는 게 아님. 너는 오래 볼수록 진가가 드러나는 '은은한 매력'형임.",
+      D.stars.includes("역마") ? "" : "역마살이 없으면 한곳에 뿌리내릴수록 운이 쌓이는 타입. 자주 옮기기보다 한 우물을 깊게 파는 게 이득.",
+      D.stars.includes("화개") ? "" : "화개살이 없으면 혼자 파고들기보다 사람들 속에서 배울 때 더 빨리 큼. 스터디나 모임이 너한텐 공부임.",
+      D.stars.includes("귀인") ? "" : "천을귀인이 사주 원국엔 없어도, 귀인은 띠와 해(年)로도 들어옴. 사람 복 항목에 적은 귀인 띠를 잘 봐둬.",
+      "📌 신살 보는 법: 옛 명리서에선 연지·일지를 기준으로 다른 기둥에 어떤 지지가 있는지로 살을 찾음. 살은 '팔자에 붙은 성향 꼬리표'일 뿐, 좋고 나쁨은 어떻게 쓰느냐로 갈림."),
     year: (() => { const Yr = readYearly(x); return P(`${y}년은 너한테 ${YEAR[ytg]}`, `💰 돈: ${YEAR_MONEY[ytg]}\n💼 일: ${YEAR_WORK[ytg]}\n💘 연애: ${YEAR_LOVE[ytg]}`,
-      `🗓 남은 달 흐름\n${Yr.months}`, Yr.luck, Yr.caution, `${y + 1}년은 ${YEAR[ntg]}`, `🔑 올해 '${KEYWORD[ytg]}' → 내년 '${KEYWORD[ntg]}'. 남은 기간엔 내년 준비를 해둬.`); })(),
+      F(Yr.luck), F(Yr.caution), `${y + 1}년은 ${YEAR[ntg]}`, `🔑 올해 '${KEYWORD[ytg]}' → 내년 '${KEYWORD[ntg]}'. 남은 기간엔 내년 준비를 해둬.`); })(),
     daewoon: dw || "대운은 성별까지 알아야 정확히 계산됨. 990원 대운 메뉴에서 10년 단위로 자세히 볼 수 있음.",
     rx: P(`니 용신은 ${yong}(${"木火土金水"["목화토금수".indexOf(yong)]}). 이 기운을 생활에 넣으면 막힌 게 풀림. 부적냥 처방 7가지:`,
       `🎨 색: ${R[0]}\n🔢 숫자: ${R[1]}\n🧭 방향: ${R[2]}\n🍚 음식: ${R[3]}\n📍 장소: ${R[4]}\n🤝 사람: ${R[5]}\n⏰ 습관: ${R[6]}`,
@@ -424,25 +428,150 @@ function readSaju(x, b, me) {
       CLOSER[s], "오늘 읽은 거 중에 하나만 기억해. 나머진 부적냥이 기억하고 있을게."),
   };
 }
+/* ── 연애·궁합·연운·대운·택일 확장 데이터 ── */
+const LOVE_SIGNAL = [
+  "좋아하면 바로 티 남. 약속을 니가 다 잡고, 그 사람 일에 괜히 나서서 해결해 주려 함.",
+  "좋아하면 그 사람 말투랑 취향을 따라 하게 됨. 답장 속도가 그 사람한테만 빨라짐.",
+  "좋아하면 온몸으로 표현함. 웃음이 커지고, 그 사람 앞에서만 텐션이 두 배가 됨.",
+  "좋아하면 오히려 조용해짐. 대신 그 사람이 지나가듯 한 말을 다 기억해 뒀다가 챙김.",
+  "좋아하면 묵묵히 옆에 있음. 말보다 '필요할 때 항상 있는 사람'이 되는 걸로 표현함.",
+  "좋아하면 밥 먹었냐, 집 잘 들어갔냐부터 물어봄. 챙기는 게 곧 고백임.",
+  "좋아하면 돌려 말 못 함. '나 너 좋아하는 듯' 같은 직구를 의외로 빨리 던짐.",
+  "좋아하면 그 사람 앞에서 제일 예쁜 모습만 보여주려 함. 준비를 엄청 하고 나감.",
+  "좋아해도 겉으론 쿨한 척함. 근데 그 사람이 부르면 어디든 나가는 게 진짜 신호.",
+  "좋아하면 머릿속에서 이미 연애 열 번 함. 프사, 스토리, 단어 하나에 의미 부여 시작.",
+];
+const LOVE_HOOK = [
+  "상대가 너한테 반하는 포인트는 '믿고 따라가도 되겠다'는 든든함.",
+  "상대가 너한테 반하는 포인트는 말 안 해도 기분을 알아주는 다정함.",
+  "상대가 너한테 반하는 포인트는 같이 있으면 덩달아 밝아지는 에너지.",
+  "상대가 너한테 반하는 포인트는 '나를 이렇게까지 기억해 줬어?' 하는 섬세함.",
+  "상대가 너한테 반하는 포인트는 흔들리지 않는 한결같음.",
+  "상대가 너한테 반하는 포인트는 생활 속에서 챙겨주는 따뜻함.",
+  "상대가 너한테 반하는 포인트는 애매한 거 없이 확실한 태도.",
+  "상대가 너한테 반하는 포인트는 남다른 감각이랑 자기관리.",
+  "상대가 너한테 반하는 포인트는 잡힐 듯 안 잡히는 자유로운 분위기.",
+  "상대가 너한테 반하는 포인트는 깊은 대화가 되는 감성.",
+];
+const LOVE_FIGHT = [
+  "싸우면 이기려고 함. 근데 이기면 연애는 짐. 결론 내기 전에 '네 말은 이거지?' 한 번만 확인해.",
+  "싸우면 일단 참음. 참다 쌓인 게 한 번에 나가니까, 작은 서운함일 때 바로 말하는 게 오히려 평화임.",
+  "싸우면 바로 터뜨리고 바로 풀림. 근데 상대는 아직 안 풀렸을 수 있음. 한 번 더 안부 물어봐.",
+  "싸우면 말을 안 함. 침묵이 길어지면 상대는 '끝났나' 생각함. '나 생각 정리 중'이라고만 말해줘도 됨.",
+  "싸우면 버팀. 시간이 해결해 줄 거라 믿는데, 상대는 대화가 필요함. 먼저 '얘기하자'고 해.",
+  "싸우면 걱정이 잔소리로 나감. '너 왜 그래' 대신 '나 걱정돼서 그래'로 시작하면 반은 풀림.",
+  "싸우면 말이 세짐. 맞는 말이어도 아프게 들림. 문장 끝에 '~해줄래?'만 붙여도 분위기 바뀜.",
+  "싸우면 혼자 정리하고 마음을 닫음. 닫기 전에 딱 한 번만 기회 줘. 생각보다 상대는 몰랐던 거임.",
+  "싸우면 피함. 자리를 뜨거나 연락을 미룸. 피하는 대신 '내일 얘기하자'고 시간만 정해둬.",
+  "싸우면 혼자 상상으로 결론 냄. 상상 속 그 사람은 진짜 그 사람이 아님. 직접 물어봐.",
+];
+const LOVE_STEPS = {
+  "솔로": ["이번 달 안에 새로운 모임이나 클래스 하나 신청하기", "프로필 사진을 '웃는 얼굴'로 바꾸기", "연락 오는 약속은 귀찮아도 두 번 중 한 번은 나가기"],
+  "썸 타는 중": ["다음 약속 날짜를 니가 먼저 제안하기", "그 사람이 좋아하는 거 하나 기억했다가 챙기기", "확인받고 싶을 땐 돌려 묻지 말고 가볍게 직접 묻기"],
+  "연애 중": ["이번 주에 고마운 거 하나 말로 하기", "서운한 거 있으면 '나는 ~해서 서운했어'로 하나만 말하기", "둘만의 새로운 데이트 코스 하나 만들기"],
+  "이별 후": ["사진이랑 대화방은 바로 지우지 말고 '보관함'으로 옮겨두기", "일주일에 한 번은 나만을 위한 일정 넣기", "다시 연락하고 싶으면 3일만 기다렸다가 그래도 하고 싶을 때 하기"],
+};
+const MONTH_DO = {
+  비견: "남 의견보다 내 계획대로 밀어붙여도 되는 달. 혼자 하는 공부나 운동 시작하기 좋음.",
+  겁재: "모임비·경조사비가 많이 나갈 수 있음. 카드 대신 체크카드 쓰고, 돈 빌려달라는 말엔 하루 생각하고 답해.",
+  식신: "맛집 가고 취미 즐기는 게 오히려 운을 올림. 만든 거 SNS에 올리면 반응 좋음.",
+  상관: "아이디어는 메모하고, 상사한테 하는 말은 한 번 걸러서. 표현은 글로 하면 더 잘 통함.",
+  편재: "새로운 제안, 새로운 사람 연락은 일단 받아봐. 대신 큰 결제는 3일 묵히고.",
+  정재: "적금 넣고, 미뤄둔 정리 하기 딱 좋은 달. 성실하게 한 게 숫자로 보임.",
+  편관: "일정 꽉 채우지 말고 하루는 비워둬. 버티면 다음 달에 확실히 보상 옴.",
+  정관: "면접, 발표, 보고, 계약에 좋은 달. 단정하게 입고 정석대로 가.",
+  편인: "혼자 공부하고 생각 정리하기 좋음. 대신 생각만 하지 말고 하나는 실행.",
+  정인: "윗사람, 선배, 가족한테 도움 받기 좋음. 모르는 건 물어보면 귀인이 나타남.",
+};
+const LUCK_HOW = {
+  식신: "재능이 돈과 기회로 바뀌는 때. 하고 싶었던 걸 이때 시작해.",
+  편재: "기회가 크게 움직이는 때. 소개, 이직, 새 프로젝트 제안은 이때 잡아.",
+  정재: "성실한 게 보상받는 때. 연봉 협상, 저축 시작, 계약에 좋음.",
+  정관: "인정받는 때. 면접, 시험, 승진, 공식적인 자리에서 빛남.",
+  정인: "귀인이 끌어주는 때. 도움 요청하면 생각보다 쉽게 풀림.",
+};
+const CAUTION_HOW = {
+  겁재: "돈 빌려주기, 동업 제안, 충동구매가 몰리는 때. 지갑은 닫고 내 할 일에만 집중하면 오히려 실력이 늘어.",
+  상관: "말이 칼이 되기 쉬운 때. 특히 윗사람이랑 부딪힘. 할 말은 70%만, 메시지는 보내기 전에 한 번 더 읽어.",
+  편관: "일이 몰리고 몸이 지치는 때. 약속 줄이고 잠부터 챙겨. 버티면 레벨업하는 달이라 포기만 안 하면 됨.",
+};
+const DW_PREP = {
+  비견: "내 이름으로 된 무언가(포트폴리오, 채널, 기술)를 지금부터 쌓아둬.",
+  겁재: "돈 지키는 습관(자동이체, 비상금)을 지금부터 만들어둬.",
+  식신: "좋아하는 걸 꾸준히 기록해 둬. 그게 그때 밥벌이가 됨.",
+  상관: "말과 글 실력을 키워둬. 그때 틀을 깨는 무기가 됨.",
+  편재: "넓게 사람 만나둬. 그때 판을 키워줄 사람이 지금 만나는 사람 중에 있음.",
+  정재: "작게라도 모으는 습관을 들여. 그때 그게 눈덩이가 됨.",
+  편관: "체력이랑 멘탈 근육을 미리 길러둬. 그때 책임이 커짐.",
+  정관: "자격, 경력, 평판을 정석대로 쌓아둬. 그때 이름값으로 돌아옴.",
+  편인: "남들 잘 안 하는 분야 하나를 파둬. 그때 전문가로 불림.",
+  정인: "배우고 싶은 걸 지금 배워둬. 그때 문서와 자격으로 열매 맺음.",
+};
+const PAIR_TALK = {
+  hap: "대화할 때 말이 술술 통하는 사이. 대신 너무 편해서 중요한 얘기를 '나중에'로 미루기 쉬움. 돈·미래 얘기는 일부러 날 잡아서 해.",
+  same: "생각 회로가 비슷해서 설명 안 해도 앎. 대신 둘 다 같은 데서 고집이 생김. 의견 갈리면 '이번엔 니 차례, 다음엔 내 차례'로 번갈아 정해.",
+  AgenB: "한쪽이 들어주고 한쪽이 털어놓는 대화 구조. 들어주는 쪽도 털어놓을 시간이 필요하니까, 주기적으로 역할을 바꿔.",
+  BgenA: "한쪽이 들어주고 한쪽이 털어놓는 대화 구조. 들어주는 쪽도 털어놓을 시간이 필요하니까, 주기적으로 역할을 바꿔.",
+  AconB: "한쪽이 방향을 잡고 한쪽이 따라가는 구조. 결정할 땐 '어떻게 생각해?'를 먼저 물어보면 간섭이 배려로 바뀜.",
+  BconA: "한쪽이 방향을 잡고 한쪽이 따라가는 구조. 결정할 땐 '어떻게 생각해?'를 먼저 물어보면 간섭이 배려로 바뀜.",
+};
+const DAY_WHY = {
+  육합: "육합(六合)은 두 지지가 손을 맞잡는 관계. 그날 기운이 니 일지랑 짝을 이뤄서, 사람이 붙고 일이 부드럽게 맞물림.",
+  삼합: "삼합(三合)은 세 지지가 한 팀이 되는 관계. 그날 기운이 니 일지랑 같은 팀이라, 혼자 해도 밀어주는 힘이 생김.",
+};
+const PURPOSE_CHECK = {
+  "고백·첫 데이트": ["장소는 시끄럽지 않은 곳으로 미리 예약", "대화 주제 세 개 준비(그 사람이 좋아하는 것 위주)", "마무리는 '다음에 또 보자'로 다음 약속 열어두기"],
+  "이사": ["이삿날 아침에 새 집 창문 다 열기", "소금이나 쌀 한 줌을 새 집 현관 안쪽에 두기(옛 풍습, 마음 정리용)", "첫날 밤엔 불 끄기 전에 '잘 부탁해' 한마디"],
+  "면접·시험": ["준비물은 전날 밤에 현관 앞에 두기", "당일 첫 끼는 평소 먹던 걸로", "시작 전 숨 세 번 크게 쉬기. 긴장은 준비했다는 증거임"],
+  "결혼·상견례": ["양가 호칭과 소개 순서 미리 맞춰두기", "식당은 조용한 룸으로, 메뉴는 호불호 없는 걸로", "끝나고 서로 수고했다는 말 꼭 하기"],
+  "새로운 시작": ["목표는 '하루 10분'처럼 작게 잡기", "시작한 날을 사진으로 남기기", "일주일 뒤 같은 요일에 한 번 돌아보기"],
+};
+const PURPOSE_AVOID = {
+  "고백·첫 데이트": "충(沖) 드는 날에 고백하면 말이 엇갈리기 쉬워서 일부러 뺐음.",
+  "이사": "충 드는 날에 이사하면 짐 정리가 꼬이고 마음이 붕 뜨기 쉬워서 뺐음.",
+  "면접·시험": "충 드는 날은 컨디션이 흔들리기 쉬워서 뺐음.",
+  "결혼·상견례": "충 드는 날은 사소한 말이 오해로 번지기 쉬워서 뺐음.",
+  "새로운 시작": "충 드는 날은 시작이 흐지부지되기 쉬워서 뺐음.",
+};
+
 function readLove(x, b, me) {
   const yuk = (13 - x.b) % 12, sam = [0, 1, 2, 3].map((k) => (x.b + 4 * k) % 12).filter((v, i, a) => v !== x.b && a.indexOf(v) === i);
   const animals = [yuk, ...sam].map((v) => ANIMAL[v]).join("·");
   const loveTg = me.sex === "여" ? ["편관", "정관"] : ["편재", "정재"];
-  const [y, m] = todayKST(), months = [];
+  const [y, m] = todayKST(), months = [], mdesc = [];
   for (let i = 0; i < 12 && months.length < 3; i++) {
-    const M = ((m - 1 + i) % 12) + 1, Y = y + Math.floor((m - 1 + i) / 12), mp = monthP(Y, M);
-    if (loveTg.includes(tenGod(x.s, mp.s)) || isYuk(mp.b, x.b) || isSam(mp.b, x.b)) months.push(`${Y !== y ? Y + "년 " : ""}${M}월`);
+    const M = ((m - 1 + i) % 12) + 1, Y = y + Math.floor((m - 1 + i) / 12), mp = monthP(Y, M), t = tenGod(x.s, mp.s);
+    const why = loveTg.includes(t) ? `연애 별(${t})이 뜨는 달` : isYuk(mp.b, x.b) ? `니 일지랑 육합 드는 달` : isSam(mp.b, x.b) ? `니 일지랑 삼합 드는 달` : "";
+    if (why) { const lab = `${Y !== y ? Y + "년 " : ""}${M}월`; months.push(lab); mdesc.push(`💗 ${lab}: ${why}. ${MONTH[t]}.`); }
   }
   const state = LOVE_NOW[b.loveState] ? b.loveState : "솔로", D = x.dp, lg = me.sex === "여" ? "관성" : "재성";
-  const loveCnt = D.cnt[lg], loveLine = loveCnt >= 3 ? "사주에 연애 별이 많아서 다가오는 사람이 많음. 고르는 눈이 중요함." : loveCnt === 0 ? "사주에 연애 별이 적어서 늦게 피는 타입. 대신 한번 만나면 오래 감." : "";
+  const loveCnt = D.cnt[lg], loveLine = loveCnt >= 3 ? "사주에 연애 별이 많아서 다가오는 사람이 많음. 고르는 눈이 중요함." : loveCnt === 0 ? "사주에 연애 별이 적어서 늦게 피는 타입. 대신 한번 만나면 오래 감." : "연애 별이 적당히 있어서, 억지로 찾지 않아도 때가 되면 인연이 들어오는 구조임.";
+  const ytg = tenGod(x.s, yearP(y).s), ntg = tenGod(x.s, yearP(y + 1).s), mtg = tenGod(x.s, monthP(y, m).s), R = RX[x.w];
+  const P = (...a) => a.filter(Boolean).join("\n\n");
   return {
-    style: [LOVE_STYLE[x.s], INNER[x.b], D.stars.includes("도화") ? "그리고 도화살 있음. 가만있어도 사람이 꼬이는 매력이 있음." : "", loveLine].filter(Boolean).join(" "),
-    match: [`${SPOUSE[x.b]}이랑 제일 잘 맞음. 띠로 치면 ${animals}띠가 찰떡.`, `그리고 너한테 부족한 ${x.w} 기운을 가진 사람, 그러니까 ${EL_PERSON[x.w]} 만나면 서로 채워줌.`,
-      `⚡ ${ANIMAL[(x.b + 6) % 12]}띠랑은 불꽃 튀는데 자주 싸움. 끌리면 연애는 하되 생활 규칙은 미리 정해.`, `🚩 피해야 할 타입: 니 ${CONS[x.s][0]}을(를) 더 키우는 사람. 만나고 나서 니가 작아지는 느낌이면 그 사람은 아님.`].join("\n\n"),
-    timing: [months.length ? `인연 기운이 들어오는 달은 ${months.join(", ")}. 이때 소개팅이나 모임 들어오면 귀찮아도 나가. 니 사주에서 연애 별이 반짝이는 때임.` : "올해는 연애 별이 조용한 편. 대신 내 매력 키우는 시기라 내년에 몰아서 들어옴.",
-      `📅 ${todayKST()[0]}년 연애 흐름: ${YEAR_LOVE[tenGod(x.s, yearP(todayKST()[0]).s)]}`].join("\n\n"),
-    now: [LOVE_NOW[state], `너는 ${PROS[x.s][1]}이(가) 매력 포인트라, 그걸 보여줄 수 있는 자리(${SHINE[x.s].split(",")[0]})에서 만나는 게 유리함.`].join("\n\n"),
-    advice: [worryLine(b.worry), `너한테 필요한 건 딱 하나, ${LOVE_TIP[x.s]}.`, `💌 연애 행운 아이템: ${EL_COLOR2[x.w]} 계열 옷이나 소품. 부족한 ${x.w} 기운이 매력을 채워줌.`, "응, 연애운 있음. 근데 니가 움직여야 됨."].filter(Boolean).join("\n\n"),
+    style: P(`연애에서 제일 중요한 자리는 일지(日支), 태어난 날의 아래 글자임. 사주에선 이걸 '배우자궁'이라고 불러. 니 일지는 ${BR_KO[x.b]}(${ANIMAL[x.b]}).`,
+      LOVE_STYLE[x.s], INNER[x.b], `💓 좋아할 때 신호: ${LOVE_SIGNAL[x.s]}`, `✨ ${LOVE_HOOK[x.s]}`,
+      `${me.sex === "여" ? "여자 사주에선 관성(官星)" : "남자 사주에선 재성(財星)"}이 연애 별인데, 니 사주엔 ${loveCnt}개. ${loveLine}`,
+      D.stars.includes("도화") ? "그리고 도화살 있음. 가만있어도 사람이 꼬이는 매력이 있음. 대신 오해 살 일도 많으니 선은 확실히." : "도화살은 없지만, 대신 오래 볼수록 진가가 드러나는 '은은한 매력'형임. 첫눈보다 세 번째 만남에서 강함."),
+    match: P(`배우자궁(${BR_KO[x.b]})이랑 합이 되는 사람이 찰떡임. 너는 ${SPOUSE[x.b]}이랑 제일 잘 맞음.`, `🐾 띠로 치면 ${animals}띠가 찰떡. 이 띠랑은 같이 있으면 리듬이 맞아서 싸워도 금방 풀림.`,
+      `🧩 너한테 부족한 ${x.w} 기운을 가진 사람, 그러니까 ${EL_PERSON[x.w]} 만나면 서로 채워줌. 이런 사람 옆에 있으면 니 단점(${CONS[x.s][0]})이 신기하게 줄어듦.`,
+      `⚡ ${ANIMAL[(x.b + 6) % 12]}띠랑은 불꽃 튀는데 자주 싸움. 일지끼리 충(沖)이라 끌림도 강하고 부딪힘도 강함. 끌리면 연애는 하되 생활 규칙은 미리 정해.`,
+      `🚩 피해야 할 타입: 니 ${j(CONS[x.s][0], "을", "를")} 더 키우는 사람. 만나고 나서 니가 작아지는 느낌이면 그 사람은 아님.`,
+      `💍 결혼 상대로는: 연애할 땐 설렘이 중요하지만, 결혼은 '같이 밥 먹는 게 편한 사람'이 답임. 너한텐 ${EL_PERSON[x.st === x.w ? "토" : x.w]}이 오래 편함.`),
+    timing: P(months.length ? `인연 기운이 들어오는 달은 ${months.join(", ")}. 이때 소개팅이나 모임 들어오면 귀찮아도 나가. 니 사주에서 연애 별이 반짝이는 때임.` : "앞으로 몇 달은 연애 별이 조용한 편. 대신 내 매력 키우는 시기라 내년에 몰아서 들어옴.",
+      mdesc.join("\n"),
+      `📅 이번 달(${m}월): ${YEAR_LOVE[mtg].replace("해.", "달.")}`,
+      `📅 ${y}년 연애 흐름: ${YEAR_LOVE[ytg]} 올해 키워드가 '${KEYWORD[ytg]}'. 그래서 연애도 ${KEYWORD[ytg]} 쪽으로 움직일 때 잘 풀림.`,
+      `📅 ${y + 1}년 연애 흐름: ${YEAR_LOVE[ntg]}`,
+      `⏰ 하루 중엔 니 용신 기운이 강한 시간에 만나는 게 좋음. ${{ 목: "아침~오전", 화: "한낮~이른 오후", 토: "점심 무렵이나 해 질 녘", 금: "오후 늦게~저녁", 수: "저녁~밤" }[x.w]} 시간대가 니 매력이 제일 잘 보이는 때.`),
+    now: P(`지금 상태: ${state}.`, LOVE_NOW[state],
+      `✅ 부적냥 연애 미션 3개\n1. ${LOVE_STEPS[state][0]}\n2. ${LOVE_STEPS[state][1]}\n3. ${LOVE_STEPS[state][2]}`,
+      `너는 ${j(PROS[x.s][1], "이", "가")} 매력 포인트라, 그걸 보여줄 수 있는 자리(${SHINE[x.s].split(",")[0]})에서 만나는 게 유리함.`,
+      `📍 인연이 잘 걸리는 장소: ${R[4]}. 니 부족한 ${x.w} 기운이 채워지는 곳이라 표정부터 달라짐.`),
+    advice: P(worryLine(b.worry), `🔥 싸울 때 너: ${LOVE_FIGHT[x.s]}`, `너한테 필요한 건 딱 하나, ${LOVE_TIP[x.s]}.`,
+      `💌 연애 행운 아이템: ${EL_COLOR2[x.w]} 계열 옷이나 소품. 부족한 ${x.w} 기운이 매력을 채워줌.\n🔢 행운 숫자: ${EL_NUM2[x.w]} · 🧭 방향: ${EL_DIR[x.w]}`,
+      `💬 부적냥이 ${x.name}한테: 연애는 '좋은 사람 찾기'보다 '나랑 있을 때 좋은 사람 되는 사람' 찾기임. 너는 ${j(PROS[x.s][0], "이", "가")} 있는 사람이라 충분히 사랑받을 자격 있음.`,
+      "응, 연애운 있음. 근데 니가 움직여야 됨."),
   };
 }
 function readGunghap(x, b, me) {
@@ -458,66 +587,151 @@ function readGunghap(x, b, me) {
   const GOODT = { hap: "일간끼리 합이 들었음. 이건 진짜 끌림임. 처음 봤을 때부터 이상하게 편했을 거임.", same: "둘이 같은 기운이라 말 안 해도 통함. 친구 같은 커플.",
     AgenB: `${j(A, "이", "가")} ${j(B, "을", "를")} 키워주는 관계. ${j(A, "이", "가")} 챙겨주면 ${j(B, "이", "가")} 피어남.`, BgenA: `${j(B, "이", "가")} ${j(A, "을", "를")} 키워주는 관계. ${B} 옆에 있으면 ${j(A, "이", "가")} 편해짐.`,
     AconB: `${j(A, "이", "가")} ${j(B, "을", "를")} 잡아주는 관계. 흔들릴 때 방향을 잡아줌.`, BconA: `${j(B, "이", "가")} ${j(A, "을", "를")} 잡아주는 관계. ${j(A, "이", "가")} 흔들릴 때 ${j(B, "이", "가")} 중심을 잡아줌.` };
-  const BRG = { yuk: "일지끼리 육합이라 같이 지낼수록 더 맞는 생활 궁합.", sam: "일지끼리 삼합이라 같이 뭘 하면 시너지 나는 팀 궁합.", same: "일지가 같아서 생활 습관이 비슷함.", chung: "", none: "" };
+  const BRG = { yuk: "일지끼리 육합이라 같이 지낼수록 더 맞는 생활 궁합.", sam: "일지끼리 삼합이라 같이 뭘 하면 시너지 나는 팀 궁합.", same: "일지가 같아서 생활 습관이 비슷함.", chung: "일지끼리 충이라 생활 리듬이 다름. 대신 그 다름에 끌린 거임.", none: "일지끼리는 특별한 합도 충도 없어서, 생활 궁합은 둘이 만들어가기 나름." };
   const CLASH = { hap: "너무 잘 맞아서 오히려 서로한테 기대기만 할 수 있음. 각자 성장도 챙겨.", same: "둘 다 고집이 비슷해서 한번 붙으면 아무도 안 짐.",
     AgenB: `${A}만 계속 주는 느낌이 들면 지침. ${B}도 고마운 걸 표현해야 함.`, BgenA: `${B}만 계속 주는 느낌이 들면 지침. ${A}도 고마운 걸 표현해야 함.`,
     AconB: `${A} 말이 ${B}한텐 간섭으로 느껴질 수 있음.`, BconA: `${B} 말이 ${A}한텐 간섭으로 느껴질 수 있음.` };
   const TIP = { hap: "둘만의 루틴 하나 만들기. 매주 같은 요일 데이트 같은 거.", same: "각자 시간 보장해주기. 붙어 있는 게 다가 아님.",
     AgenB: "고맙다는 말을 습관처럼. 주는 사람이 지치지 않게.", BgenA: "고맙다는 말을 습관처럼. 주는 사람이 지치지 않게.",
     AconB: "결정은 같이 하고, 잔소리는 하루 한 번만.", BconA: "결정은 같이 하고, 잔소리는 하루 한 번만." };
+  const KINDN = { hap: "천간합(天干合)", same: "비화(같은 오행)", AgenB: `상생(${A} → ${B})`, BgenA: `상생(${B} → ${A})`, AconB: `상극(${A} → ${B})`, BconA: `상극(${B} → ${A})` };
+  const BRN = { yuk: "육합(六合)", sam: "삼합(三合)", chung: "충(沖)", same: "같은 지지", none: "무난" };
   const sl = score >= 90 ? "이 정도면 전생에 뭐 있었음." : score >= 80 ? "잘 맞음. 조금만 노력하면 오래감." : score >= 70 ? "평균 이상. 다른 점이 오히려 재밌는 사이." : "쉽진 않음. 근데 사주보다 중요한 건 둘이 맞춰가는 마음임.";
+  const pw = weakEl(pc), pst = strongEl(pc), Q = (...a) => a.filter(Boolean).join("\n\n");
   return {
-    score: `${score}점. ${sl}`,
-    good: [GOODT[kind], BRG[br], `${A}의 연애 스타일: ${LOVE_STYLE[x.s].split(". ")[0]}.\n${B}의 연애 스타일: ${LOVE_STYLE[ps].split(". ")[0]}.`, fillMe ? `그리고 ${j(B, "이", "가")} ${A}한테 부족한 ${x.w} 기운을 채워줌. 이건 진짜 큰 장점.` : "", fillYou ? `${A}도 ${B}한테 모자란 기운을 채워주는 쪽임.` : ""].filter(Boolean).join(" "),
-    clash: [CLASH[kind], br === "chung" ? "그리고 일지끼리 충이라 생활 리듬이 달라서 자주 부딪힘. 근데 충은 끌림이기도 함. 서로 다른 점에 반한 거임." : ""].filter(Boolean).join(" "),
-    tip: [TIP[kind], br === "chung" ? "돈 관리랑 생활 규칙은 미리 정해두면 싸울 일 반으로 줄어." : "", worryLine(b.worry)].filter(Boolean).join(" "),
+    score: Q(`💯 ${score}점. ${sl}`,
+      `📋 부적냥 채점표\n① 일간 관계: ${STEM_KO[x.s]}${STEM_EL[x.s]} × ${STEM_KO[ps]}${STEM_EL[ps]} → ${KINDN[kind]}\n② 일지 관계: ${BR_KO[x.b]}(${ANIMAL[x.b]}) × ${BR_KO[pb]}(${ANIMAL[pb]}) → ${BRN[br]}\n③ 오행 보완: ${fillMe ? `${j(B, "이", "가")} ${A}의 부족한 ${x.w}을 채움 ✔` : `${B}의 센 기운(${pst})은 ${A}의 빈자리(${x.w})랑 달라 ✖`}\n④ ${fillYou ? `${j(A, "이", "가")} ${B}의 부족한 ${pw}을 채움 ✔` : `${A}의 센 기운(${x.st})은 ${B}의 빈자리(${pw})랑 달라 ✖`}`,
+      `일간은 '나 자신', 일지는 '배우자 자리'라서 궁합에선 이 두 개를 제일 먼저 봄. 점수는 참고용이고, 진짜 궁합은 둘이 어떻게 맞춰가냐로 바뀜.`,
+      `한 줄 요약: ${j(A, "은", "는")} ${OUTER[x.s]}, ${j(B, "은", "는")} ${OUTER[ps]}. ${kind === "hap" || br === "yuk" ? "서로 끌어당기는 자석 같은 사이." : br === "chung" ? "다른 점이 많아서 서로 배우는 사이." : "서로 다른 색이 섞여서 새 색을 만드는 사이."}`),
+    good: Q(GOODT[kind], BRG[br],
+      `🧑 ${A}: ${STEM_NATURE[x.s].split(". ")[0]}.\n🧑 ${B}: ${STEM_NATURE[ps].split(". ")[0]}.`,
+      `${A}의 연애 스타일: ${LOVE_STYLE[x.s].split(". ")[0]}.\n${B}의 연애 스타일: ${LOVE_STYLE[ps].split(". ")[0]}.`,
+      fillMe ? `그리고 ${j(B, "이", "가")} ${A}한테 부족한 ${x.w} 기운을 채워줌. 이건 진짜 큰 장점. ${B} 옆에 있으면 ${A}의 ${CONS[x.s][0]}이 줄어듦.` : `${A}한텐 ${x.w} 기운이 부족한데, 이건 데이트 장소(${RX[x.w][4]})로 채우면 됨.`,
+      fillYou ? `${A}도 ${B}한테 모자란 ${pw} 기운을 채워주는 쪽임. 서로 주고받는 균형 좋은 사이.` : `${B}한텐 ${pw} 기운이 부족함. ${j(A, "이", "가")} ${RX[pw][0]} 계열 선물 하나 해주면 딱임.`,
+      `💞 둘이 같이 있을 때 제일 좋은 순간: ${SHINE[x.s].split(",")[0]} ${j(A, "이", "가")} 빛나고, ${SHINE[ps].split(",")[0]} ${j(B, "이", "가")} 빛남. 서로 그 순간을 알아봐 주면 됨.`),
+    clash: Q(CLASH[kind], br === "chung" ? "그리고 일지끼리 충이라 생활 리듬이 달라서 자주 부딪힘. 근데 충은 끌림이기도 함. 서로 다른 점에 반한 거임." : "",
+      `🔥 ${j(A, "이", "가")} 싸울 때: ${LOVE_FIGHT[x.s].split(". ")[0]}.\n🔥 ${j(B, "이", "가")} 싸울 때: ${LOVE_FIGHT[ps].split(". ")[0]}.`,
+      `😤 ${j(A, "이", "가")} 제일 싫은 말: ${HATE_WORDS[x.s]}\n😤 ${j(B, "이", "가")} 제일 싫은 말: ${HATE_WORDS[ps]}\n싸울 때 이 말만 피해도 반은 줄어.`,
+      `💬 대화 패턴: ${PAIR_TALK[kind]}`,
+      `⚠ 조심할 포인트: ${A}의 '${CONS[x.s][0]}', ${B}의 '${CONS[ps][0]}'. 이 둘이 만나면 꼬임. 둘 중 한 명이 먼저 '잠깐 쉬자'고 말하는 규칙을 정해둬.`),
+    tip: Q(`🗝 오래가는 비법: ${TIP[kind]}`, br === "chung" ? "돈 관리랑 생활 규칙은 미리 정해두면 싸울 일 반으로 줄어." : "",
+      `😊 ${A}한테 해주면 좋은 말: ${LIKE_WORDS[x.s]}\n😊 ${B}한테 해주면 좋은 말: ${LIKE_WORDS[ps]}`,
+      `📍 추천 데이트: ${[...new Set([RX[x.w][4].split(", ")[0], RX[pw][4].split(", ")[0]])].join(" 또는 ")}. 둘 다 부족한 기운이 채워지는 곳이라 분위기가 부드러워짐.`,
+      x.w === pw ? `🎁 선물 팁: 둘 다 ${EL_COLOR2[x.w]} 계열이 행운색. 커플템으로 맞추면 딱임.` : `🎁 선물 팁: ${A}한텐 ${EL_COLOR2[x.w]} 계열, ${B}한텐 ${EL_COLOR2[pw]} 계열.`,
+      `✅ 이번 주 커플 미션\n1. 서로 고마운 거 하나씩 말하기\n2. 상대가 좋아하는 메뉴로 밥 먹기\n3. 다음 달 데이트 하나 같이 정하기`,
+      worryLine(b.worry), "궁합은 정해진 답이 아니라 둘이 같이 푸는 문제임. 부적냥이 응원함."),
   };
 }
 function readYearly(x) {
   const [y, m] = todayKST(), ytg = tenGod(x.s, yearP(y).s), list = [], luck = [], caut = [];
-  for (let M = m; M <= 12; M++) { const t = tenGod(x.s, monthP(y, M).s); list.push(`${M}월: ${MONTH[t]}`); if (GOOD.has(t)) luck.push(`${M}월`); if (BAD.has(t)) caut.push([M, t]); }
-  for (let M = 1; M <= 3; M++) { const t = tenGod(x.s, monthP(y + 1, M).s); if (GOOD.has(t) && luck.length < 4) luck.push(`내년 ${M}월`); }
-  const ntg = tenGod(x.s, yearP(y + 1).s);
+  for (let M = m; M <= 12; M++) { const mp = monthP(y, M), t = tenGod(x.s, mp.s); list.push(`${GOOD.has(t) ? "🌟" : BAD.has(t) ? "⚠️" : "🌿"} ${M}월 · ${STEM_KO[mp.s]}${BR_KO[mp.b]}월 (${t})\n${MONTH[t]}. ${MONTH_DO[t]}`); if (GOOD.has(t)) luck.push([`${M}월`, t]); if (BAD.has(t)) caut.push([`${M}월`, t]); }
+  const pre = [];
+  for (let M = 1; M <= 3; M++) { const mp = monthP(y + 1, M), t = tenGod(x.s, mp.s); pre.push(`${GOOD.has(t) ? "🌟" : BAD.has(t) ? "⚠️" : "🌿"} 내년 ${M}월 (${t}): ${MONTH[t]}`); if (GOOD.has(t) && luck.length < 4) luck.push([`내년 ${M}월`, t]); if (BAD.has(t) && caut.length < 4) caut.push([`내년 ${M}월`, t]); }
+  const ntg = tenGod(x.s, yearP(y + 1).s), yp = yearP(y), np = yearP(y + 1), P = (...a) => a.filter(Boolean).join("\n\n");
   return {
-    overall: [`${y}년은 너한테 ${YEAR[ytg]}`, `🔑 올해 키워드: '${KEYWORD[ytg]}'`, `💰 돈: ${YEAR_MONEY[ytg]}\n💼 일: ${YEAR_WORK[ytg]}\n💘 연애: ${YEAR_LOVE[ytg]}`].join("\n\n"),
-    months: list.join("\n"),
-    luck: luck.length ? `운이 트이는 때는 ${luck.join(", ")}. 이때 미뤄둔 거 시작하고, 연락 오는 건 다 받아.` : "남은 올해는 크게 튀는 달 없이 고른 편. 꾸준히만 하면 됨.",
-    caution: caut.length ? caut.map(([M, t]) => `${M}월엔 ${CAUTION[t]} 조심.`).join(" ") + " 미리 알면 피할 수 있음." : "올해 남은 기간엔 크게 조심할 달 없음. 대신 방심만 하지 마.",
-    next: [`${y + 1}년은 ${YEAR[ntg]}`, `🔑 내년 키워드: '${KEYWORD[ntg]}'. 올해 ${KEYWORD[ytg]}에서 내년 ${KEYWORD[ntg]}(으)로 넘어가는 흐름이니까, 남은 기간엔 그 준비를 해둬.`].join("\n\n"),
+    overall: P(`${y}년은 ${STEM_KO[yp.s]}${BR_KO[yp.b]}년. 니 일간(${STEM_KO[x.s]}${STEM_EL[x.s]})한테 이 해의 기운은 '${ytg}'(${TG_MEAN[ytg]})로 들어옴.`, `${y}년은 너한테 ${YEAR[ytg]}`, `🔑 올해 키워드: '${KEYWORD[ytg]}'`, `💰 돈: ${YEAR_MONEY[ytg]}\n💼 일: ${YEAR_WORK[ytg]}\n💘 연애: ${YEAR_LOVE[ytg]}`,
+      `니 사주는 ${x.dp.strong ? "신강(기운이 센 편)" : "신약(기운이 여린 편)"}이라, 올해 ${ytg} 기운이 ${GOOD.has(ytg) ? "힘을 실어주는" : BAD.has(ytg) ? "단련시키는" : "균형을 잡아주는"} 쪽으로 작용함.`),
+    months: P(`남은 달을 하나씩 대입해 봤음. 🌟 좋은 달 · 🌿 무난한 달 · ⚠️ 조심할 달.`, list.join("\n\n"), `👀 내년 초 미리보기\n${pre.join("\n")}`),
+    luck: P(luck.length ? `운이 트이는 때는 ${luck.map((l) => l[0]).join(", ")}. 이때 미뤄둔 거 시작하고, 연락 오는 건 다 받아.` : "남은 기간은 크게 튀는 달 없이 고른 편. 꾸준히만 하면 됨.",
+      ...luck.map(([lab, t]) => `🌟 ${lab} (${t}): ${LUCK_HOW[t]} ${MONTH_DO[t]}`),
+      `🍀 운 올리는 법: 부족한 ${x.w} 기운을 채우면 좋은 달의 효과가 더 커짐. ${EL_FILL[x.w]}.`,
+      `🎨 행운 색: ${EL_COLOR2[x.w]} · 🔢 숫자: ${EL_NUM2[x.w]} · 🧭 방향: ${EL_DIR[x.w]}`),
+    caution: P(caut.length ? `조심할 때는 ${caut.map((c) => c[0]).join(", ")}. 미리 알면 피할 수 있음.` : "남은 기간엔 크게 조심할 달 없음. 대신 방심만 하지 마.",
+      ...caut.map(([lab, t]) => `⚠️ ${lab} (${t}): ${CAUTION[t]} 조심. ${CAUTION_HOW[t]}`),
+      `🙅 너한테 올해 특히 조심할 습관: ${CAREFUL[x.s]}. 이게 나오면 운이 새는 신호임.`,
+      `🕳 돈 새는 구멍: ${LEAK[x.s]}. 조심할 달엔 이것부터 막아.`,
+      "조심하라는 건 겁먹으라는 게 아님. 알고 가면 같은 일이 와도 덜 다침."),
+    next: P(`${y + 1}년은 ${STEM_KO[np.s]}${BR_KO[np.b]}년. 너한텐 '${ntg}'의 해.`, `${y + 1}년은 ${YEAR[ntg]}`,
+      `💰 돈: ${YEAR_MONEY[ntg]}\n💼 일: ${YEAR_WORK[ntg]}\n💘 연애: ${YEAR_LOVE[ntg]}`,
+      `🔑 내년 키워드: '${KEYWORD[ntg]}'. 올해 ${KEYWORD[ytg]}에서 내년 ${KEYWORD[ntg]}(으)로 넘어가는 흐름이니까, 남은 기간엔 그 준비를 해둬.`,
+      `✅ 내년 준비 3가지\n1. ${DW_PREP[ntg]}\n2. 올해 안 끝낸 일 하나는 12월 안에 정리\n3. 내년 목표는 딱 하나만 정하기`),
   };
 }
 // 대운: 연간 음양 + 성별로 순행/역행, 절입일까지 날수 ÷ 3 = 대운 시작 나이(근사)
 const TERM_DAY = [6, 4, 6, 5, 6, 6, 7, 8, 8, 8, 7, 7];
-function readDaewoon(x, b, me) {
-  const [by, bm, bd] = me.birth.split("-").map(Number), fwd = (x.p.year.s % 2 === 0) === (me.sex === "남");
+export function daewoonList(p, me) {
+  const [by, bm, bd] = me.birth.split("-").map(Number), fwd = (p.year.s % 2 === 0) === (me.sex === "남");
   const bt = Date.UTC(by, bm - 1, bd);
-  let tt = fwd ? Date.UTC(by, bm - 1, TERM_DAY[bm - 1]) : Date.UTC(by, bm - 1, TERM_DAY[bm - 1]);
+  let tt = Date.UTC(by, bm - 1, TERM_DAY[bm - 1]);
   if (fwd && tt <= bt) tt = Date.UTC(by, bm, TERM_DAY[bm % 12]);
   if (!fwd && tt > bt) tt = Date.UTC(by, bm - 2, TERM_DAY[(bm + 10) % 12]);
   const start = Math.max(1, Math.round(Math.abs(tt - bt) / 864e5 / 3)), [ty] = todayKST(), age = ty - by;
-  const dir = fwd ? 1 : -1, pil = (k) => ({ s: ((x.p.month.s + dir * k) % 10 + 10) % 10, b: ((x.p.month.b + dir * k) % 12 + 12) % 12 });
+  const dir = fwd ? 1 : -1, pil = (k) => ({ s: ((p.month.s + dir * k) % 10 + 10) % 10, b: ((p.month.b + dir * k) % 12 + 12) % 12 });
   const cur = Math.max(1, Math.floor((age - start) / 10) + 1), range = (k) => `${start + 10 * (k - 1)}~${start + 10 * k - 1}세`;
-  const nowP = pil(cur), nowTg = tenGod(x.s, nowP.s);
+  return { start, cur, age, pil, range };
+}
+function readDaewoon(x, b, me) {
+  const { start, cur, pil, range } = daewoonList(x.p, me);
+  const nowP = pil(cur), nowTg = tenGod(x.s, nowP.s), prevTg = cur > 1 ? tenGod(x.s, pil(cur - 1).s) : null;
   let rise = null, rest = null;
   for (let k = cur + 1; k <= cur + 5; k++) { const t = tenGod(x.s, pil(k).s); if (!rise && GOOD.has(t)) rise = [k, t]; if (!rest && BAD.has(t)) rest = [k, t]; }
-  const gzs = (q) => STEM_KO[q.s] + BR_KO[q.b];
+  const gzs = (q) => STEM_KO[q.s] + BR_KO[q.b], P = (...a) => a.filter(Boolean).join("\n\n"), sh = (t) => t.replace("해.", "시기.").replace("해 ", "시기 ");
+  const flow = [];
+  for (let k = Math.max(1, cur - 1); k <= cur + 3; k++) { const t = tenGod(x.s, pil(k).s); flow.push(`${k === cur ? "👉" : GOOD.has(t) ? "🌟" : BAD.has(t) ? "🌊" : "🌿"} ${range(k)} ${gzs(pil(k))} · ${t} · ${KEYWORD[t]}`); }
   return {
-    now: [`지금 넌 ${range(cur)} ${gzs(nowP)}대운이야(대운은 ${start}세부터 10년씩 바뀜). ${DAEWOON[nowTg]}`, `🔑 이 10년 키워드: '${KEYWORD[nowTg]}'`, `💰 ${YEAR_MONEY[nowTg].replace("해.", "시기.").replace("해 ", "시기 ")}\n💼 ${YEAR_WORK[nowTg].replace("해.", "시기.").replace("해 ", "시기 ")}`].join("\n\n"),
-    rise: rise ? `${range(rise[0])} ${gzs(pil(rise[0]))}대운. ${TG_SHORT[rise[1]]}라서 이때 치고 나가야 함. 지금부터 그때 쓸 무기를 하나 만들어 둬.` : "앞으로 큰 굴곡 없이 고르게 가는 흐름. 꾸준함이 제일 큰 무기임.",
-    rest: rest ? `${range(rest[0])} ${gzs(pil(rest[0]))}대운. ${TG_SHORT[rest[1]]}라서 무리하게 판 벌리기보다 실력 다지는 게 이득.` : "앞으로 크게 쉬어야 할 대운은 안 보임. 대신 매년 운은 따로 챙겨.",
-    advice: [`10년 계획 한마디: 부족한 ${x.w} 기운부터 채워. ${EL_FILL[x.w]}.`, worryLine(b.worry), CLOSER[x.s]].filter(Boolean).join(" "),
+    now: P(`대운은 10년마다 바뀌는 큰 계절이야. 니 대운은 ${start}세부터 ${x.p.year.s % 2 === 0 === (me.sex === "남") ? "순행(앞으로)" : "역행(거꾸로)"}으로 흘러감.`,
+      `🗺 니 대운 지도\n${flow.join("\n")}`,
+      `지금 넌 ${range(cur)} ${gzs(nowP)}대운이야. ${DAEWOON[nowTg]}`, `🔑 이 10년 키워드: '${KEYWORD[nowTg]}'`,
+      `💰 ${sh(YEAR_MONEY[nowTg])}\n💼 ${sh(YEAR_WORK[nowTg])}\n💘 ${sh(YEAR_LOVE[nowTg])}`,
+      prevTg ? `직전 대운은 '${KEYWORD[prevTg]}'의 10년이었음. 그때 겪은 일이 지금 '${KEYWORD[nowTg]}'의 재료가 됨.` : ""),
+    rise: rise ? P(`🌟 ${range(rise[0])} ${gzs(pil(rise[0]))}대운. ${TG_SHORT[rise[1]]}라서 이때 치고 나가야 함.`, DAEWOON[rise[1]],
+      `💰 ${sh(YEAR_MONEY[rise[1]])}\n💼 ${sh(YEAR_WORK[rise[1]])}`, `🛠 지금부터 할 준비: ${DW_PREP[rise[1]]}`,
+      `물 들어올 때 노 젓는 거임. 근데 노는 미리 만들어 둬야 저을 수 있음. 지금 하는 작은 습관이 그때의 노가 됨.`)
+      : P("앞으로 큰 굴곡 없이 고르게 가는 흐름. 꾸준함이 제일 큰 무기임.", `🛠 그래도 준비할 것: ${DW_PREP[nowTg]}`, "큰 파도가 없다는 건 매년 운(세운)을 잘 타는 게 중요하다는 뜻. 990원 연운으로 해마다 체크해."),
+    rest: rest ? P(`🌊 ${range(rest[0])} ${gzs(pil(rest[0]))}대운. ${TG_SHORT[rest[1]]}라서 무리하게 판 벌리기보다 실력 다지는 게 이득.`, DAEWOON[rest[1]],
+      `⚠️ 이 시기 조심: ${CAUTION[rest[1]]}. ${CAUTION_HOW[rest[1]]}`,
+      `숨 고르는 시기는 나쁜 시기가 아님. 겨울에 뿌리가 자라야 봄에 꽃이 핌. 이때 배운 게 다음 대운의 무기가 됨.`)
+      : P("앞으로 크게 쉬어야 할 대운은 안 보임. 대신 매년 운은 따로 챙겨.", `너는 ${CAREFUL[x.s]} 때가 제일 위험함. 대운이 좋아도 이것만 조심하면 됨.`, "쉬어갈 구간이 없다는 건 스스로 쉬는 법을 배워야 한다는 뜻이기도 함."),
+    advice: P(`📝 10년 계획 한마디: 부족한 ${x.w} 기운부터 채워. ${EL_FILL[x.w]}.`,
+      `✅ 지금 대운('${KEYWORD[nowTg]}')에서 할 일 3개\n1. ${MONTH_DO[nowTg]}\n2. ${DW_PREP[nowTg]}\n3. 1년에 한 번, 생일마다 이 풀이 다시 읽어보기`,
+      worryLine(b.worry), CLOSER[x.s]),
   };
 }
 function readTaekil(x, b, days) {
-  const purpose = PURPOSE[b.purpose] ? b.purpose : Object.keys(PURPOSE)[0], [why, tip] = PURPOSE[purpose];
+  const purpose = PURPOSE[b.purpose] ? b.purpose : Object.keys(PURPOSE)[0], [why, tip] = PURPOSE[purpose], P = (...a) => a.filter(Boolean).join("\n\n");
   const rel = (d) => { const bi = BR_KO.indexOf(d.gz[1]); return isYuk(bi, x.b) ? "육합" : "삼합"; };
-  if (!days || !days.length) return { pick: "앞으로 60일 안엔 딱 맞는 날이 안 보임. 충만 피하면 어느 날이든 괜찮음.", others: "", tip };
-  const [d0, ...rest] = days;
+  const dtg = (d) => tenGod(x.s, STEM_KO.indexOf(d.gz[0]));
+  const R = RX[x.w], C = PURPOSE_CHECK[purpose];
+  const common = `🎨 그날 옷: ${R[0]} 계열 하나 · 🔢 숫자: ${R[1]} · 🧭 방향: ${R[2]}\n🍚 그날 먹을 것: ${R[3].split(", ")[0]}`;
+  if (!days || !days.length) return { pick: P("앞으로 60일 안엔 딱 맞는 날이 안 보임. 충만 피하면 어느 날이든 괜찮음.", PURPOSE_AVOID[purpose], common), others: "다른 후보도 없음. 대신 니 일지와 충 드는 날만 피하면 됨.", tip: P(tip, worryLine(b.worry)) };
+  const [d0, ...rest] = days, t0 = dtg(d0);
   return {
-    pick: `${d0.label}, ${d0.gz.replace(/\(.*\)/, "")}일. 너랑 ${rel(d0)}이 드는 날임. ${why}`,
-    others: rest.length ? rest.map((d) => `${d.label} (${rel(d)})`).join(", ") + ". 첫날이 안 되면 이 중에 골라." : "다른 후보는 없음. 첫날 꼭 잡아.",
-    tip: [tip, worryLine(b.worry)].filter(Boolean).join(" "),
+    pick: P(`📅 ${d0.label}, ${d0.gz.replace(/\(.*\)/, "")}일.`, `너랑 ${rel(d0)}이 드는 날임. ${why}`, DAY_WHY[rel(d0)],
+      `그리고 이날 천간은 니 일간한테 '${t0}'(${TG_MEAN[t0]}). ${TODAY[t0][0]}`,
+      `🔍 고른 기준: ① 니 일지(${BR_KO[x.b]})와 합이 드는 날 ② 충(沖) 드는 날은 제외 ③ 그중 가장 가까운 날. ${PURPOSE_AVOID[purpose]}`,
+      `⏰ 시간은 ${{ 목: "오전이", 화: "한낮이", 토: "점심 무렵이", 금: "오후 늦은 시간이", 수: "저녁이" }[x.w]} 좋음. 니 부족한 ${x.w} 기운이 채워지는 때임.`),
+    others: rest.length ? P(`첫날이 안 되면 이 중에 골라.`, rest.map((d) => `· ${d.label} ${d.gz.replace(/\(.*\)/, "")}일 — ${rel(d)} · ${dtg(d)}(${KEYWORD[dtg(d)]})`).join("\n"),
+      `육합 날은 '사람'이 붙는 날이라 만남·약속에 더 좋고, 삼합 날은 '힘'이 모이는 날이라 시작·도전에 더 좋음.`,
+      `후보끼리 고민되면 🌟 ${rest.filter((d) => GOOD.has(dtg(d))).map((d) => d.label).join(", ") || "아무 날이나"} 쪽이 조금 더 유리함(길한 십신이 드는 날).`)
+      : "다른 후보는 없음. 첫날 꼭 잡아.",
+    tip: P(`💡 ${tip}`, `✅ ${purpose} 체크리스트\n1. ${C[0]}\n2. ${C[1]}\n3. ${C[2]}`, common, worryLine(b.worry), "좋은 날은 거드는 거고, 결국 해내는 건 너임. 부적냥이 그날 응원할게."),
   };
+}
+
+// 웹툰 연출용 요약 (메뉴마다 다른 웹툰)
+export function storyMeta(prodId, b, me) {
+  const x = base(me), [y, m] = todayKST();
+  if (prodId === "love") {
+    const loveTg = me.sex === "여" ? ["편관", "정관"] : ["편재", "정재"], marks = [];
+    for (let i = 0; i < 6; i++) { const M = ((m - 1 + i) % 12) + 1, Y = y + Math.floor((m - 1 + i) / 12), mp = monthP(Y, M), t = tenGod(x.s, mp.s); marks.push({ M, hit: loveTg.includes(t) || isYuk(mp.b, x.b) || isSam(mp.b, x.b) }); }
+    return { br: x.b, dohwa: x.dp.stars.includes("도화"), marks, yuk: (13 - x.b) % 12, w: x.w };
+  }
+  if (prodId === "gunghap") {
+    const r = readGunghap(x, b, me), pp = sajuOf(b.partner.birth, "모름");
+    return { score: Number(r.score.match(/(\d+)점/)[1]), a: { s: x.s, b: x.b }, p: { s: pp.day.s, b: pp.day.b }, pname: b.partner.name };
+  }
+  if (prodId === "yearly") {
+    const yp = yearP(y), months = [];
+    for (let M = 1; M <= 12; M++) { const t = tenGod(x.s, monthP(y, M).s); months.push({ M, t, k: GOOD.has(t) ? "g" : BAD.has(t) ? "b" : "n", past: M < m }); }
+    return { y, ys: yp.s, yb: yp.b, ytg: tenGod(x.s, yp.s), months };
+  }
+  if (prodId === "daewoon") {
+    const { start, cur, pil, range } = daewoonList(x.p, me), list = [];
+    for (let k = Math.max(1, cur - 1); k <= cur + 4; k++) { const q = pil(k), t = tenGod(x.s, q.s); list.push({ r: range(k), s: q.s, b: q.b, t, k: GOOD.has(t) ? "g" : BAD.has(t) ? "b" : "n", now: k === cur }); }
+    return { start, list };
+  }
+  if (prodId === "taekil") return { purpose: PURPOSE[b.purpose] ? b.purpose : Object.keys(PURPOSE)[0], br: x.b };
+  return null;
 }
 
 // 풀이 만들기: 메뉴 id, 입력값 → { 키: 문장 }

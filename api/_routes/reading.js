@@ -2,7 +2,7 @@
 import { route, admin, rpc, isDate, isTime, isSex, clip } from "../_lib.js";
 import { sajuOf, goodDays, cardOf } from "../../public/saju.js";
 import { PRODUCTS } from "../../public/products.js";
-import { compose } from "../_text.js";
+import { compose, storyMeta } from "../_text.js";
 
 export default route(async (req, res, user, b) => {
   const prod = PRODUCTS.find((p) => p.id === b.product);
@@ -31,7 +31,9 @@ export default route(async (req, res, user, b) => {
     const rewards = { xp: await rpc("add_xp", { uid: user.id, amt: 30 }), cards: [] };
     rewards.cards.push(await rpc("add_card", { uid: user.id, c: cardOf(p.day), src: "reading" }));
     if (partner) rewards.cards.push(await rpc("add_card", { uid: user.id, c: cardOf(sajuOf(partner.birth, "모름").day), src: "partner" }));
-    res.json({ sections, days, rewards, used: kind });
+    let story = null;
+    try { story = storyMeta(prod.id, { loveState: b.loveState, purpose: b.purpose, partner }, { name, sex: me.sex, birth: me.birth, time: me.time }); } catch (e) { story = null; }
+    res.json({ sections, days, story, rewards, used: kind });
   } catch (e) {
     await rpc("refund_any", { uid: user.id, n: 1, kind });
     throw e;

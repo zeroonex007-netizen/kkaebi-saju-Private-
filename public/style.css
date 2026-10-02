@@ -492,3 +492,73 @@ body.has-tab main{padding-bottom:20px}
 .rpn.in .board p:nth-of-type(2){animation-delay:.4s}.rpn.in .board .bars{animation-delay:.8s}.rpn.in .board p:nth-of-type(3){animation-delay:1.2s}
 @keyframes chalk{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
 .sfx.chalk{left:auto!important;right:6%;top:52px;bottom:auto!important;font-size:1.3rem!important}
+/* 메뉴별 웹툰 도입부 */
+.sfx.pinkn{color:#FF7BA6!important;text-shadow:2px 2px 0 #3A1E3F!important}
+.scroll{position:absolute;left:6%;top:104px;width:58%;bottom:20px;background:#FFFBEF;border:3px solid #1E1729;border-radius:4px;box-shadow:4px 4px 0 #1E1729;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}
+.scroll p{margin:0;font-family:"Noto Serif KR",serif;font-weight:900;font-size:1.5rem;letter-spacing:.2em;color:#8B2E2E}
+.scroll small{font-size:.8rem;color:#5B4A6B;line-height:1.5}
+.thread{position:absolute;left:0;right:0;bottom:0;height:45%;width:100%;z-index:3;pointer-events:none}
+.thread path{fill:none;stroke:#E5304F;stroke-width:3;stroke-linecap:round;stroke-dasharray:400;stroke-dashoffset:400}
+.rpn.in .thread path{animation:draw 1.8s .3s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.palace{position:absolute;left:6%;bottom:18px;display:flex;gap:6px}
+.palace span{display:flex;flex-direction:column;gap:3px;padding:6px 7px;border:2px solid #C9B8D9;border-radius:8px;background:#fff}
+.palace i{font-style:normal;font-family:"Noto Serif KR",serif;font-weight:900;font-size:1.25rem;text-align:center}
+.palace span.on{border:3px solid #E5487B;background:#FFE3EC;transform:scale(1.18);box-shadow:0 0 0 4px rgba(229,72,123,.18)}
+.palace span.on i+i{color:#E5487B}
+.hearts{position:absolute;left:5%;right:34%;top:60px;bottom:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.hearts span{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;border:2px solid #EAD9E2;border-radius:10px;font-size:.8rem;color:#7E6E8C}
+.hearts b{font-size:1.3rem}
+.hearts span.hit{border-color:#E5487B;color:#E5487B;font-weight:700}
+.rpn.in .hearts span.hit b{animation:bob 1.2s ease-in-out infinite}
+.duo{position:absolute;left:5%;bottom:16px;display:flex;align-items:center;gap:8px}
+.duo span{display:flex;flex-direction:column;align-items:center;background:#fff;border:3px solid #1E1729;border-radius:10px;padding:6px 10px;box-shadow:3px 3px 0 #1E1729}
+.duo small{font-size:.72rem;color:#7E6E8C;max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.duo b{font-family:"Noto Serif KR",serif;font-weight:900;font-size:1.5rem;line-height:1.15;text-align:center}
+.duo em{font-style:normal;font-size:1.6rem;color:#7E6E8C}
+.duo em.hap{color:#E5487B}.duo em.ch{color:#F2A900}
+.rpn.in .duo em{animation:bob 1s ease-in-out infinite}
+.gauge{position:absolute;left:8%;top:62px;width:150px;display:flex;flex-direction:column;align-items:center}
+.gauge .dial{position:relative;width:150px;height:75px;border-radius:150px 150px 0 0;background:conic-gradient(from 270deg at 50% 100%,#C9E7FF 0 60deg,#FFE27A 60deg 120deg,#FF9DB8 120deg 180deg,transparent 180deg);border:3px solid #1E1729;border-bottom:none;overflow:hidden}
+.gauge .dial i{position:absolute;left:50%;bottom:0;width:4px;height:66px;margin-left:-2px;background:#1E1729;border-radius:2px;transform-origin:50% 100%;transform:rotate(-90deg)}
+.rpn.in .gauge .dial i{transition:transform 1.6s cubic-bezier(.3,1.4,.5,1) .3s;transform:rotate(calc((var(--v) - 50) * 1.8deg))}
+.gauge b{font-family:"Jua";font-size:1.8rem;margin-top:2px}
+.stamp{position:absolute;left:10%;top:62px;width:120px;height:120px;border:6px double #D7263D;border-radius:12px;color:#D7263D;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"Noto Serif KR",serif;font-weight:900;font-size:2rem;transform:rotate(-8deg);background:rgba(255,255,255,.55)}
+.stamp small{font-family:"Jua";font-weight:400;font-size:.9rem;margin-top:2px}
+.stamp.big{font-family:"Jua";font-weight:400;font-size:2.2rem}
+.rpn.in .stamp{animation:stampin .45s .2s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes stampin{from{transform:scale(2.4) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(-8deg);opacity:1}}
+.calpage{position:absolute;left:7%;bottom:16px;width:52%;height:66%;background:#fff;border:3px solid #1E1729;border-top:14px solid #D7263D;border-radius:6px;box-shadow:4px 4px 0 #1E1729;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.calpage b{font-family:"Noto Serif KR",serif;font-weight:900;font-size:1.9rem}
+.calpage small{font-size:.75rem;color:#7E6E8C}
+.mgrid{position:absolute;left:5%;right:30%;top:56px;bottom:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.mgrid span{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;border:2px solid #CFE3C0;border-radius:8px;font-size:.72rem;line-height:1.2}
+.mgrid b{font-size:.8rem}.mgrid i{font-style:normal;font-size:1rem}.mgrid small{color:#7E6E8C;font-size:.66rem}
+.mgrid span.g{border-color:#F2B705;background:#FFF8D9}.mgrid span.b{border-color:#F07A5A;background:#FFEDE6}.mgrid span.past{opacity:.4}
+.rpn.in .mgrid span{animation:chalk .35s both}
+.rpn.in .mgrid span:nth-child(3n+2){animation-delay:.15s}.rpn.in .mgrid span:nth-child(3n){animation-delay:.3s}
+.river{position:absolute;left:4%;right:4%;top:64px;bottom:118px}
+.river svg{position:absolute;left:0;right:0;top:50%;width:100%;height:40px;margin-top:-20px}
+.river path{fill:none;stroke:#5BB3F0;stroke-width:10;opacity:.5}
+.rlist{position:relative;display:flex;gap:4px;height:100%;align-items:center;overflow-x:auto}
+.rlist span{flex:1;min-width:52px;display:flex;flex-direction:column;align-items:center;background:#fff;border:2px solid #A9D4F5;border-radius:8px;padding:5px 2px;font-size:.68rem;position:relative}
+.rlist b{font-family:"Noto Serif KR",serif;font-weight:900;font-size:1.05rem}
+.rlist i{font-style:normal;color:#2B6CA3;font-weight:700}
+.rlist span.g{border-color:#F2B705}.rlist span.b{border-color:#9BB0C4;background:#F1F5F9}
+.rlist span.now{border:3px solid #1E1729;transform:translateY(-6px);box-shadow:3px 3px 0 #1E1729}
+.rlist em{position:absolute;top:-18px;font-style:normal;font-family:"Jua";font-size:.8rem;background:#1E1729;color:#fff;padding:0 6px;border-radius:6px}
+.waves{position:absolute;left:0;right:0;bottom:0;height:34%;background:repeating-radial-gradient(circle at 20px -6px,transparent 0 16px,#5BB3F0 17px 22px,transparent 23px) 0 0/40px 30px,#8CCBF5;z-index:1}
+.rpn.in .waves{animation:wave 2.4s linear infinite}
+@keyframes wave{to{background-position:40px 0,0 0}}
+.boat{position:absolute;right:8%;bottom:16%;width:44%;height:62%;z-index:2}
+.boat::after{content:"";position:absolute;left:-6%;right:-6%;bottom:-4px;height:24%;background:#B5713A;border:3px solid #1E1729;border-radius:0 0 50% 50%}
+.boat .prof{position:absolute;bottom:14%;left:10%;height:118%;right:auto}
+.rpn.in .boat{animation:bob 1.6s ease-in-out infinite}
+.dgrid{position:absolute;left:5%;right:34%;top:96px;bottom:14px;display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.dgrid i{border-radius:3px;background:#E9DFC9}
+.dgrid i.x{background:#BDB3A0}
+.rpn.in .dgrid i{animation:chalk .3s both}
+.rpn.in .dgrid i:nth-child(n+21){animation-delay:.25s}.rpn.in .dgrid i:nth-child(n+41){animation-delay:.5s}
+.dchips{position:absolute;left:5%;right:36%;top:60px;display:flex;flex-wrap:wrap;gap:6px}
+.dchips span{background:#fff;border:2px solid #E9C98A;border-radius:999px;padding:4px 10px;font-size:.85rem}
+.dchips span.on{border-color:#D7263D;color:#D7263D;font-weight:700}

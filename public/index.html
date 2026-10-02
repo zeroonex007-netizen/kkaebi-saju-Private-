@@ -599,10 +599,50 @@ function ritualPanels(nm,p){const HZ=x=>x?STEMS[x.s]:"?",HB=x=>x?BR[x.b]:"?",col
       <div class="bars">${bars}</div>
       <p>→ <b>${A.strong?"신강(身强)":"신약(身弱)"}</b> · 용신 <b>${ELH[A.yong]} ${A.yong}</b></p></div>${prof("cross","r tiny")}<b class="sfx chalk">끼익</b>`}]:[]),
     {bg:"#FFE9A8",html:`<div class="cap">그리고—</div>${prof("wave","r zoom")}<div class="bub l">…결론 나왔음. 들어봐.</div><i class="spk s1">✨</i><i class="spk s3">✨</i>`}];}
-function renderSections(keys,obj,days){const r=$("reading");r.textContent="";r.classList.add("rtoon");
-  const nm=(lastType&&lastType.name)||"너";
-  for(const o of ritualPanels(nm,(lastType&&lastType.p)||{})){const d=document.createElement("div");d.className="rpn"+(o.night?" night":"");d.style.background=o.bg;d.innerHTML=`<div class="rtop${o.tall?" tall":""}">${o.html}</div>`;r.appendChild(d);}
-  if(days&&days.length){const d=document.createElement("div");d.className="rpn";d.style.background="#FFF1D6";
+// 메뉴마다 다른 웹툰 도입부 (사주=고전·칠판 / 연애=붉은 실 / 궁합=겹쳐보기 / 연운=달력 / 대운=강물 / 택일=도장)
+const ANI=["쥐","소","호랑이","토끼","용","뱀","말","양","원숭이","닭","개","돼지"],TGK={비견:"독립",겁재:"승부",식신:"재능",상관:"표현",편재:"확장",정재:"저축",편관:"버티기",정관:"인정",편인:"공부",정인:"귀인"};
+function storyPanels(nm,p,pid,S,days){
+  const prof=(pose,cls="")=>`<span class="prof ${cls}"><img src="/img/nyang-${pose}.png" alt=""></span>`,E=esc;
+  const end=(t)=>({bg:"#FFE9A8",html:`<div class="cap">그리고—</div>${prof("wave","r zoom")}<div class="bub l">${E(t)}</div><i class="spk s1">✨</i><i class="spk s3">✨</i>`});
+  if(pid==="love"){const br=S.br,col=["hour","day","month","year"];
+    return[
+    {bg:"#3A1E3F",night:1,html:`<div class="cap">밤 열한 시, 연애 상담이 들어왔다.</div><img class="rcat r" src="/img/nyang-lie.png" alt=""><div class="bub l">…${E(nm)}의 마음이라. 연애는 대충 못 봄.</div><b class="sfx pinkn">두근</b>`},
+    {bg:"#FFE3EC",tall:1,html:`<div class="cap">옛 책에 이런 얘기가 있다.</div><div class="scroll"><p>月下老人</p><small>달빛 아래 노인이<br>인연끼리 붉은 실을 묶어 둔다</small></div><svg class="thread" viewBox="0 0 200 120" preserveAspectRatio="none"><path d="M0 100 C 50 10, 90 130, 140 50 S 190 40, 200 20"/></svg>${prof("hold","r small")}<div class="bub l top">그 실, 사주에선 '일지'에 묶여 있음.</div>`},
+    {bg:"#FFF1F5",tall:1,html:`<div class="cap">배우자궁(配偶者宮)을 확대한다.</div><div class="palace">${col.map(k=>`<span class="${k==="day"?"on":""}"><i>${p[k]?STEMS[p[k].s]:"?"}</i><i>${p[k]?BR[p[k].b]:"?"}</i></span>`).join("")}</div><div class="bub r">일지 ${BR_KO[br]}(${ANI[br]})… 여기가 니 연애 자리.</div>${prof("hold","r small")}${S.dohwa?`<b class="sfx pinkn">도화 발견</b>`:""}`},
+    {bg:"#FFF6E8",html:`<div class="cap">앞으로 여섯 달, 연애 별을 센다.</div><div class="hearts">${S.marks.map(m=>`<span class="${m.hit?"hit":""}"><b>${m.hit?"💗":"🤍"}</b>${m.M}월</span>`).join("")}</div>${prof("cross","r tiny")}<b class="sfx chalk">반짝</b>`},
+    end(S.marks.some(m=>m.hit)?"…실이 당겨지는 달, 보였음.":"…실은 천천히 감기는 중. 들어봐.")];}
+  if(pid==="gunghap"){const a=S.a,b=S.p,hap=Math.abs(a.s-b.s)===5||(a.b+b.b)%12===1||(a.b!==b.b&&a.b%4===b.b%4),ch=(a.b-b.b+12)%12===6;
+    return[
+    {bg:"#2B2140",night:1,html:`<div class="cap">사주 두 장이 동시에 도착했다.</div><img class="rcat r" src="/img/nyang-lie.png" alt=""><div class="bub l">${E(nm)} × ${E(S.pname)}… 오, 겹쳐볼 맛 나겠는데.</div><b class="sfx">휙휙</b>`},
+    {bg:"#FFE3EC",tall:1,html:`<div class="cap">두 사람의 일주를 나란히 놓는다.</div><div class="duo"><span><small>${E(nm)}</small><b>${STEMS[a.s]}<br>${BR[a.b]}</b></span><em class="${hap?"hap":ch?"ch":""}">${hap?"♥":ch?"⚡":"·"}</em><span><small>${E(S.pname)}</small><b>${STEMS[b.s]}<br>${BR[b.b]}</b></span></div><div class="bub r">${hap?"합(合)이 보임. 이거 끌림임.":ch?"충(沖)… 불꽃 튀는 사이네.":"합도 충도 아님. 디테일을 봐야 함."}</div>${prof("cross","r small")}`},
+    {bg:"#EEE8FF",html:`<div class="cap">궁합 계산기를 돌린다.</div><div class="gauge"><div class="dial" style="--v:${S.score}"><i></i></div><b>${S.score}</b></div>${prof("cross","r small")}<b class="sfx chalk">드르륵</b>`},
+    {bg:"#FFF1D6",html:`<div class="cap">채점 완료.</div><div class="stamp big">${S.score}점</div>${prof("cheer","r")}<b class="sfx">쾅</b>`},
+    end(S.score>=85?"…이 정도면 전생에 뭐 있었음. 들어봐.":"…좋은 점, 조심할 점 다 보였음.")];}
+  if(pid==="yearly"){
+    return[
+    {bg:"#2B2140",night:1,html:`<div class="cap">올해 남은 운을 물으러 왔다.</div><img class="rcat r" src="/img/nyang-lie.png" alt=""><div class="bub l">…세운(歲運)이라. 달력부터 꺼내 옴.</div><b class="sfx">부스럭</b>`},
+    {bg:"#FFF6E0",html:`<div class="cap">올해의 간지를 펼친다.</div><div class="calpage"><small>${S.y}</small><b>${STEMS[S.ys]}${BR[S.yb]}年</b><small>${STEM_KO[S.ys]}${BR_KO[S.yb]}년 · 너한텐 ${S.ytg}</small></div>${prof("hold","r small")}<div class="bub r top">키워드는 '${TGK[S.ytg]}'.</div>`},
+    {bg:"#E8F7D6",tall:1,html:`<div class="cap">열두 달에 월건(月建)을 하나씩 대입한다.</div><div class="mgrid">${S.months.map(m=>`<span class="${m.past?"past":m.k}"><b>${m.M}월</b><i>${m.past?"✓":m.k==="g"?"🌟":m.k==="b"?"⚠️":"🌿"}</i><small>${m.t}</small></span>`).join("")}</div>${prof("cross","r tiny")}<b class="sfx chalk">체크</b>`},
+    end("…남은 달, 표시 다 해 뒀음.")];}
+  if(pid==="daewoon"){const now=S.list.find(x=>x.now)||S.list[0];
+    return[
+    {bg:"#1E2E45",night:1,html:`<div class="cap">10년짜리 큰 물결, 대운을 본다.</div><img class="rcat r" src="/img/nyang-lie.png" alt=""><div class="bub l">…대운은 인생의 계절임. ${S.start}세부터 10년마다 바뀜.</div><b class="sfx">쏴아</b>`},
+    {bg:"#DDF1FF",tall:1,html:`<div class="cap">대운표를 강물처럼 펼친다.</div><div class="river"><svg viewBox="0 0 300 40" preserveAspectRatio="none"><path d="M0 20 Q 25 5 50 20 T 100 20 T 150 20 T 200 20 T 250 20 T 300 20"/></svg><div class="rlist">${S.list.map(x=>`<span class="${x.k}${x.now?" now":""}">${x.now?"<em>지금</em>":""}<b>${STEMS[x.s]}${BR[x.b]}</b><small>${x.r}</small><i>${TGK[x.t]}</i></span>`).join("")}</div></div>${prof("cross","r tiny")}`},
+    {bg:"#CDEBFF",html:`<div class="cap">지금 물결은 '${TGK[now.t]}'.</div><div class="waves"></div><span class="boat">${prof("hold","")}</span><div class="bub l">물 들어올 때 노 저어야 함. 노는 미리 깎아 둬야 하고.</div><b class="sfx">철썩</b>`},
+    end("…니 물때, 다 읽었음.")];}
+  if(pid==="taekil"){const d0=days&&days[0];
+    return[
+    {bg:"#2B2140",night:1,html:`<div class="cap">좋은 날을 잡아 달라는 주문.</div><img class="rcat r" src="/img/nyang-lie.png" alt=""><div class="bub l">…${E(S.purpose)} 날. 60일치 대 보겠음.</div><b class="sfx">끙차</b>`},
+    {bg:"#FFF6E0",tall:1,html:`<div class="cap">앞으로 60일, 일진을 전부 대입한다.</div><div class="dgrid">${Array.from({length:60},(_,i)=>`<i class="${i%6===2?"x":""}"></i>`).join("")}</div>${prof("cross","r tiny")}<div class="bub r top">충(沖) 드는 날은 빼고…</div><b class="sfx chalk">슥슥</b>`},
+    {bg:"#FFF1D6",html:`<div class="cap">찾았다.</div><div class="stamp">吉日<small>${d0?E(d0.label):"충만 피하면 OK"}</small></div>${prof("cheer","r")}<b class="sfx">쾅</b>`},
+    ...(days&&days.length>1?[{bg:"#FFF1D6",html:`<div class="cap">후보일도 적어 둔다.</div><div class="dchips">${days.map((x,i)=>`<span class="${i?"":"on"}">${E(x.label)}</span>`).join("")}</div>${prof("hold","r small")}`}]:[]),
+    end("…그날 챙길 것까지 다 적었음.")];}
+  return null;}
+function renderSections(keys,obj,days,story){const r=$("reading");r.textContent="";r.classList.add("rtoon");
+  const nm=(lastType&&lastType.name)||"너",pid=lastType&&lastType.prod;
+  let SP=null;try{SP=story&&storyPanels(nm,(lastType&&lastType.p)||{},pid,story,days);}catch(e){SP=null;}
+  for(const o of SP||ritualPanels(nm,(lastType&&lastType.p)||{})){const d=document.createElement("div");d.className="rpn"+(o.night?" night":"");d.style.background=o.bg;d.innerHTML=`<div class="rtop${o.tall?" tall":""}">${o.html}</div>`;r.appendChild(d);}
+  if(!SP&&days&&days.length){const d=document.createElement("div");d.className="rpn";d.style.background="#FFF1D6";
     d.innerHTML=`<div class="rtop short"><div class="cap">부적냥이 고른 날</div></div><div class="rbody"><div class="days">${days.map(x=>`<span>${esc(x.label)}</span>`).join("")}</div></div>`;r.appendChild(d);}
   let i=0;for(const[k,t]of keys){if(!obj[k])continue;const side=i%2?"l":"r",d=document.createElement("div");d.className="rpn";d.style.background=RBG[i%RBG.length];
     d.innerHTML=`<div class="rtop"><div class="cap">${esc(t)}</div>${NARR[k]?`<div class="narr">${esc(NARR[k])}</div>`:""}<img class="rcat ${side}" src="/img/nyang-${RPOSE[i%RPOSE.length]}.png" alt=""><div class="bub ${side==="r"?"l":"r"}">${esc(punch(obj[k]))}</div></div><div class="rbody"></div>`;
@@ -624,7 +664,7 @@ $("runBtn").onclick=async()=>{
   try{
     const r=await api("reading",{product:prod.id,me:my,worry:$("worry").value,loveState:$("loveState").value,purpose:$("purpose").value,
       partner:prod.partner?{name:$("pName").value.trim(),sex:$("pSex").value,birth:$("pBirth").value}:null});
-    renderSections(prod.keys,r.sections,r.days);const before=me;await refreshMe();renderRx(prod,p,$("purpose").value);showReview();showRewards(r.rewards,before);
+    renderSections(prod.keys,r.sections,r.days,r.story);const before=me;await refreshMe();renderRx(prod,p,$("purpose").value);showReview();showRewards(r.rewards,before);
   }catch(e){
     if(e.status===402){show("v-form");toast("별사탕이 모자라!");openShop();return;}
     $("reading").innerHTML='<section><h3>부적냥이 잠깐 누웠어</h3><p>풀이를 못 만들어서 별사탕은 돌려놨어. 다시 눌러줘!</p></section>';await refreshMe();
