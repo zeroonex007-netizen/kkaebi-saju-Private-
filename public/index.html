@@ -67,6 +67,7 @@
 
   <h2 class="sec">부적냥 메뉴판</h2>
   <div class="grid" id="menu"></div>
+  <button class="toon-cta" data-toon="saju"><img src="/img/nyang-run.png" alt=""><span><b>📖 부적냥 이야기</b><small>새벽 2시, 읽씹당한 지민이 부적냥을 만났다</small></span><i>›</i></button>
   <p class="price-line">모든 메뉴 별사탕 1개 = 990원 · 5개 4,500원 · 11개 9,900원 · <a href="/terms.html#refund">환불 정책</a></p>
 
   <h2 class="sec">먼저 본 친구들 후기</h2>
@@ -84,8 +85,16 @@
   <p class="fine">양력 기준이며 절기는 해마다 하루 정도 차이가 날 수 있어요. 부적냥의 풀이는 명리학을 바탕으로 한 참고용이에요. 중요한 결정은 꼭 전문가와 상의해요.</p>
 </section>
 
+<section id="v-toon" hidden>
+  <button class="back" data-home>‹ 돌아가기</button>
+  <h1 class="ftitle" id="toonTitle"></h1>
+  <div class="toon" id="toon"></div>
+  <p class="refund" style="text-align:center;margin-top:10px">이해를 돕기 위한 이야기예요. 풀이와 부적은 사람마다 달라요.</p>
+</section>
+
 <section id="v-amulet" hidden>
   <h1 class="ftitle">🧧 부적냥 부적 상점</h1>
+  <button class="toon-cta" data-toon="amulet"><img src="/img/nyang-hold.png" alt=""><span><b>✍️ 부적냥이 부적 쓰는 법</b><small>니 이름을 세 번 부르고, 한 획씩 진심으로</small></span><i>›</i></button>
   <p class="shop-sub">폰 배경화면으로 쓰는 내 이름 박힌 이미지 부적. 하나에 별사탕 1개(990원)</p>
   <div class="amulets" id="amuletShop"></div>
   <div class="sent" id="giftsSent" hidden></div>
@@ -414,7 +423,7 @@ async function api(path,body){
 }
 
 /* ---------- 화면 ---------- */
-function show(v){for(const id of["v-home","v-form","v-result","v-chat","v-amulet","v-my"])$(id).hidden=id!==v;$("chatbar").hidden=v!=="v-chat";$("biz").hidden=v==="v-chat";
+function show(v){for(const id of["v-home","v-form","v-result","v-chat","v-amulet","v-my","v-toon"])$(id).hidden=id!==v;$("chatbar").hidden=v!=="v-chat";$("biz").hidden=v==="v-chat";
   const tab=["v-home","v-amulet","v-my"].includes(v);$("tabbar").hidden=!tab;document.body.classList.toggle("has-tab",tab);
   document.querySelectorAll("#tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.tab===v));window.scrollTo(0,0);}
 document.querySelectorAll("#tabbar [data-tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));
@@ -796,6 +805,45 @@ $("giftSave").onclick=async()=>{const blob=await new Promise(r=>$("giftCv").toBl
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return;}}catch(e){if(e&&e.name==="AbortError")return;}
   const u=URL.createObjectURL(blob),l=document.createElement("a");l.href=u;l.download=file.name;l.click();setTimeout(()=>URL.revokeObjectURL(u),5000);toast("저장했어! 배경화면으로 설정해줘.");};
 
+
+
+/* ---------- 웹툰: 부적냥 이야기 · 부적 쓰는 법 ---------- */
+const P=(n)=>`/img/nyang-${n}.png`;
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function panel(o){const d=document.createElement("div");d.className="pn"+(o.cls?" "+o.cls:"");d.style.background=o.bg||"#FFF6EE";
+  let h="";if(o.cap)h+=`<div class="cap">${esc(o.cap)}</div>`;
+  if(o.phone)h+=`<div class="phone">${o.phone.map(([w,t])=>`<p class="${w}">${esc(t)}</p>`).join("")}</div>`;
+  if(o.cat)h+=`<img class="pcat ${o.catPos||""}" src="${P(o.cat)}" alt="">`;
+  if(o.html)h+=o.html;
+  (o.bub||[]).forEach(([w,t,pos])=>h+=`<div class="bub ${w} ${pos||""}">${esc(t)}</div>`);
+  if(o.sfx)h+=`<b class="sfx">${esc(o.sfx)}</b>`;
+  d.innerHTML=h;return d;}
+function toonSaju(){const n="지민";return[
+  {bg:"#1E1B33",cap:"새벽 2시.",phone:[["them","그럼 담에 보자ㅎㅎ"],["me","응응 언제 볼까?"],["read","읽음 · 답장 없음 · 3시간 전"]],cls:"night"},
+  {bg:"#1E1B33",cls:"night",cap:`${n}는 오늘도 못 자고 있었다.`,bub:[["me","나만 좋아하는 건가…","l"]],sfx:"뒤척"},
+  {bg:"#2B2140",cls:"night",cat:"lie",catPos:"low",sfx:"부스럭",bub:[["cat","…또 안 자냐.","r"]]},
+  {bg:"#FFF1D6",cat:"cross",bub:[["me","고, 고양이가 말을 해?!","tl"],["cat","니 생일이나 줘봐. 990원이면 됨.","ml"]]},
+  {bg:"#FFF6EE",html:`<div class="mini-card"><small>부적냥의 총평</small><b>겉은 조용한 열정러,<br>속은 느긋한 돼지.</b><p>화(火) 기운이 제일 적어서<br>좋아해도 티가 안 남.</p></div>`,bub:[["me","헐… 소름. 나 진짜 그래.","l"]]},
+  {bg:"#FFE3EC",cat:"hold",bub:[["cat","그 사람한테 니 마음 안 보였을 거임.","r"],["cat","연애부적 하나 붙이고, 10/7에 니가 먼저 연락해.","l"]]},
+  {bg:"#FFF6EE",cap:"2주 뒤.",phone:[["them","주말에 밥 먹을래? 내가 살게"],["me","좋아!! 🥹"]]},
+  {bg:"#FFF1D6",cat:"lie",catPos:"mid",bub:[["cat","봐. 니가 움직이니까 되잖아.","r"]],
+   html:`<button class="btn toon-go" data-go="saju">나도 990원으로 보기</button>`}];}
+function toonAm(){const el=myEl();return amOf(el?EL_RX[el].amulet:"love");}
+function toonAmulet(){const nm=(me&&me.name)||"너",el=myEl(),E=el?`${el}(${EL_HANJA[el]})`:"부족한",A=toonAm();return[
+  {bg:"#FFF6EE",cat:"lie",catPos:"low",cap:"딩동. 부적 주문이 들어왔다.",bub:[["cat","…귀찮은데.","r"]],sfx:"끙차"},
+  {bg:"#FFF1D6",cat:"cross",cap:"먼저, 이름을 세 번 부른다.",bub:[["cat",`${nm}.`,"l"],["cat",`${nm}.`,"r"],["cat",`${nm}.`,"c"]]},
+  {bg:"#EEE8FF",cat:"hold",cap:"사주를 펼쳐 부족한 기운을 찾는다.",bub:[["cat",el?`너는 ${E} 기운이 제일 적음. 그거 채워 넣을게.`:"생일 알려주면 부족한 기운까지 넣어줌.","r"]]},
+  {bg:"#2B2131",cls:"night",cap:"부적 종이에, 먹으로. 한 획씩.",html:`<div class="draw" style="background:${A.paper};border-color:${A.ink}"><b style="color:${A.ink}">${A.hanja}</b></div>`,sfx:"슥— 슥—"},
+  {bg:"#FFE9A8",cat:"cheer",cap:"마지막엔, 진심으로 빈다.",bub:[["cat",`${nm} 잘 되게 해주세요.`,"r"]],html:`<i class="spk s1">✨</i><i class="spk s2">✨</i><i class="spk s3">✨</i>`},
+  {bg:"#2B2131",cls:"night",cap:"완성.",html:`<canvas class="toon-am" id="toonAm" width="1080" height="1920"></canvas>`},
+  {bg:"#FFF6EE",cat:"wave",bub:[["cat","배경화면에 붙여둬. 매일 보면 더 잘 붙음.","r"]],html:`<button class="btn toon-go" data-go="amulet">내 부적 받으러 가기</button>`}];}
+async function openToon(kind){const box=$("toon");box.textContent="";$("toonTitle").textContent=kind==="amulet"?"✍️ 부적냥이 부적 쓰는 법":"📖 지민이 부적냥을 만난 밤";
+  (kind==="amulet"?toonAmulet():toonSaju()).forEach(o=>box.appendChild(panel(o)));show("v-toon");
+  box.querySelectorAll(".toon-go").forEach(b=>b.onclick=()=>{if(b.dataset.go==="saju")openForm(PRODUCTS[0]);else show("v-amulet");});
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{threshold:.35});
+  box.querySelectorAll(".pn").forEach(p=>io.observe(p));
+  if(kind==="amulet")await drawAmulet($("toonAm"),toonAm(),myEl(),null,true,{to:(me&&me.name)||""});}
+document.querySelectorAll("[data-toon]").forEach(b=>b.onclick=()=>openToon(b.dataset.toon));
 
 /* ---------- 내 정보 ---------- */
 function maskPhone(p){const d=(p||"").replace(/\D/g,"");return d.length>=10?`${d.slice(0,3)}-****-${d.slice(-4)}`:p;}

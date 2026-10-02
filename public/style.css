@@ -391,3 +391,40 @@ body.has-tab main{padding-bottom:20px}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @media (prefers-reduced-motion: reduce){.pet .gold,.pet .orbit,.pet .crown,.pet .spark{animation:none}}
+
+/* 웹툰 */
+.toon-cta{display:flex;align-items:center;gap:12px;width:100%;margin:12px 0 4px;padding:10px 14px;border:0;border-radius:20px;background:#2B2140;color:#fff;text-align:left}
+.toon-cta img{width:58px;height:50px;object-fit:contain}
+.toon-cta span{flex:1;display:flex;flex-direction:column}
+.toon-cta b{font-family:"Jua";font-weight:400;font-size:1.08rem}.toon-cta small{color:#CFC3E0;font-size:.82rem}
+.toon-cta i{font-style:normal;font-size:1.6rem;color:#FFD23F}
+.toon{display:flex;flex-direction:column;gap:16px}
+.pn{position:relative;min-height:300px;border:3px solid #1E1729;border-radius:8px;overflow:hidden;color:#1E1729;opacity:0;transform:translateY(24px);transition:opacity .5s,transform .5s}
+.pn.in{opacity:1;transform:none}
+.pn .cap{position:absolute;left:10px;top:10px;z-index:5;background:#1E1729;color:#fff;font-family:"Jua";padding:6px 12px;border-radius:4px;font-size:1rem;max-width:80%}
+.pn.night .cap{background:#fff;color:#1E1729}
+.pn .pcat{position:absolute;right:6%;bottom:4%;height:66%;max-width:62%;object-fit:contain;z-index:2}
+.pn .pcat.low{height:42%;bottom:6%;right:8%}
+.pn .bub{position:absolute;z-index:4;background:#fff;border:3px solid #1E1729;border-radius:20px;padding:8px 14px;font-family:"Jua";font-size:1.05rem;max-width:62%;line-height:1.35}
+.pn .bub.l{left:5%;top:30%}.pn .bub.r{right:5%;top:16%}.pn .bub.c{left:28%;top:62%}
+.pn .bub.me{background:#FFE3EC}
+.pn .bub + .bub.l{top:56%}
+.pn .sfx{position:absolute;left:8%;bottom:10%;z-index:3;font-family:"Jua";font-size:2rem;color:#E5487B;transform:rotate(-12deg);text-shadow:2px 2px 0 #fff}
+.pn.night .sfx{color:#FFD23F;text-shadow:2px 2px 0 #000}
+.pn .phone{position:absolute;left:50%;top:56px;transform:translateX(-50%);width:66%;background:#B2C7D9;border-radius:22px;border:5px solid #111;padding:14px 10px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.pn .phone p{margin:0;padding:7px 10px;border-radius:12px;font-size:.88rem;max-width:85%}
+.pn .phone .them{background:#fff;align-self:flex-start}.pn .phone .me{background:#FEE500;align-self:flex-end}
+.pn .phone .read{align-self:center;background:none;color:#4A5A6A;font-size:.75rem}
+.pn .mini-card{position:absolute;left:50%;top:44px;transform:translateX(-50%);width:76%;background:#fff;border:3px solid #1E1729;border-radius:14px;padding:14px;text-align:center;box-shadow:6px 6px 0 #1E1729}
+.pn .mini-card small{color:#7E6E8C}.pn .mini-card b{display:block;font-family:"Jua";font-weight:400;font-size:1.3rem;margin:4px 0}.pn .mini-card p{margin:0;color:#E5487B;font-size:.95rem}
+.pn .mini-card ~ .bub.l{top:auto;bottom:8%}
+.pn .draw{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%) rotate(-3deg);width:130px;height:200px;background:#FFD648;border:5px double #CD261E;display:grid;place-items:center}
+.pn .draw b{font-family:"Noto Serif KR",serif;font-weight:900;font-size:5.4rem;color:#CD261E;clip-path:inset(0 0 100% 0)}
+.pn.in .draw b{animation:ink 2.4s .3s steps(12) forwards}
+@keyframes ink{to{clip-path:inset(0 0 0 0)}}
+.pn .spk{position:absolute;font-style:normal;font-size:1.6rem;z-index:3;animation:bob 1.4s ease-in-out infinite}.pn .s1{left:12%;top:40%}.pn .s2{left:30%;top:70%;animation-delay:.3s}.pn .s3{right:10%;top:52%;animation-delay:.6s}
+.pn .toon-am{display:block;margin:52px auto 12px;width:46%;height:auto;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.pn .toon-go{position:absolute;left:5%;right:5%;bottom:5%;width:auto;z-index:6}
+.pn:has(.toon-go){min-height:340px}
+.pn .bub.tl{left:5%;top:14%}.pn .bub.ml{left:5%;top:48%}
+.pn .pcat.mid{height:40%;bottom:24%;right:10%}
