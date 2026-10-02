@@ -5,6 +5,9 @@ window.KKAEBI_CONFIG = {
   // 토스페이먼츠 결제위젯 '클라이언트 키'. 아래는 토스 문서용 테스트 키 (실제 돈 안 나감)
   // 카카오 디벨로퍼스 > 앱 > 플랫폼 키 > JavaScript 키 (공개해도 되는 키)
   KAKAO_JS_KEY: "23c4b202999b38c56e3efc0b24d0c363",
+  // 카카오 로그인 때 추가로 받을 정보. 카카오 콘솔 '동의항목'에서 켠 것만 넣어야 함(안 켠 걸 넣으면 로그인 오류 KOE205)
+  // 예: "account_email profile_nickname profile_image name gender age_range birthday birthyear phone_number"
+  KAKAO_SCOPES: "",
   TOSS_CLIENT_KEY: "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm",
   // 부적 패스(월 구독) 카드 등록용 "API 개별 연동" 클라이언트 키. 아래는 토스 문서용 테스트 키 (실제 돈 안 나감)
   TOSS_BILLING_CLIENT_KEY: "test_ck_docs_Ovk5rk1EwkEbP0W43n07xlzm",

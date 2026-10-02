@@ -345,7 +345,8 @@
     <p class="am-why" id="giftLine"></p>
     <p class="giftmsg" id="giftMsg" hidden></p>
     <div class="am-prev"><canvas id="giftCv" width="1080" height="1920"></canvas></div>
-    <button class="btn" id="giftClaim">로그인하고 부적 받기</button>
+    <button class="btn" id="giftSave">📥 배경화면으로 저장하기</button>
+    <button class="btn-soft" id="giftClaim" style="margin-top:8px">로그인하고 내 부적함에 보관하기</button>
     <button class="btn-soft" data-close style="margin-top:8px">나중에</button>
   </div>
 </div>
@@ -462,7 +463,7 @@ $("mailGo").onclick=async()=>{const email=$("mailId").value.trim().toLowerCase()
     if(error){loginError("로그인이 안 됐어. 비밀번호를 확인해줘!");return;}
     $("mailPw").value="";}
   finally{b.disabled=false;b.textContent="시작하기";}};
-$("kakaoBtn").onclick=()=>sb.auth.signInWithOAuth({provider:"kakao",options:{redirectTo:location.origin+location.pathname}});
+$("kakaoBtn").onclick=()=>sb.auth.signInWithOAuth({provider:"kakao",options:{redirectTo:location.origin+location.pathname,...(C.KAKAO_SCOPES?{scopes:C.KAKAO_SCOPES}:{})}});
 $("naverBtn").onclick=()=>{location.href="/api/naver-start";};
 $("loginClose").onclick=()=>$("login").hidden=true;
 $("walletBtn").onclick=()=>{if(!needLogin())openShop();};
@@ -495,7 +496,10 @@ let booted=false;
 sb.auth.onAuthStateChange((ev,s)=>{session=s;setTimeout(async()=>{
   await refreshMe();
   if(!booted){booted=true;await afterBoot();}
-  if(ev==="SIGNED_IN"){$("login").hidden=true;await claimRef();await giftFlow();await doCheckin();}
+  if(ev==="SIGNED_IN"){$("login").hidden=true;
+    // 카카오로 들어왔으면 카카오가 준 정보(이름·성별·생일·전화 등) 저장
+    if(s&&s.provider_token&&(s.user.app_metadata||{}).provider==="kakao"){try{await api("kakao-profile",{token:s.provider_token});await refreshMe();}catch(e){}}
+    await claimRef();await giftFlow();await doCheckin();}
 },0);});
 
 async function claimRef(){let code=null;try{code=localStorage.getItem("kkaebi_ref");}catch(e){}
@@ -621,7 +625,7 @@ async function shareDone(){$("shareSheet").hidden=true;
 const shareText=c=>`${c.text||c.title}\n${c.url}`;
 $("shKakao").onclick=()=>{const c=shareCtx;if(!c)return;
   if(!KAKAO_OK){toast("카카오톡을 못 불러왔어. 링크 복사로 보내줘!");return;}
-  try{Kakao.Share.sendDefault({objectType:"feed",content:{title:c.title,description:c.desc,imageUrl:location.origin+c.img,imageWidth:800,imageHeight:400,link:{mobileWebUrl:c.url,webUrl:c.url}},buttons:[{title:c.btn,link:{mobileWebUrl:c.url,webUrl:c.url}}]});shareDone();}
+  try{Kakao.Share.sendDefault({objectType:"feed",content:{title:c.title,description:c.desc,imageUrl:/^https?:/.test(c.img)?c.img:location.origin+c.img,imageWidth:800,imageHeight:400,link:{mobileWebUrl:c.url,webUrl:c.url}},buttons:[{title:c.btn,link:{mobileWebUrl:c.url,webUrl:c.url}}]});shareDone();}
   catch(e){console.error(e);toast("카톡 공유가 안 됐어. 링크 복사로 보내줘!");}};
 $("shInsta").onclick=async()=>{const c=shareCtx;if(!c)return;const f=await c.file;
   try{if(f&&navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],text:shareText(c)});shareDone();return;}}catch(e){if(e&&e.name==="AbortError")return;}
@@ -743,8 +747,16 @@ async function drawAmulet(cv,a,el,own,preview,opt={}){
 
 /* ---------- 부적 선물 ---------- */
 $("amGift").onclick=()=>{if(needLogin())return;$("giftForm").hidden=false;$("amGift").hidden=true;$("gFrom").value=(me&&me.name)||"";$("gErr").textContent="";$("gTo").focus();};
+// 선물 카드 그림(800×800): 왼쪽 글, 오른쪽 받는 사람 이름 박힌 부적
+async function giftCardImage(g){const a=amOf(g.kind),c=document.createElement("canvas");c.width=800;c.height=800;const x=c.getContext("2d");
+  x.fillStyle="#2B2131";x.fillRect(0,0,800,800);const src=$("amCv"),h=740,w=src.width*h/src.height;x.drawImage(src,800-w-30,30,w,h);
+  x.fillStyle="#fff";x.font="60px Jua";x.fillText("🎁",40,150);x.font="52px Jua";x.fillText(`${g.to}님께`,40,240);x.fillText("부적이",40,310);x.fillText("도착했어요",40,380);
+  x.fillStyle="#E6DCEF";x.font="28px 'Gowun Dodum'";x.fillText(`${g.from}님이 보냄`,40,450);x.fillText("눌러서 받기 →",40,700);
+  return c.toDataURL("image/jpeg",.86);}
 async function sendGiftLink(g){const a=amOf(g.kind),url=`${location.origin}/?gift=${g.code}${me&&me.ref_code?"&ref="+me.ref_code:""}`;
-  openShare({url,btn:"내 부적 받기",img:`/share/amulet-${g.kind}.jpg`,title:`${g.from}님이 ${g.to}님 위해 ${a.name}을 부탁했어요`,
+  let img=g.img||`/share/amulet-${g.kind}.jpg`;
+  if(!g.img){try{await drawAmulet($("amCv"),a,null,null,false,{to:g.to,from:g.from});const r=await api("gift",{action:"image",code:g.code,img:await giftCardImage(g)});if(r.url){img=r.url;g.img=r.url;}}catch(e){}}
+  openShare({url,btn:"내 부적 받기",img,title:`${g.from}님이 ${g.to}님 위해 ${a.name}을 부탁했어요`,
     desc:`부적냥이 ${g.to}님 이름 부르면서 진심으로 빌었어. "${a.pray}"`,text:`${g.to}! ${g.from}이(가) 너 위해 부적냥한테 ${a.name} 부탁했어 🧧 열어봐`});
   return true;}
 $("gSend").onclick=async()=>{const a=amOf(amCur),to=$("gTo").value.trim(),from=$("gFrom").value.trim();
@@ -770,7 +782,7 @@ async function giftFlow(){let code=null;try{code=localStorage.getItem("nyang_gif
       $("giftTitle").textContent=`${a.hanja} ${a.name}이 도착했어`;
       $("giftLine").textContent=`${g.from_name}님이 ${g.to_name}님 위해 부적냥한테 부탁했어. 부적냥이 이름 부르면서 진심으로 빌었음.`;
       $("giftMsg").hidden=!g.msg;$("giftMsg").textContent=g.msg?`“${g.msg}”`:"";
-      openSheet("giftSheet");await drawAmulet($("giftCv"),a,null,null,true,{to:g.to_name,from:g.from_name});return;}
+      openSheet("giftSheet");await drawAmulet($("giftCv"),a,null,{serial:0,from_name:g.from_name,to_name:g.to_name},false,{to:g.to_name,from:g.from_name});giftCur=a;return;}
     const r=await api("gift",{action:"claim",code});try{localStorage.removeItem("nyang_gift");}catch(e){}
     $("giftSheet").hidden=true;await refreshMe();
     if(r.dup)toast("이미 있는 부적이라 대신 별사탕 1개 넣어줬어 🎁");
@@ -778,7 +790,11 @@ async function giftFlow(){let code=null;try{code=localStorage.getItem("nyang_gif
   }catch(e){
     if(e.status===409||e.status===404){try{localStorage.removeItem("nyang_gift");}catch(_){}toast(e.status===404?"선물을 못 찾았어. 링크를 다시 확인해줘.":"이 선물은 받을 수 없어. 이미 받았거나 내가 보낸 선물이야.");}
   }finally{giftBusy=false;}}
+let giftCur=null;
 $("giftClaim").onclick=()=>{$("giftSheet").hidden=true;needLogin();};
+$("giftSave").onclick=async()=>{const blob=await new Promise(r=>$("giftCv").toBlob(r,"image/png"));const file=new File([blob],`부적냥_${giftCur?giftCur.name:"부적"}.png`,{type:"image/png"});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return;}}catch(e){if(e&&e.name==="AbortError")return;}
+  const u=URL.createObjectURL(blob),l=document.createElement("a");l.href=u;l.download=file.name;l.click();setTimeout(()=>URL.revokeObjectURL(u),5000);toast("저장했어! 배경화면으로 설정해줘.");};
 
 
 /* ---------- 내 정보 ---------- */

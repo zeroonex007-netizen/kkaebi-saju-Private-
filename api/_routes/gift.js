@@ -24,6 +24,18 @@ export default route(async (req, res, _u, b) => {
     if (r.error === "coins") return res.status(402).json({ error: "coins" });
     return res.json(r);
   }
+  // 선물 카드 그림 올리기 → 카톡 카드에 실제 부적 그림이 뜨게
+  if (b.action === "image") {
+    const img = typeof b.img === "string" ? b.img : "";
+    const m = img.match(/^data:image\/jpeg;base64,([A-Za-z0-9+/=]+)$/);
+    if (!code || !m || m[1].length > 2_000_000) return res.status(400).json({ error: "input" });
+    const { data: g } = await admin.from("gifts").select("sender").eq("code", code).maybeSingle();
+    if (!g || g.sender !== user.id) return res.status(404).json({ error: "notfound" });
+    await admin.storage.createBucket("gifts", { public: true }).catch(() => {});   // 이미 있으면 무시
+    const { error } = await admin.storage.from("gifts").upload(`${code}.jpg`, Buffer.from(m[1], "base64"), { contentType: "image/jpeg", upsert: true });
+    if (error) return res.status(500).json({ error: "upload" });
+    return res.json({ url: admin.storage.from("gifts").getPublicUrl(`${code}.jpg`).data.publicUrl });
+  }
   if (b.action === "claim") {
     const r = await rpc("claim_gift", { uid: user.id, c: code, e: await myEl(user.id) });
     if (r.error) return res.status(r.error === "notfound" ? 404 : 409).json(r);

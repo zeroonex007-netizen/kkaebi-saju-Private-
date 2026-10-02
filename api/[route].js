@@ -8,6 +8,7 @@ import daily from "./_routes/daily.js";
 import gift from "./_routes/gift.js";
 import emailSignup from "./_routes/email-signup.js";
 import gacha from "./_routes/gacha.js";
+import kakaoProfile from "./_routes/kakao-profile.js";
 import me from "./_routes/me.js";
 import naverCallback from "./_routes/naver-callback.js";
 import naverStart from "./_routes/naver-start.js";
@@ -23,7 +24,7 @@ import subStart from "./_routes/sub-start.js";
 import visit from "./_routes/visit.js";
 
 const ROUTES = {
-  amulet, chat, checkin, "cron-billing": cronBilling, daily, "email-signup": emailSignup, gacha, gift, me,
+  amulet, chat, checkin, "cron-billing": cronBilling, daily, "email-signup": emailSignup, gacha, gift, "kakao-profile": kakaoProfile, me,
   "naver-callback": naverCallback, "naver-start": naverStart, order, "pay-confirm": payConfirm,
   reading, ref, review, reviews, share, "sub-cancel": subCancel, "sub-start": subStart, visit,
 };
