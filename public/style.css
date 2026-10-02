@@ -349,3 +349,7 @@ body.has-tab main{padding-bottom:20px}
 .si-kakao{background:#FEE500}
 .si-insta{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
 .si-more{background:#EEEAF2}.si-link{background:#EEEAF2}
+.mailbtn{background:var(--surface);color:var(--ink);border:2px solid var(--line);border-radius:16px;padding:12px;font-weight:700}
+.mailform{display:grid;gap:8px;padding:4px 0 6px}
+.mailform input{font:inherit;border:2px solid var(--line);border-radius:14px;padding:12px;background:var(--surface);color:var(--ink)}
+.mailform small{color:var(--muted);font-size:.8rem}

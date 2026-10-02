@@ -69,13 +69,6 @@
   <div class="grid" id="menu"></div>
   <p class="price-line">모든 메뉴 별사탕 1개 = 990원 · 5개 4,500원 · 11개 9,900원 · <a href="/terms.html#refund">환불 정책</a></p>
 
-  <div class="today">
-    <h2>내 사주로 보는 오늘 운세 · 무료</h2>
-    <p>내 일주 기준으로 총운·연애·돈을 봐줄게.</p>
-    <button class="btn" id="dailyBtn">오늘 운세 뽑기</button>
-    <div class="out" id="dailyOut" hidden></div>
-  </div>
-
   <h2 class="sec">먼저 본 친구들 후기</h2>
   <div class="reviews" id="reviewList"><p style="color:var(--muted)">후기를 불러오고 있어…</p></div>
 
@@ -83,7 +76,7 @@
   <div class="faq" id="faq">
     <details><summary>부적냥은 어떤 서비스예요?</summary><p>생년월일시로 만세력(사주 여덟 글자)을 세워서 성격, 재물운, 일·진로, 연애운을 풀어주는 사주 서비스예요. 사주 말고도 궁합, 올해 운세, 대운, 좋은 날 고르기(택일)를 볼 수 있고, 내 사주에 부족한 기운을 채워주는 이미지 부적도 받을 수 있어요.</p></details>
     <details><summary>990원 사주, 진짜 990원이에요?</summary><p>네. 모든 메뉴가 별사탕 1개(990원)예요. 추가 결제나 자동 결제 없어요. 여러 개 보고 싶으면 별사탕 5개(4,500원), 11개(9,900원) 묶음이 더 싸요.</p></details>
-    <details><summary>무료로 볼 수 있는 건 뭐예요?</summary><p>맨 위 '오늘의 행운 부적'은 로그인 없이 매일 무료예요. 로그인하면 내 사주로 보는 오늘 운세, 부적냥 고민 상담, 매일 출석·복주머니 뽑기도 무료예요. 친구 초대와 공유 미션으로 별사탕을 받을 수도 있어요.</p></details>
+    <details><summary>무료로 볼 수 있는 건 뭐예요?</summary><p>맨 위 '오늘의 행운 부적'은 로그인 없이 매일 무료예요. 로그인하면 부적냥 고민 상담, 매일 출석·복주머니 뽑기도 무료예요. 친구 초대와 공유 미션으로 별사탕을 받을 수도 있어요.</p></details>
     <details><summary>환불할 수 있어요?</summary><p>사용하지 않은 별사탕은 구매일로부터 7일 안에 전액 환불돼요. 이미 풀이를 본 별사탕과 받은 이미지 부적은 디지털 콘텐츠라 환불이 안 돼요. 오류로 풀이가 안 나오면 별사탕은 자동으로 돌려드려요.</p></details>
   </div>
   <div class="ask" id="askBox"></div>
@@ -222,6 +215,13 @@
     <div class="login-btns">
       <button class="kakao" id="kakaoBtn"><svg class="lg" viewBox="0 0 24 24" aria-hidden="true"><path fill="#000" d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.5.1 1 .1 1.5.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg>카카오로 시작하기</button>
       <button class="naver" id="naverBtn"><svg class="lg" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M4 4h5.6l4.8 7V4H20v16h-5.6l-4.8-7v7H4z"/></svg>네이버로 시작하기</button>
+      <button class="mailbtn" id="mailBtn">✉️ 이메일로 시작하기</button>
+      <div class="mailform" id="mailForm" hidden>
+        <input id="mailId" type="email" autocomplete="email" placeholder="이메일" inputmode="email">
+        <input id="mailPw" type="password" autocomplete="current-password" placeholder="비밀번호 (6자 이상)">
+        <button class="btn" id="mailGo">시작하기</button>
+        <small>처음이면 자동으로 가입돼요. 다음부터 같은 이메일·비밀번호로 들어오면 돼요.</small>
+      </div>
     </div>
     <p class="agree">시작하면 <a href="/terms.html" target="_blank">이용약관</a>과 <a href="/privacy.html" target="_blank">개인정보처리방침</a>에 동의하는 것으로 봐요.</p>
     <button class="btn-soft" id="loginClose" style="margin-top:12px">닫기</button>
@@ -432,6 +432,19 @@ function renderWallet(){
 }
 async function refreshMe(){if(!session){me=null;renderWallet();return;}try{me=await api("me");}catch(e){me=null;}renderWallet();}
 function needLogin(){if(session)return false;$("login").hidden=false;$("kakaoBtn").focus();return true;}
+$("mailBtn").onclick=()=>{$("mailForm").hidden=!$("mailForm").hidden;if(!$("mailForm").hidden)$("mailId").focus();};
+$("mailGo").onclick=async()=>{const email=$("mailId").value.trim().toLowerCase(),password=$("mailPw").value,b=$("mailGo");
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){loginError("이메일 주소를 확인해줘!");return;}
+  if(password.length<6){loginError("비밀번호는 6자 이상으로 해줘!");return;}
+  b.disabled=true;b.textContent="들어가는 중…";
+  try{let {error}=await sb.auth.signInWithPassword({email,password});
+    if(error){const r=await fetch("/api/email-signup",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email,password})});const j=await r.json().catch(()=>({}));
+      if(r.ok){({error}=await sb.auth.signInWithPassword({email,password}));}
+      else if(j.error==="exists"){loginError("이미 가입된 이메일이야. 비밀번호를 확인해줘! (카카오·네이버로 가입한 이메일이면 그 버튼으로 들어와줘)");return;}
+      else{loginError("가입이 안 됐어. 잠깐 뒤에 다시 해줘!");return;}}
+    if(error){loginError("로그인이 안 됐어. 비밀번호를 확인해줘!");return;}
+    $("mailPw").value="";}
+  finally{b.disabled=false;b.textContent="시작하기";}};
 $("kakaoBtn").onclick=()=>sb.auth.signInWithOAuth({provider:"kakao",options:{redirectTo:location.origin+location.pathname}});
 $("naverBtn").onclick=()=>{location.href="/api/naver-start";};
 $("loginClose").onclick=()=>$("login").hidden=true;
@@ -782,14 +795,8 @@ try{if(localStorage.getItem("nyang_luck_"+new Date().toDateString()))showLuck(lu
 $("luckShare").onclick=()=>{if(!luckDone)return;const r=luckDone,url=location.origin+(me&&me.ref_code?"/?ref="+me.ref_code:"/");
   openShare({url,btn:"나도 뽑기",img:`/share/luck-${r.score}.jpg`,title:`오늘 내 행운점수 ${r.score}점 🍀`,desc:`부적냥 한마디: "${r.quote}" 너도 뽑아봐.`,
     text:`오늘 내 행운점수 ${r.score}점 🍀 부적냥이 "${r.quote}"래 ㅋㅋ 너도 뽑아봐`});};
-$("luckMore").onclick=()=>{if(needLogin())return;if(!me||!me.birth){toast("생일 알려주면 내 사주로 봐줄게!");openForm(PRODUCTS[0]);return;}
-  document.querySelector(".today").scrollIntoView({behavior:"smooth",block:"center"});$("dailyBtn").click();};
+$("luckMore").onclick=()=>openForm(PRODUCTS[0]);
 
-/* ---------- 오늘의 운세 ---------- */
-$("dailyBtn").onclick=async()=>{if(needLogin())return;
-  if(!me||!me.birth){toast("먼저 메뉴 하나 보면서 생일을 알려줘!");openForm(PRODUCTS[0]);return;}
-  const out=$("dailyOut");out.hidden=false;out.textContent="부적냥이 오늘 부적 고르는 중…";
-  try{const r=await api("daily");out.textContent=r.text;if(r.xp){const before=me;await refreshMe();xpToast(r.xp,before);}}catch(e){out.textContent="지금은 운세를 못 뽑았어. 조금 있다가 다시 눌러줘!";}};
 
 /* ---------- 수다 ---------- */
 function addMsg(w,t){const d=document.createElement("div");d.className="msg "+w;d.textContent=t;$("chatlog").appendChild(d);d.scrollIntoView({block:"end"});return d;}

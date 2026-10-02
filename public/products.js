@@ -28,7 +28,7 @@ export const LEVELS = [
   { xp: 150, name: "누워있는 부적냥" }, { xp: 250, name: "부적 두 장 부적냥" }, { xp: 400, name: "금부적 부적냥" },
   { xp: 600, name: "용한 부적냥" }, { xp: 850, name: "소름 부적냥" }, { xp: 1150, name: "도사 부적냥" }, { xp: 1500, name: "부적냥 대왕" },
 ];
-export const XP_RULES = "출석 +10 · 뽑기 +5 · 오늘의 운세 +5 · 풀이 +30 · 새 카드 +15 · 공유 미션 +20";
+export const XP_RULES = "출석 +10 · 뽑기 +5 · 풀이 +30 · 새 카드 +15 · 공유 미션 +20";
 export const LEVEL_REWARD = "레벨이 오를 때마다 별사탕 조각 1개, Lv.5에 별사탕 1개, Lv.10에 별사탕 3개";
 
 // 복주머니 뽑기 확률 (DB의 gacha 함수와 같아야 함)
