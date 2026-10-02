@@ -1,7 +1,7 @@
 // 메뉴·요금 (브라우저와 서버가 같이 씀 — 가격은 서버가 이 파일 기준으로 검증)
 export const PRODUCTS=[
  {id:"saju",em:"🔮",c:"c-lav",name:"990원 사주",sub:"용하다는 그 풀이",desc:"여덟 글자로 네 성격, 재물, 일, 사람 복까지 부적냥이 귀찮지만 다 봐줄게.",
-  keys:[["summary","부적냥의 총평"],["personality","성격"],["money","재물운"],["work","일과 진로"],["people","사람 복"],["stars","숨은 살과 귀인"],["advice","부적냥의 한마디"]]},
+  keys:[["summary","부적냥의 총평"],["ilju","일주 이야기 · 나라는 사람"],["ohaeng","오행 분석"],["sipsin","십신 분석"],["personality","성격 · 장점과 단점"],["pillars","네 기둥 이야기"],["life","인생 흐름"],["money","재물운"],["work","일과 진로"],["love","연애와 결혼"],["people","사람 복"],["stars","숨은 살과 귀인"],["year","올해와 내년"],["daewoon","지금 대운"],["rx","부적냥 처방전"],["advice","부적냥의 한마디"]]},
  {id:"love",em:"💘",c:"c-pink",name:"990원 연애운",sub:"내 인연은 언제 와?",desc:"내 연애 스타일, 잘 맞는 사람, 인연이 들어오는 시기를 알려줄게.",isNew:true,love:true,
   keys:[["style","나의 연애 스타일"],["match","나랑 찰떡인 사람"],["timing","인연이 오는 시기"],["now","지금 상태에서 해야 할 것"],["advice","부적냥의 연애 조언"]]},
  {id:"gunghap",em:"🫶",c:"c-pink",name:"990원 궁합",sub:"우리 사이 몇 점?",desc:"두 사람의 사주를 겹쳐서 점수, 잘 맞는 점, 부딪히는 점을 알려줄게.",partner:true,

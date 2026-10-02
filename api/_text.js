@@ -282,6 +282,40 @@ const EL_COLOR2 = { 목: "초록·민트", 화: "빨강·코랄", 토: "베이�
 const EL_NUM2 = { 목: "3, 8", 화: "2, 7", 토: "5, 10", 금: "4, 9", 수: "1, 6" };
 const KEYWORD = { 비견: "독립", 겁재: "승부", 식신: "재능", 상관: "표현", 편재: "확장", 정재: "저축", 편관: "버티기", 정관: "인정", 편인: "공부", 정인: "귀인" };
 
+
+/* ── 사주 풀이 확장: 오행·십신·네 기둥·인생 흐름·처방 ── */
+const EL_MEAN = {
+  목: ["목(木)이 없어서 새로 시작하는 데 시동이 늦게 걸림. 대신 한번 시작하면 끝까지 감.", "목(木)이 적당해서 성장하려는 힘이 꾸준함. 배우고 크는 걸 좋아함.", "목(木)이 많아서 계획과 시작은 넘치는데 마무리가 약함. 하나씩 끝내는 연습이 필요함."],
+  화: ["화(火)가 없어서 감정 표현이 서툶. 속은 뜨거운데 겉은 차분해 보여서 오해받음.", "화(火)가 적당해서 열정과 예의가 균형 잡힘. 분위기 읽는 센스가 있음.", "화(火)가 많아서 열정 폭발형. 대신 쉽게 달아오르고 쉽게 식으니까 페이스 조절."],
+  토: ["토(土)가 없어서 중심 잡기 어려울 때가 있음. 루틴이 곧 부적임.", "토(土)가 적당해서 믿음직하고 안정적임. 사람들이 기대기 좋은 타입.", "토(土)가 많아서 고집과 걱정이 같이 큼. 생각은 줄이고 몸을 움직이면 풀림."],
+  금: ["금(金)이 없어서 맺고 끊는 게 어려움. 거절 연습이 필요함.", "금(金)이 적당해서 결단력과 의리가 있음. 할 땐 하는 사람.", "금(金)이 많아서 날카롭고 완벽주의. 말에 칼이 서지 않게만 조심."],
+  수: ["수(水)가 없어서 생각보다 행동이 먼저 나감. 쉬어가는 시간을 일부러 만들어.", "수(水)가 적당해서 지혜롭고 유연함. 상황 판단이 빠름.", "수(水)가 많아서 생각이 깊고 감수성이 풍부함. 대신 걱정과 불안도 같이 큼."],
+};
+const GROUP_MID = { 비겁: "비겁이 적당해서 자존심과 협동심이 균형 잡힘.", 식상: "식상이 적당해서 하고 싶은 말은 하되 선은 지킴.", 재성: "재성이 적당해서 돈 감각이 무난하고 현실적임.", 관성: "관성이 적당해서 책임감 있게 일하되 눌리지는 않음.", 인성: "인성이 적당해서 배울 땐 배우고 혼자 설 땐 섬." };
+const GROUP_DESC = { 비겁: "비겁(比劫)은 나와 같은 기운. 자존심, 독립심, 친구와 경쟁자를 뜻함.", 식상: "식상(食傷)은 내가 만들어내는 기운. 말, 표현, 재능, 끼를 뜻함.", 재성: "재성(財星)은 내가 다스리는 기운. 돈, 현실 감각, 그리고 남자에겐 연인을 뜻함.", 관성: "관성(官星)은 나를 다스리는 기운. 직장, 규칙, 명예, 그리고 여자에겐 연인을 뜻함.", 인성: "인성(印星)은 나를 키워주는 기운. 공부, 엄마, 도와주는 사람, 문서를 뜻함." };
+const TG_MEAN = { 비견: "독립심과 자존심", 겁재: "경쟁심과 승부욕", 식신: "먹고 즐기고 만드는 재능", 상관: "말재주와 반골 기질", 편재: "큰돈과 넓은 활동력", 정재: "꼼꼼한 돈 관리와 성실함", 편관: "압박을 견디는 카리스마", 정관: "규칙과 명예, 책임감", 편인: "독특한 직관과 공부 머리", 정인: "배움과 보살핌을 받는 복" };
+const PALACE = { year: "연주(어린 시절·집안·남들 눈에 비친 첫인상)", month: "월주(부모·청년기·사회생활의 무대)", day: "일지(나의 속마음·배우자 자리)", hour: "시주(자녀·말년·마음속 꿈)" };
+const PALACE_TONE = {
+  year: ["그래서 어릴 때부터 이 기운 덕을 봤고, 첫인상에서 이게 드러남.", "그래서 어린 시절엔 이 기운 때문에 좀 버거웠을 수 있음. 근데 그게 지금의 단단함이 됨.", "그래서 첫인상에서 이 기운이 은근히 느껴짐."],
+  month: ["사회생활 무대에서 이 기운이 무기가 됨. 일터에서 인정받기 좋은 구조.", "사회생활에서 이 기운 때문에 부딪힐 때가 있음. 대신 그만큼 빨리 성장함.", "사회생활에서 이 기운을 어떻게 쓰느냐가 관건임."],
+  day: ["속마음이 편안한 구조라 배우자나 가까운 사람한테 이 기운을 나눠줌.", "속으로는 이 기운 때문에 혼자 끙끙댈 때가 있음. 가까운 사람한테 털어놔야 풀림.", "속마음에 이 기운이 깔려 있어서 가까운 사람만 아는 니 모습이 있음."],
+  hour: ["말년과 꿈 쪽에 이 기운이 있어서 시간이 갈수록 좋아지는 사주.", "말년 쪽에 이 기운이 있어서 나이 들수록 내 꿈을 위해 싸우게 됨. 그게 오히려 원동력.", "마음속 꿈에 이 기운이 있음. 언젠가 꼭 해보고 싶은 게 이거랑 닮았을 거임."],
+};
+const LIFE = {
+  year: ["초년(~20대 초): 기반이 탄탄한 편. 받은 걸 잘 쓰면 됨.", "초년(~20대 초): 일찍 철든 편. 남들보다 고민이 빨랐음.", "초년(~20대 초): 무난하게 흘러감. 큰 굴곡보다 잔잔한 성장."],
+  month: ["청년기(20~30대): 사회에서 자리 잡기 좋은 흐름. 이때 쌓은 게 평생 감.", "청년기(20~30대): 부딪히면서 크는 시기. 힘들어도 이때 근육이 생김.", "청년기(20~30대): 방향을 찾는 시기. 여러 개 해보는 게 이득."],
+  day: ["중년(40~50대): 내 사람과 내 자리가 안정되는 시기.", "중년(40~50대): 스스로를 다잡아야 하는 시기. 대신 이걸 넘기면 진짜 내 것이 생김.", "중년(40~50대): 하던 걸 깊게 파는 시기."],
+  hour: ["말년(60대~): 편안하고 복이 모이는 흐름.", "말년(60대~): 새로운 도전을 하는 활기찬 말년.", "말년(60대~): 잔잔하고 자기만의 세계가 있는 말년."],
+};
+const RX = {
+  목: ["초록·민트", "3, 8", "동쪽", "나물, 샐러드, 새콤한 과일", "숲, 공원, 식물 많은 카페", "새로운 걸 같이 해보자고 끌어주는 사람", "아침 10분 산책, 새로운 거 하나 시작하기"],
+  화: ["빨강·코랄", "2, 7", "남쪽", "따뜻한 차, 쌉쌀한 커피, 매콤한 음식", "햇빛 잘 드는 곳, 사람 많은 곳", "밝고 표현 확실한 사람", "햇볕 쬐기, 좋아하는 사람한테 먼저 연락하기"],
+  토: ["노랑·베이지", "5, 10", "집 근처, 익숙한 동네", "단호박, 고구마, 잡곡밥", "정돈된 방, 단골집", "느긋하고 든든한 사람", "정해진 시간에 밥 먹기, 책상 정리"],
+  금: ["흰색·실버", "4, 9", "서쪽", "배, 무, 매운 음식", "깔끔한 공간, 전시회", "결단력 있고 깔끔한 사람", "운동, 미뤄둔 결정 하나 끝내기"],
+  수: ["검정·네이비", "1, 6", "북쪽", "해산물, 검은콩, 미역국", "물가, 바다, 조용한 도서관", "말 잘 들어주는 사람", "물 자주 마시기, 자기 전 일기 세 줄"],
+};
+const toneOf = (tg) => (GOOD.has(tg) ? 0 : BAD.has(tg) ? 1 : 2);
+
 function base(me) {
   const p = sajuOf(me.birth, me.time), c = elCount(p), w = weakEl(c), st = strongEl(c);
   return { p, c, w, st, s: p.day.s, b: p.day.b, name: me.name, dp: deep(p) };
@@ -291,21 +325,44 @@ function summaryOf(x) {
 }
 
 /* ── 메뉴별 조합 ── */
-function readSaju(x, b) {
-  const D = x.dp, line = (g) => (D.many.includes(g) ? GROUP_MANY[g] : D.none.includes(g) ? GROUP_NONE[g] : "");
-  const [y] = todayKST(), ytg = tenGod(x.s, yearP(y).s), s = x.s;
+function readSaju(x, b, me) {
+  const D = x.dp, line = (g) => (D.many.includes(g) ? GROUP_MANY[g] : D.none.includes(g) ? GROUP_NONE[g] : GROUP_MID[g]);
+  const [y, m] = todayKST(), ytg = tenGod(x.s, yearP(y).s), ntg = tenGod(x.s, yearP(y + 1).s), mtg = tenGod(x.s, monthP(y, m).s), s = x.s, p = x.p;
   const yuk = (13 - x.b) % 12, sam = [4, 8].map((k) => (x.b + k) % 12), clash = (x.b + 6) % 12;
+  const ei = "목화토금수".indexOf(STEM_EL[s]), yong = D.strong ? "목화토금수"[(ei + 1) % 5] : "목화토금수"[(ei + 4) % 5], R = RX[yong];
   const P = (...a) => a.filter(Boolean).join("\n\n");
+  const pal = (k, tgv) => `${PALACE[k]}에 ${tgv}, 그러니까 ${j(TG_MEAN[tgv], "이", "가")} 자리 잡고 있음. ${PALACE_TONE[k][toneOf(tgv)]}`;
+  const tgY = tenGod(s, p.year.s), tgM = tenGod(s, p.month.s), tgD = tenGod(s, MAIN_STEM[p.day.b]), tgH = p.hour ? tenGod(s, p.hour.s) : null;
+  const L = readLove(x, b, me || { sex: "여" });
+  let dw = "";
+  try { if (me && me.sex && me.birth) { const W = readDaewoon(x, {}, me); dw = P(W.now, W.rise, W.rest); } } catch (e) { dw = ""; }
   return {
-    summary: P(summaryOf(x), STRENGTH[D.strong], `한 줄로 정리하면, ${OUTER[s]} 겉모습 안에 ${INNER_ANIMAL[x.b]}가 사는 사람. 올해 키워드는 '${KEYWORD[ytg]}'.`),
-    personality: P(CORE[s], `${INNER[x.b]} ${D.season[0]}에 태어나서 ${D.season[1]}`,
-      `✔ 장점: ${PROS[s].join(", ")}\n✔ 단점: ${CONS[s].join(", ")}`,
-      `✨ 이럴 때 빛남: ${SHINE[s]}\n⚠ 이럴 때 조심: ${CAREFUL[s]}`, [line("비겁"), line("인성")].filter(Boolean).join(" ")),
-    money: P(MONEY[s], line("재성"), `💰 너한테 맞는 돈 버는 법\n1. ${MONEY_TIP[s][0]}\n2. ${MONEY_TIP[s][1]}`, `🕳 새는 구멍: ${LEAK[s]}. 한 달만 이거 적어봐. 바로 보임.`, `📅 ${y}년 돈 흐름: ${YEAR_MONEY[ytg]}`),
-    work: P(WORK[s], `🧭 일하는 스타일: ${WORKSTYLE[s]}`, `💼 잘 맞는 일: ${JOBS[s].join(" · ")}`, [line("관성"), line("식상")].filter(Boolean).join(" "), `📅 ${y}년 일 흐름: ${YEAR_WORK[ytg]}`),
-    people: P(PEOPLE[s], `🤝 귀인 띠: ${[yuk, ...sam].map((v) => ANIMAL[v]).join("·")}띠. 이 띠 사람이 도와주면 일이 풀림.`, `⚡ 부딪히는 띠: ${ANIMAL[clash]}띠. 나쁜 사람이 아니라 리듬이 다른 거라, 선만 잘 지키면 오히려 배울 게 많음.`, line("비겁")),
+    summary: P(summaryOf(x), STRENGTH[D.strong], `한 줄로 정리하면, ${OUTER[s]} 겉모습 안에 ${INNER_ANIMAL[x.b]}가 사는 사람. 올해 키워드는 '${KEYWORD[ytg]}', 이번 달은 '${KEYWORD[mtg]}'.`,
+      `이 풀이는 일간(${STEM_KO[s]}${STEM_EL[s]}), 월령, 오행 분포, 십신, 신살, 올해 세운까지 다 넣어서 본 거임. 길어도 끝까지 읽어. 뒤로 갈수록 니 얘기임.`),
+    ilju: P(`니 일주는 ${STEM_KO[s]}${BR_KO[x.b]}(${gz(p.day).match(/\((.*)\)/)[1]}). 사주에서 '나 자신'을 뜻하는 기둥임.`, CORE[s], INNER[x.b],
+      `${D.season[0]}에 태어나서 ${D.season[1]} 같은 ${STEM_KO[s]}이라도 계절에 따라 성격이 달라지는데, 너는 이 계절 기운을 그대로 받았음.`),
+    ohaeng: P(`니 오행: 목 ${x.c.목} · 화 ${x.c.화} · 토 ${x.c.토} · 금 ${x.c.금} · 수 ${x.c.수}`,
+      ...["목", "화", "토", "금", "수"].map((e) => EL_MEAN[e][x.c[e] === 0 ? 0 : x.c[e] >= 3 ? 2 : 1]),
+      `제일 센 건 ${x.st}, 제일 약한 건 ${x.w}. ${D.strong ? "기운이 센 사주라 힘을 빼주는" : "기운이 약한 사주라 힘을 보태주는"} ${yong}(${"木火土金水"["목화토금수".indexOf(yong)]}) 기운이 너한테 약이 됨. 이걸 용신(用神)이라고 함.`),
+    sipsin: P(`십신은 니 일간을 기준으로 나머지 글자들이 어떤 관계인지 보는 거임. 니 분포: 비겁 ${D.cnt.비겁} · 식상 ${D.cnt.식상} · 재성 ${D.cnt.재성} · 관성 ${D.cnt.관성} · 인성 ${D.cnt.인성}`,
+      ...["비겁", "식상", "재성", "관성", "인성"].map((g) => `${GROUP_DESC[g]} ${line(g)}`)),
+    personality: P(`✔ 장점: ${PROS[s].join(", ")}\n✔ 단점: ${CONS[s].join(", ")}`, `✨ 이럴 때 빛남: ${SHINE[s]}\n⚠ 이럴 때 조심: ${CAREFUL[s]}`,
+      `남들이 보는 너: ${OUTER[s]}. 실제 너: ${INNER_ANIMAL[x.b]}. 이 차이 때문에 "너 의외다"라는 말 자주 들었을 거임.`, `스트레스 받을 때: ${CAREFUL[s]}. 이 신호가 오면 일단 멈추고 ${R[6]} 해.`),
+    pillars: P(pal("year", tgY), pal("month", tgM), pal("day", tgD), tgH ? pal("hour", tgH) : "시주는 태어난 시간을 몰라서 비워뒀음. 시간 알면 자녀·말년 운까지 볼 수 있음."),
+    life: P(LIFE.year[toneOf(tgY)], LIFE.month[toneOf(tgM)], LIFE.day[toneOf(tgD)], tgH ? LIFE.hour[toneOf(tgH)] : "말년(60대~): 시간을 알면 더 정확히 볼 수 있음.", "인생 흐름은 정해진 게 아니라 '날씨'임. 비 오는 시기엔 우산 쓰고, 맑을 땐 멀리 가면 됨."),
+    money: P(MONEY[s], line("재성"), `💰 너한테 맞는 돈 버는 법\n1. ${MONEY_TIP[s][0]}\n2. ${MONEY_TIP[s][1]}\n3. 용신인 ${yong} 기운 쪽 일(${JOBS["목화토금수".indexOf(yong) * 2] ? JOBS["목화토금수".indexOf(yong) * 2][0] : "관련 분야"} 같은)에서 기회가 잘 옴`,
+      `🕳 새는 구멍: ${LEAK[s]}. 한 달만 이거 적어봐. 바로 보임.`, `📅 ${y}년 돈 흐름: ${YEAR_MONEY[ytg]}\n📅 ${y + 1}년 돈 흐름: ${YEAR_MONEY[ntg]}`),
+    work: P(WORK[s], `🧭 일하는 스타일: ${WORKSTYLE[s]}`, `💼 잘 맞는 일: ${JOBS[s].join(" · ")}`, line("관성"), line("식상"),
+      `📅 ${y}년 일 흐름: ${YEAR_WORK[ytg]}\n📅 ${y + 1}년 일 흐름: ${YEAR_WORK[ntg]}`, `회사에서 너는 '${PROS[s][0]}'으로 인정받고, '${CONS[s][0]}' 때문에 오해받음. 오해는 말 한마디로 풀리니까 먼저 말해.`),
+    love: P(L.style, L.match, L.timing, `더 자세한 연애 흐름, 지금 상태별 조언은 990원 연애운 메뉴에 따로 있음.`),
+    people: P(PEOPLE[s], `🤝 귀인 띠: ${[yuk, ...sam].map((v) => ANIMAL[v]).join("·")}띠. 이 띠 사람이 도와주면 일이 풀림.`, `⚡ 부딪히는 띠: ${ANIMAL[clash]}띠. 나쁜 사람이 아니라 리듬이 다른 거라, 선만 잘 지키면 오히려 배울 게 많음.`,
+      `👨‍👩‍👧 가족·윗사람: ${line("인성")}\n👯 친구·동료: ${line("비겁")}`),
     stars: D.stars.length ? D.stars.map((k) => STARS[k]).join("\n\n") : "특별한 살은 안 보임. 대신 기복이 적고 꾸준한 사주라 오래갈수록 유리함.",
-    advice: P(worryLine(b.worry), `부족한 ${x.w} 기운은 ${EL_FILL[x.w]}로 채우면 됨.`, `🍀 행운의 색: ${EL_COLOR2[x.w]}\n🍀 행운의 숫자: ${EL_NUM2[x.w]}\n🍀 행운의 방향: ${EL_DIR[x.w]}`, CLOSER[s]),
+    year: P(`${y}년은 너한테 ${YEAR[ytg]}`, `💰 돈: ${YEAR_MONEY[ytg]}\n💼 일: ${YEAR_WORK[ytg]}\n💘 연애: ${YEAR_LOVE[ytg]}`, `이번 달(${m}월) 키워드는 '${KEYWORD[mtg]}'. ${MONTH[mtg]}.`, `${y + 1}년은 ${YEAR[ntg]}`),
+    daewoon: dw || "대운은 성별까지 알아야 정확히 계산됨. 990원 대운 메뉴에서 10년 단위로 자세히 볼 수 있음.",
+    rx: P(`니 용신은 ${yong}(${"木火土金水"["목화토금수".indexOf(yong)]}). 이 기운을 생활에 넣으면 막힌 게 풀림. 부적냥 처방 7가지:`,
+      `🎨 색: ${R[0]}\n🔢 숫자: ${R[1]}\n🧭 방향: ${R[2]}\n🍚 음식: ${R[3]}\n📍 장소: ${R[4]}\n🤝 사람: ${R[5]}\n⏰ 습관: ${R[6]}`, `처방은 하나만 해도 됨. 제일 쉬운 거 하나 골라서 이번 주에 해봐.`),
+    advice: P(worryLine(b.worry), `부족한 ${x.w} 기운은 ${EL_FILL[x.w]}로 채우면 됨.`, CLOSER[s], "오늘 읽은 거 중에 하나만 기억해. 나머진 부적냥이 기억하고 있을게."),
   };
 }
 function readLove(x, b, me) {
@@ -412,7 +469,7 @@ export function compose(prodId, b, me) {
   if (prodId === "yearly") return readYearly(x);
   if (prodId === "daewoon") return readDaewoon(x, b, me);
   if (prodId === "taekil") return readTaekil(x, b, goodDays(x.p, 6));
-  return readSaju(x, b);
+  return readSaju(x, b, me);
 }
 
 // 오늘의 운세

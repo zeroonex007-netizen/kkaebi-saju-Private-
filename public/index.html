@@ -578,7 +578,7 @@ function loadingUI(t){$("reading").innerHTML=`<div class="loading"><img src="/im
 const RPOSE=["cross","hold","cheer","wave","run","lie"],RBG=["#FFF1D6","#FFE3EC","#E8F7D6","#EEE8FF","#DDF1FF","#FFEBDD"];
 function punch(t){const f=String(t).split(/\n/)[0];const m=f.match(/^.*?[.!?](?=\s|$)/);return (m?m[0]:f).slice(0,60);}
 // 명리학 공부한 냥이: 고전 → 만세력 → 칠판 분석 → 결론
-const NARR={summary:"칠판에 결론을 적었다.",personality:"일간과 일지를 나란히 대조했다.",money:"재성(財星)의 자리를 확인했다.",work:"관성(官星)과 식상(食傷)의 흐름을 봤다.",people:"비겁(比劫)과 귀인을 체크했다.",stars:"신살표를 펼쳤다.",advice:"용신(用神) 기준으로 처방을 적었다.",
+const NARR={ilju:"일주 카드를 확대했다.",ohaeng:"오행 막대를 하나씩 다시 셌다.",sipsin:"십신표를 칠판에 그렸다.",pillars:"네 기둥을 하나씩 짚었다.",life:"인생 그래프를 그렸다.",love:"일지, 배우자 자리를 확대했다.",year:"올해 세운을 대입했다.",daewoon:"대운표를 펼쳤다.",rx:"용신으로 처방전을 썼다.",summary:"칠판에 결론을 적었다.",personality:"일간과 일지를 나란히 대조했다.",money:"재성(財星)의 자리를 확인했다.",work:"관성(官星)과 식상(食傷)의 흐름을 봤다.",people:"비겁(比劫)과 귀인을 체크했다.",stars:"신살표를 펼쳤다.",advice:"용신(用神) 기준으로 처방을 적었다.",
   style:"일지, 배우자 자리를 확대했다.",match:"합(合)이 되는 지지를 찾았다.",timing:"월운에서 연애 별을 셌다.",now:"지금 운의 흐름과 대조했다.",score:"두 사람의 일간·일지를 겹쳐 봤다.",good:"천간합·육합을 체크했다.",clash:"충(沖)이 있는지 확인했다.",tip:"용신 기준으로 처방을 적었다.",
   overall:"올해 세운(歲運)의 십신을 계산했다.",months:"달마다 월건(月建)을 대입했다.",luck:"길한 십신이 들어오는 달을 표시했다.",caution:"흉한 십신이 겹치는 달을 표시했다.",next:"내년 세운을 미리 대입했다.",rise:"대운표에서 길운을 찾았다.",rest:"대운표에서 쉬어갈 구간을 찾았다.",pick:"일진과 내 일지의 합을 찾았다.",others:"후보 일진을 몇 개 더 골랐다."};
 const ELS="목화토금수",ELH={목:"木",화:"火",토:"土",금:"金",수:"水"},SEASON_OF=["겨울","겨울","봄","봄","봄","여름","여름","여름","가을","가을","가을","겨울"];
