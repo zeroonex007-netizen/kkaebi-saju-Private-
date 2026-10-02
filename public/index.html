@@ -577,21 +577,31 @@ function loadingUI(t){$("reading").innerHTML=`<div class="loading"><img src="/im
 // 풀이 결과를 웹툰 컷으로: 컷마다 부적냥 포즈 + 핵심 한마디 말풍선 + 아래 해설
 const RPOSE=["cross","hold","cheer","wave","run","lie"],RBG=["#FFF1D6","#FFE3EC","#E8F7D6","#EEE8FF","#DDF1FF","#FFEBDD"];
 function punch(t){const f=String(t).split(/\n/)[0];const m=f.match(/^.*?[.!?](?=\s|$)/);return (m?m[0]:f).slice(0,60);}
-// 점 보는 시늉: 일어나기 → 쌀점 → 만세력 → 촛불 → 반응
-const NARR={summary:"쌀알이 동그랗게 모였다.",personality:"부적냥이 니 일주를 손가락으로 짚었다.",money:"엽전 세 개를 던졌다. 짤랑.",work:"만세력을 한 장 넘겼다.",people:"촛불이 두 번 흔들렸다.",stars:"부적이 혼자 팔랑거렸다.",advice:"부적냥이 붓을 들었다.",
-  style:"분홍 실을 꺼내 손가락에 감았다.",match:"실 끝이 어딘가를 가리켰다.",timing:"달력을 휘리릭 넘겼다.",now:"쌀알 하나를 톡 튕겼다.",score:"두 사람 생일을 나란히 놓았다.",good:"촛불이 따뜻하게 커졌다.",clash:"쌀알 두 개가 부딪혔다.",tip:"부적냥이 붓을 들었다.",
-  overall:"올해 달력을 펼쳤다.",months:"달마다 쌀알을 하나씩 놓았다.",luck:"엽전이 앞면으로 떨어졌다.",caution:"촛불이 살짝 흔들렸다.",next:"내년 달력을 꺼냈다.",rise:"쌀알이 위로 튀었다.",rest:"촛불을 잠깐 낮췄다.",pick:"달력에 동그라미를 쳤다.",others:"쌀알을 몇 개 더 골랐다."};
-function ritualPanels(nm,p){const HZ=x=>x?STEMS[x.s]:"?",HB=x=>x?BR[x.b]:"?",cols=["hour","day","month","year"];
-  const rice=Array.from({length:26},(_,k)=>`<i style="left:${8+((k*37)%84)}%;top:${30+((k*53)%46)}%;animation-delay:${(k%9)*.08}s;transform:rotate(${(k*47)%180}deg)"></i>`).join("");
+// 명리학 공부한 냥이: 고전 → 만세력 → 칠판 분석 → 결론
+const NARR={summary:"칠판에 결론을 적었다.",personality:"일간과 일지를 나란히 대조했다.",money:"재성(財星)의 자리를 확인했다.",work:"관성(官星)과 식상(食傷)의 흐름을 봤다.",people:"비겁(比劫)과 귀인을 체크했다.",stars:"신살표를 펼쳤다.",advice:"용신(用神) 기준으로 처방을 적었다.",
+  style:"일지, 배우자 자리를 확대했다.",match:"합(合)이 되는 지지를 찾았다.",timing:"월운에서 연애 별을 셌다.",now:"지금 운의 흐름과 대조했다.",score:"두 사람의 일간·일지를 겹쳐 봤다.",good:"천간합·육합을 체크했다.",clash:"충(沖)이 있는지 확인했다.",tip:"용신 기준으로 처방을 적었다.",
+  overall:"올해 세운(歲運)의 십신을 계산했다.",months:"달마다 월건(月建)을 대입했다.",luck:"길한 십신이 들어오는 달을 표시했다.",caution:"흉한 십신이 겹치는 달을 표시했다.",next:"내년 세운을 미리 대입했다.",rise:"대운표에서 길운을 찾았다.",rest:"대운표에서 쉬어갈 구간을 찾았다.",pick:"일진과 내 일지의 합을 찾았다.",others:"후보 일진을 몇 개 더 골랐다."};
+const ELS="목화토금수",ELH={목:"木",화:"火",토:"土",금:"金",수:"水"},SEASON_OF=["겨울","겨울","봄","봄","봄","여름","여름","여름","가을","가을","가을","겨울"];
+function analyze(p){const de=STEM_EL[p.day.s],i=ELS.indexOf(de),mom=ELS[(i+4)%5],kid=ELS[(i+1)%5],c=elCount(p);
+  let sup=0,tot=0;for(const k of["year","month","day","hour"])if(p[k]){for(const [e,w] of [[STEM_EL[p[k].s],k==="day"?0:1],[BR_EL[p[k].b],k==="month"?2:1]]){tot+=w;if(e===de||e===mom)sup+=w;}}
+  const strong=sup*2>=tot,me=BR_EL[p.month.b],deuk=me===de||me===mom;
+  return{de,c,strong,deuk,yong:strong?kid:mom,season:SEASON_OF[p.month.b]};}
+function ritualPanels(nm,p){const HZ=x=>x?STEMS[x.s]:"?",HB=x=>x?BR[x.b]:"?",cols=["hour","day","month","year"],A=p.day?analyze(p):null;
+  const bars=A?ELS.split("").map(e=>`<span><i style="height:${Math.min(100,A.c[e]*25)}%"></i><em>${ELH[e]}</em></span>`).join(""):"";
+  const prof=(pose,cls="")=>`<span class="prof ${cls}"><img src="/img/nyang-${pose}.png" alt=""><svg class="specs" viewBox="0 0 100 34" aria-hidden="true"><circle cx="24" cy="17" r="14" fill="rgba(255,255,255,.25)" stroke="#1E1729" stroke-width="5"/><circle cx="76" cy="17" r="14" fill="rgba(255,255,255,.25)" stroke="#1E1729" stroke-width="5"/><path d="M38 15 Q50 8 62 15" fill="none" stroke="#1E1729" stroke-width="5"/></svg></span>`;
   return[
-    {bg:"#2B2140",night:1,html:`<div class="cap">주문이 들어왔다. ${esc(nm)}의 사주.</div><img class="rcat r" src="/img/nyang-lie.png" alt=""><div class="bub l">…끙차. 이름이랑 생일 받음.</div><b class="sfx">끙차</b>`},
-    {bg:"#FFF1D6",html:`<div class="cap">먼저, 쌀을 뿌린다.</div><div class="tray">${rice}</div><img class="rcat r small" src="/img/nyang-hold.png" alt=""><div class="bub l">쌀 뿌려봄.</div><b class="sfx pink">촤르륵</b>`},
-    {bg:"#EEE8FF",html:`<div class="cap">만세력을 펼쳐 여덟 글자를 적는다.</div><div class="book"><div class="pg"><small>시 일 월 연</small><b>${cols.map(k=>HZ(p[k])).join(" ")}</b><b>${cols.map(k=>HB(p[k])).join(" ")}</b></div></div><img class="rcat r small" src="/img/nyang-cross.png" alt="">`},
-    {bg:"#1E1729",night:1,html:`<div class="cap">촛불을 켜고, 눈을 감는다.</div><span class="candle">🕯️</span><img class="rcat r" src="/img/nyang-cross.png" alt=""><div class="bub l">…흠.</div><b class="sfx">스읍</b>`},
-    {bg:"#FFE9A8",html:`<div class="cap">그리고—</div><img class="rcat r zoom" src="/img/nyang-cheer.png" alt=""><div class="bub l">…어? 이거 좀 재밌는데.</div><i class="spk s1">✨</i><i class="spk s3">✨</i>`}];}
+    {bg:"#2B2140",night:1,html:`<div class="cap">주문이 들어왔다. ${esc(nm)}의 사주.</div><img class="rcat r" src="/img/nyang-lie.png" alt=""><div class="bub l">…끙차. 『자평진전』 세 번 읽은 고양이임.</div><b class="sfx">끙차</b>`},
+    {bg:"#F3EBDD",tall:1,html:`<div class="cap">먼저, 고전부터 펼친다.</div><div class="books"><b>子平眞詮<small>자평진전</small></b><b>滴天髓<small>적천수</small></b><b>窮通寶鑑<small>궁통보감</small></b></div>${prof("hold","r")}<div class="bub l top">명리는 근거로 봄.</div>`},
+    {bg:"#EEE8FF",html:`<div class="cap">만세력으로 여덟 글자를 세운다.</div><div class="book"><div class="pg"><small>시 일 월 연</small><b>${cols.map(k=>HZ(p[k])).join(" ")}</b><b>${cols.map(k=>HB(p[k])).join(" ")}</b></div></div>${prof("cross","r small")}`},
+    ...(A?[{bg:"#1F3A2E",night:1,tall:1,html:`<div class="cap">칠판에 분석을 적는다.</div><div class="board">
+      <p>일간 <b>${HZ(p.day)}${ELH[A.de]}</b> · ${A.de} 기운의 사람</p>
+      <p>월령 <b>${HB(p.month)}</b>(${A.season}) → <b>${A.deuk?"득령(得令)":"실령(失令)"}</b></p>
+      <div class="bars">${bars}</div>
+      <p>→ <b>${A.strong?"신강(身强)":"신약(身弱)"}</b> · 용신 <b>${ELH[A.yong]} ${A.yong}</b></p></div>${prof("cross","r tiny")}<b class="sfx chalk">끼익</b>`}]:[]),
+    {bg:"#FFE9A8",html:`<div class="cap">그리고—</div>${prof("wave","r zoom")}<div class="bub l">…결론 나왔음. 들어봐.</div><i class="spk s1">✨</i><i class="spk s3">✨</i>`}];}
 function renderSections(keys,obj,days){const r=$("reading");r.textContent="";r.classList.add("rtoon");
   const nm=(lastType&&lastType.name)||"너";
-  for(const o of ritualPanels(nm,(lastType&&lastType.p)||{})){const d=document.createElement("div");d.className="rpn"+(o.night?" night":"");d.style.background=o.bg;d.innerHTML=`<div class="rtop">${o.html}</div>`;r.appendChild(d);}
+  for(const o of ritualPanels(nm,(lastType&&lastType.p)||{})){const d=document.createElement("div");d.className="rpn"+(o.night?" night":"");d.style.background=o.bg;d.innerHTML=`<div class="rtop${o.tall?" tall":""}">${o.html}</div>`;r.appendChild(d);}
   if(days&&days.length){const d=document.createElement("div");d.className="rpn";d.style.background="#FFF1D6";
     d.innerHTML=`<div class="rtop short"><div class="cap">부적냥이 고른 날</div></div><div class="rbody"><div class="days">${days.map(x=>`<span>${esc(x.label)}</span>`).join("")}</div></div>`;r.appendChild(d);}
   let i=0;for(const[k,t]of keys){if(!obj[k])continue;const side=i%2?"l":"r",d=document.createElement("div");d.className="rpn";d.style.background=RBG[i%RBG.length];
