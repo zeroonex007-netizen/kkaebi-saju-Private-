@@ -574,9 +574,20 @@ function readMe(){const name=$("name").value.trim(),birth=$("birth").value;
 function renderPillars(p){const w=$("pillars");w.textContent="";for(const[k,l]of[["hour","시"],["day","일"],["month","월"],["year","연"]]){const c=document.createElement("div");c.className="pillar";c.innerHTML=`<small>${l}주</small>`;const x=p[k];
   for(const part of["s","b"]){const d=document.createElement("div");if(x){const ch=part==="s"?STEMS[x.s]:BR[x.b],el=part==="s"?STEM_EL[x.s]:BR_EL[x.b],ko=part==="s"?STEM_KO[x.s]:BR_KO[x.b];d.className="ch e-"+el;d.textContent=ch;const i=document.createElement("i");i.textContent=ko+"·"+el;d.appendChild(i);}else{d.className="ch unk";d.textContent="?";}c.appendChild(d);}w.appendChild(c);}}
 function loadingUI(t){$("reading").innerHTML=`<div class="loading"><img src="/img/nyang-lie.png" alt=""><span></span></div>`;$("reading").querySelector("span").textContent=t;}
-function renderSections(keys,obj,days){const r=$("reading");r.textContent="";
-  if(days&&days.length){const s=document.createElement("section");s.innerHTML="<h3>부적냥이 고른 날</h3>";const box=document.createElement("div");box.className="days";days.forEach(d=>{const x=document.createElement("span");x.textContent=d.label;box.appendChild(x);});s.appendChild(box);r.appendChild(s);}
-  for(const[k,t]of keys){if(!obj[k])continue;const s=document.createElement("section");const h=document.createElement("h3");h.textContent=t;const p=document.createElement("p");p.textContent=obj[k];s.append(h,p);r.appendChild(s);}}
+// 풀이 결과를 웹툰 컷으로: 컷마다 부적냥 포즈 + 핵심 한마디 말풍선 + 아래 해설
+const RPOSE=["cross","hold","cheer","wave","run","lie"],RBG=["#FFF1D6","#FFE3EC","#E8F7D6","#EEE8FF","#DDF1FF","#FFEBDD"];
+function punch(t){const f=String(t).split(/\n/)[0];const m=f.match(/^.*?[.!?](?=\s|$)/);return (m?m[0]:f).slice(0,60);}
+function renderSections(keys,obj,days){const r=$("reading");r.textContent="";r.classList.add("rtoon");
+  const nm=(lastType&&lastType.name)||"너";
+  const intro=document.createElement("div");intro.className="rpn in";intro.style.background="#2B2140";
+  intro.innerHTML=`<div class="rtop"><div class="cap">부적냥이 ${esc(nm)} 사주를 펼쳤다.</div><img class="rcat r" src="/img/nyang-lie.png" alt=""><div class="bub l">…흠. 귀찮지만 다 봐줌.</div><b class="sfx">펄럭</b></div>`;r.appendChild(intro);
+  if(days&&days.length){const d=document.createElement("div");d.className="rpn";d.style.background="#FFF1D6";
+    d.innerHTML=`<div class="rtop short"><div class="cap">부적냥이 고른 날</div></div><div class="rbody"><div class="days">${days.map(x=>`<span>${esc(x.label)}</span>`).join("")}</div></div>`;r.appendChild(d);}
+  let i=0;for(const[k,t]of keys){if(!obj[k])continue;const side=i%2?"l":"r",d=document.createElement("div");d.className="rpn";d.style.background=RBG[i%RBG.length];
+    d.innerHTML=`<div class="rtop"><div class="cap">${esc(t)}</div><img class="rcat ${side}" src="/img/nyang-${RPOSE[i%RPOSE.length]}.png" alt=""><div class="bub ${side==="r"?"l":"r"}">${esc(punch(obj[k]))}</div></div><div class="rbody"></div>`;
+    d.querySelector(".rbody").textContent=obj[k];r.appendChild(d);i++;}
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{threshold:.15});
+  r.querySelectorAll(".rpn").forEach(p=>io.observe(p));}
 
 $("runBtn").onclick=async()=>{
   const[err,my]=readMe();if(err){$("err").textContent=err;return;}
