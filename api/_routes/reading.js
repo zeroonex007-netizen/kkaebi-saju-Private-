@@ -1,4 +1,4 @@
-// 990원 메뉴 풀이: 별사탕 1개 차감 → 부적냥 문장 조합 풀이(AI 안 씀, 토큰 0원) → 실패하면 환불
+// 990원 메뉴 풀이: 별사탕 1개 차감 → 행운거북 문장 조합 풀이(AI 안 씀, 토큰 0원) → 실패하면 환불
 import { route, admin, rpc, isDate, isTime, isSex, clip } from "../_lib.js";
 import { sajuOf, goodDays, cardOf } from "../../public/saju.js";
 import { PRODUCTS } from "../../public/products.js";

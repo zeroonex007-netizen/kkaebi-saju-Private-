@@ -9,5 +9,5 @@ export default route(async (req, res, user, b) => {
   const orderId = "kb_" + Date.now() + "_" + randomBytes(5).toString("hex");
   const { error } = await admin.from("orders").insert({ id: orderId, user_id: user.id, pack: pack.id, coins: pack.n, amount: pack.price });
   if (error) throw error;
-  res.json({ orderId, amount: pack.price, orderName: `부적냥 사주 별사탕 ${pack.n}개` });
+  res.json({ orderId, amount: pack.price, orderName: `행운거북 사주 별사탕 ${pack.n}개` });
 });
